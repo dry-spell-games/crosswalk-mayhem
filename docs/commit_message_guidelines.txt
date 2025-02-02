@@ -1,0 +1,32 @@
+# Commit Message Guidelines
+
+## Structure
+1. **Header**: A short summary of the changes (50 characters or less).
+2. **Body** (optional): Detailed explanation of the changes, if necessary.
+3. **Footer** (optional): References to issues or tasks, if applicable.
+
+## Best Practices
+- **Use the imperative mood**: E.g., "Fix bug" instead of "Fixed bug" or "Fixes bug".
+- **Be concise but descriptive**: Summarize what the commit does.
+- **Separate subject from body with a blank line**: If you need a detailed explanation, add it in the body.
+- **Limit the header to 50 characters**: Keep it short and to the point.
+- **Wrap the body at 72 characters**: For better readability.
+- **Use the body to explain what and why, not how**: Focus on the reasons behind the changes.
+
+## Examples
+
+### Add player movement script
+- Implement basic player movement using arrow keys
+- Add boundary checks to prevent player from moving off-screen
+
+### Fix sound effect bug
+- Correct file path for collision sound effect
+- Update sound manager to handle missing files gracefully
+
+### Refactor level loading logic
+- Extract level loading into a separate function
+- Improve error handling for missing level files
+
+By following these guidelines, we ensure our commit history is clean, readable, and useful for everyone on the team.
+
+Happy coding!
