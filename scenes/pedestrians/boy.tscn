@@ -1,9 +1,9 @@
 [gd_scene load_steps=29 format=3 uid="uid://nqa2ngpkufgk"]
 
-[ext_resource type="Script" path="res://Scripts/Pedestrian/Boy.cs" id="1_qesmq"]
-[ext_resource type="Texture2D" uid="uid://bikq1arr5raih" path="res://Art/Boy/Boy-idle.png" id="2_0b5xe"]
-[ext_resource type="Texture2D" uid="uid://djn4ewkoa6dxu" path="res://Art/Boy/Boy-run.png" id="2_0wp6t"]
-[ext_resource type="Texture2D" uid="uid://dq5qtsljaauhs" path="res://Art/Boy/Boy-walk.PNG" id="3_jvh5o"]
+[ext_resource type="Script" path="res://scripts/pedestrians/Boy.cs" id="1_avtv0"]
+[ext_resource type="Texture2D" uid="uid://bikq1arr5raih" path="res://assets/sprites/pedestrians/boy/Boy-idle.png" id="2_0b5xe"]
+[ext_resource type="Texture2D" uid="uid://djn4ewkoa6dxu" path="res://assets/sprites/pedestrians/boy/Boy-run.png" id="2_0wp6t"]
+[ext_resource type="Texture2D" uid="uid://dq5qtsljaauhs" path="res://assets/sprites/pedestrians/boy/Boy-walk.PNG" id="3_jvh5o"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_posrf"]
 size = Vector2(22, 34)
@@ -179,7 +179,7 @@ size = Vector2(24, 41)
 [node name="Boy" type="Area2D"]
 collision_layer = 3
 collision_mask = 3
-script = ExtResource("1_qesmq")
+script = ExtResource("1_avtv0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false

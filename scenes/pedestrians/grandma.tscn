@@ -1,9 +1,9 @@
 [gd_scene load_steps=32 format=3 uid="uid://bvggy5wyo6v8g"]
 
-[ext_resource type="Script" path="res://Scripts/Pedestrian/Grandma.cs" id="1_rqljl"]
-[ext_resource type="Texture2D" uid="uid://bmyq5a7nwd2gf" path="res://Art/Grandma/granny-idle.png" id="2_0tg6s"]
-[ext_resource type="Texture2D" uid="uid://c4mblvb63vfvp" path="res://Art/Grandma/granny-run.png" id="3_t83go"]
-[ext_resource type="Texture2D" uid="uid://bf5egufgx7vfs" path="res://Art/Grandma/granny.png" id="4_m8ch8"]
+[ext_resource type="Script" path="res://scripts/pedestrians/Grandma.cs" id="1_s0axq"]
+[ext_resource type="Texture2D" uid="uid://bmyq5a7nwd2gf" path="res://assets/sprites/pedestrians/grandma/granny-idle.png" id="2_0tg6s"]
+[ext_resource type="Texture2D" uid="uid://c4mblvb63vfvp" path="res://assets/sprites/pedestrians/grandma/granny-run.png" id="3_t83go"]
+[ext_resource type="Texture2D" uid="uid://bf5egufgx7vfs" path="res://assets/sprites/pedestrians/grandma/granny.png" id="4_m8ch8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4m3e3"]
 atlas = ExtResource("2_0tg6s")
@@ -199,7 +199,7 @@ size = Vector2(32, 31)
 
 [node name="Grandma" type="Area2D"]
 collision_mask = 3
-script = ExtResource("1_rqljl")
+script = ExtResource("1_s0axq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_slsle")

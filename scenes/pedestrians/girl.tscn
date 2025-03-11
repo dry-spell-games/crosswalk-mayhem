@@ -1,9 +1,9 @@
 [gd_scene load_steps=29 format=3 uid="uid://dlrucac7f3tlt"]
 
-[ext_resource type="Texture2D" uid="uid://dtu82dgai7fqm" path="res://Art/Girl/Girl-Walk.png" id="1_6fvt8"]
-[ext_resource type="Script" path="res://Scripts/Pedestrian/Girl.cs" id="1_8msn7"]
-[ext_resource type="Texture2D" uid="uid://belx8p80nwx2t" path="res://Art/Girl/Girl-idle.png" id="2_4hamo"]
-[ext_resource type="Texture2D" uid="uid://tp5dpv15itqy" path="res://Art/Girl/Girl-run.png" id="3_5h27a"]
+[ext_resource type="Texture2D" uid="uid://dtu82dgai7fqm" path="res://assets/sprites/pedestrians/girl/Girl-Walk.png" id="1_6fvt8"]
+[ext_resource type="Script" path="res://scripts/pedestrians/Girl.cs" id="1_n4ap3"]
+[ext_resource type="Texture2D" uid="uid://belx8p80nwx2t" path="res://assets/sprites/pedestrians/girl/Girl-idle.png" id="2_4hamo"]
+[ext_resource type="Texture2D" uid="uid://tp5dpv15itqy" path="res://assets/sprites/pedestrians/girl/Girl-run.png" id="3_5h27a"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rpqu6"]
 atlas = ExtResource("2_4hamo")
@@ -179,7 +179,7 @@ size = Vector2(24, 40)
 [node name="Girl" type="Area2D"]
 collision_layer = 3
 collision_mask = 3
-script = ExtResource("1_8msn7")
+script = ExtResource("1_n4ap3")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jdfxq")

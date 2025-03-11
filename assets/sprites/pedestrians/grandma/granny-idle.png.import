@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bmyq5a7nwd2gf"
-path="res://.godot/imported/granny-idle.png-a0e3d20c09abefcea935b808dc2da0ac.ctex"
+path="res://.godot/imported/granny-idle.png-7f8518c0db3a26bf0904554a41eb145e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/Grandma/granny-idle.png"
-dest_files=["res://.godot/imported/granny-idle.png-a0e3d20c09abefcea935b808dc2da0ac.ctex"]
+source_file="res://assets/sprites/pedestrians/grandma/granny-idle.png"
+dest_files=["res://.godot/imported/granny-idle.png-7f8518c0db3a26bf0904554a41eb145e.ctex"]
 
 [params]
 

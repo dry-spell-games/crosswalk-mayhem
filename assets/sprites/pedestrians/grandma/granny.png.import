@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bf5egufgx7vfs"
-path="res://.godot/imported/granny.png-6c0d11ac7c748a47c0042050085a2137.ctex"
+path="res://.godot/imported/granny.png-cf7b2c260d31ea29c68c01a2008186e8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/Grandma/granny.png"
-dest_files=["res://.godot/imported/granny.png-6c0d11ac7c748a47c0042050085a2137.ctex"]
+source_file="res://assets/sprites/pedestrians/grandma/granny.png"
+dest_files=["res://.godot/imported/granny.png-cf7b2c260d31ea29c68c01a2008186e8.ctex"]
 
 [params]
 

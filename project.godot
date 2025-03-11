@@ -11,7 +11,8 @@ config_version=5
 [application]
 
 config/name="Crosswalk Mayhem"
-config/features=PackedStringArray("4.3", "Mobile")
+run/main_scene="res://main-menu/scenes/main-menu.tscn"
+config/features=PackedStringArray("4.3", "C#", "Mobile")
 config/icon="res://icon.svg"
 
 [display]
