@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 namespace Crosswalk {
-    public partial class FamilyCar : Car
+    public partial class Familycar : Car
     {
         [Export] public override float Speed { get; set; } = 300.0f;
         [Export] public override float BrakingForce {get; set; } = 1000.0f;
