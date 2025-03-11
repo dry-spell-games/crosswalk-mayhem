@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel;
 
 namespace Crosswalk {
-    public partial class SportsCar : Car
+    public partial class Sportscar : Car
     {
         [Export] public override float Speed { get; set; } = 500.0f;
         [Export] public override float BrakingForce { get; set; } = 1500.0f;
