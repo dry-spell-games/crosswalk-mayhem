@@ -1,0 +1,140 @@
+[gd_scene load_steps=14 format=3 uid="uid://ba4jig0wifyq8"]
+
+[ext_resource type="Texture2D" uid="uid://c5o80x04gql33" path="res://Art/Cars/FamilyCar/FamilyCarSprite.png" id="1_jvloa"]
+[ext_resource type="Script" path="res://Scripts/Car/FamilyCar.cs" id="1_nby4f"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_io17e"]
+atlas = ExtResource("1_jvloa")
+region = Rect2(0, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdsk7"]
+atlas = ExtResource("1_jvloa")
+region = Rect2(64, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8fmnt"]
+atlas = ExtResource("1_jvloa")
+region = Rect2(128, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hkcm4"]
+atlas = ExtResource("1_jvloa")
+region = Rect2(192, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qe4av"]
+atlas = ExtResource("1_jvloa")
+region = Rect2(256, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nvvgj"]
+atlas = ExtResource("1_jvloa")
+region = Rect2(320, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7rcqt"]
+atlas = ExtResource("1_jvloa")
+region = Rect2(384, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3am20"]
+atlas = ExtResource("1_jvloa")
+region = Rect2(448, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bw5r8"]
+atlas = ExtResource("1_jvloa")
+region = Rect2(0, 0, 64, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mqv1d"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_io17e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdsk7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8fmnt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hkcm4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qe4av")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nvvgj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7rcqt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3am20")
+}],
+"loop": true,
+"name": &"drive",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bw5r8")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_44q83"]
+size = Vector2(43, 85)
+
+[node name="FamilyCar" type="Area2D"]
+collision_layer = 2
+script = ExtResource("1_nby4f")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_mqv1d")
+animation = &"drive"
+autoplay = "drive"
+frame_progress = 0.738302
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, -1.5)
+shape = SubResource("RectangleShape2D_44q83")
+metadata/_edit_lock_ = true
+
+[node name="RaycastHolder" type="Node2D" parent="."]
+
+[node name="RCRight" type="RayCast2D" parent="RaycastHolder"]
+position = Vector2(-20, 45)
+target_position = Vector2(-30, 50)
+collision_mask = 7
+hit_from_inside = true
+collide_with_areas = true
+metadata/_edit_lock_ = true
+
+[node name="RCMRight" type="RayCast2D" parent="RaycastHolder"]
+position = Vector2(0, 45)
+target_position = Vector2(-25, 50)
+collision_mask = 7
+hit_from_inside = true
+collide_with_areas = true
+metadata/_edit_lock_ = true
+
+[node name="RCMiddle" type="RayCast2D" parent="RaycastHolder"]
+position = Vector2(0, 45)
+collision_mask = 7
+hit_from_inside = true
+collide_with_areas = true
+metadata/_edit_lock_ = true
+
+[node name="RCMLeft" type="RayCast2D" parent="RaycastHolder"]
+position = Vector2(0, 45)
+target_position = Vector2(25, 50)
+collision_mask = 7
+hit_from_inside = true
+collide_with_areas = true
+metadata/_edit_lock_ = true
+
+[node name="RCLeft" type="RayCast2D" parent="RaycastHolder"]
+position = Vector2(20, 45)
+target_position = Vector2(30, 50)
+collision_mask = 7
+hit_from_inside = true
+collide_with_areas = true
+metadata/_edit_lock_ = true
