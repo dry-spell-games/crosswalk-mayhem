@@ -34,7 +34,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="SportsCar" type="Area2D"]
+[node name="Sportscar" type="Area2D"]
 collision_layer = 2
 script = ExtResource("1_3lwgf")
 
