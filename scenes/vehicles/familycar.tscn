@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://ba4jig0wifyq8"]
 
-[ext_resource type="Texture2D" uid="uid://c5o80x04gql33" path="res://Art/Cars/FamilyCar/FamilyCarSprite.png" id="1_jvloa"]
-[ext_resource type="Script" path="res://Scripts/Car/FamilyCar.cs" id="1_nby4f"]
+[ext_resource type="Script" path="res://scripts/vehicles/Familycar.cs" id="1_4aoy6"]
+[ext_resource type="Texture2D" uid="uid://c5o80x04gql33" path="res://assets/sprites/vehicles/familycar/FamilyCarSprite.png" id="1_jvloa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_io17e"]
 atlas = ExtResource("1_jvloa")
@@ -84,7 +84,7 @@ size = Vector2(43, 85)
 
 [node name="FamilyCar" type="Area2D"]
 collision_layer = 2
-script = ExtResource("1_nby4f")
+script = ExtResource("1_4aoy6")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_mqv1d")

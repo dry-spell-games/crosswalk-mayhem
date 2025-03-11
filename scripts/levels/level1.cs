@@ -26,13 +26,13 @@ namespace Crosswalk
             GD.Print("Level 1 started");
 
             // Ladataan Jalankulkija scenet
-            GrandmaScene = (PackedScene)ResourceLoader.Load("res://Scenes/Pedestrian/Grandma.tscn");
-            GirlScene = (PackedScene)ResourceLoader.Load("res://Scenes/Pedestrian/Girl.tscn");
-            BoyScene = (PackedScene)ResourceLoader.Load("res://Scenes/Pedestrian/Boy.tscn");
+            GrandmaScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/grandma.tscn");
+            GirlScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/girl.tscn");
+            BoyScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/boy.tscn");
 
             // Ladataan autojen scenet
-            FamilyCarScene = (PackedScene)ResourceLoader.Load("res://Scenes/Car/FamilyCar.tscn");
-            SportsCarScene = (PackedScene)ResourceLoader.Load("res://Scenes/Car/SportsCar.tscn");
+            FamilyCarScene = (PackedScene)ResourceLoader.Load("res://scenes/vehicles/familycar.tscn");
+            SportsCarScene = (PackedScene)ResourceLoader.Load("res://scenes/vehicles/sportscar.tscn");
 
             // Haetaan CollisionShape2d, jotta tarkastus voidaan laittaa päälle/pois
             collisionShape = GetNode<CollisionShape2D>("TrafficLights/Hitbox");

@@ -7,7 +7,7 @@ namespace Crosswalk
     {
         public void _on_play_pressed()
         {
-            GetTree().ChangeSceneToFile("res://Scenes/Levels/Level1.tscn");
+            GetTree().ChangeSceneToFile("res://scenes/levels/level1.tscn");
         }
     }
 }

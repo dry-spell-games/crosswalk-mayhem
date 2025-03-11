@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://7rrqanr4yqyo"]
 
-[ext_resource type="Script" path="res://Scripts/Levels/Level1.cs" id="1_a7fg4"]
-[ext_resource type="Texture2D" uid="uid://dduabj27wadre" path="res://Art/Map/crosswalk6.png" id="2_gqv1c"]
+[ext_resource type="Script" path="res://scripts/levels/Level1.cs" id="1_a7fg4"]
+[ext_resource type="Texture2D" uid="uid://dduabj27wadre" path="res://assets/tilemaps/crosswalk6.png" id="2_gqv1c"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q8lhg"]
 size = Vector2(132, 8)

@@ -8,7 +8,7 @@ namespace Crosswalk
         public void _on_StartGameButton_pressed()
         {
             GD.Print("New Game painettu!");
-            GetTree().ChangeSceneToFile("res://Game/Main/Level1.tscn");
+            GetTree().ChangeSceneToFile("res://scenes/level1.tscn");
         }
     }
 }

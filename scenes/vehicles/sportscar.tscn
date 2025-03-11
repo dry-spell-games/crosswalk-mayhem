@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://cbnmdpuxpaqh5"]
 
-[ext_resource type="Script" path="res://Scripts/Car/SportsCar.cs" id="1_7o22y"]
-[ext_resource type="Texture2D" uid="uid://c6fanyr3mj4qe" path="res://Art/Cars/SportsCar/Lambo.png" id="1_n42tr"]
+[ext_resource type="Script" path="res://scripts/vehicles/Sportscar.cs" id="1_3lwgf"]
+[ext_resource type="Texture2D" uid="uid://c6fanyr3mj4qe" path="res://assets/sprites/vehicles/sportscar/Lambo.png" id="1_n42tr"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cwhhw"]
 radius = 23.0
@@ -36,7 +36,7 @@ animations = [{
 
 [node name="SportsCar" type="Area2D"]
 collision_layer = 2
-script = ExtResource("1_7o22y")
+script = ExtResource("1_3lwgf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_cwhhw")
