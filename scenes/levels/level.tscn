@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://7rrqanr4yqyo"]
+
+[ext_resource type="Script" path="res://Scripts/Levels/Level1.cs" id="1_a7fg4"]
+[ext_resource type="Texture2D" uid="uid://dduabj27wadre" path="res://Art/Map/crosswalk6.png" id="2_gqv1c"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q8lhg"]
+size = Vector2(132, 8)
+
+[node name="Level1" type="Node2D"]
+script = ExtResource("1_a7fg4")
+CarSpawnRate = 2.0
+TrafficLightsTimer = 5.0
+metadata/_edit_lock_ = true
+
+[node name="Kartta" type="Sprite2D" parent="."]
+z_index = -1000
+position = Vector2(180, 320)
+texture = ExtResource("2_gqv1c")
+metadata/_edit_lock_ = true
+
+[node name="TrafficLights" type="Area2D" parent="."]
+collision_layer = 4
+metadata/_edit_lock_ = true
+
+[node name="Hitbox" type="CollisionShape2D" parent="TrafficLights"]
+position = Vector2(180, 461)
+shape = SubResource("RectangleShape2D_q8lhg")
+metadata/_edit_lock_ = true
