@@ -206,7 +206,7 @@ metadata/_edit_lock_ = true
 sprite_frames = SubResource("SpriteFrames_5cdhs")
 animation = &"walk"
 autoplay = "walk"
-frame_progress = 0.653988
+frame_progress = 0.122577
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -219,6 +219,7 @@ metadata/_edit_lock_ = true
 metadata/_edit_lock_ = true
 
 [node name="InteractionShape" type="CollisionShape2D" parent="InteractionArea"]
+visible = false
 position = Vector2(1.5, 8)
 shape = SubResource("RectangleShape2D_ueowc")
 metadata/_edit_lock_ = true
