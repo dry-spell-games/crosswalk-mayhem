@@ -3,9 +3,9 @@ using System;
 
 namespace Crosswalk
 {
-    public partial class Boy : Pedestrian
+    public partial class Man : Pedestrian
     {
-        [Export] public override float Speed { get; set; } = 40.0f;
+        [Export] public override float Speed { get; set; } = 55.0f;
         [Export] public override float RotationSpeed { get; set; } = 30000;
         [Export] public override float StopDuration { get; set; } = 3.0f;
         [Export] public override float StopCooldown { get; set; } = 10.0f;
@@ -37,7 +37,7 @@ namespace Crosswalk
 
         protected override void HandleCarCollision(Car car)
         {
-            GD.Print("Boy was hit by a car :[");
+            GD.Print("Man was hit by a car :]");
             isFlying = true;
             FlyTime = 0;
         }

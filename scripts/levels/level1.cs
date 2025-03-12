@@ -6,7 +6,6 @@ namespace Crosswalk
 {
     public partial class Level1 : Node2D
     {
-
         [Export] private float SpawnRate { get; set; } = 2.0f;
         [Export] private float CarSpawnRate { get; set; } = 10.0f;
         [Export] private float TrafficLightsTimer { get; set; } = 1.0f;
@@ -15,10 +14,11 @@ namespace Crosswalk
         private PackedScene GrandmaScene;
         private PackedScene GirlScene;
         private PackedScene BoyScene;
+        private PackedScene ManScene;
+        private PackedScene WomanScene;
         private PackedScene FamilyCarScene;
         private PackedScene SportsCarScene;
-        private CollisionShape2D collisionShape;
-
+        private CollisionShape2D vehicleTrafficLigthHitbox;
 
         private Random random = new Random();
 
@@ -30,13 +30,15 @@ namespace Crosswalk
             GrandmaScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/grandma.tscn");
             GirlScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/girl.tscn");
             BoyScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/boy.tscn");
+            ManScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/man.tscn");
+            WomanScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/woman.tscn");
 
             // Loads vehicle scenes
             FamilyCarScene = (PackedScene)ResourceLoader.Load("res://scenes/vehicles/familycar.tscn");
             SportsCarScene = (PackedScene)ResourceLoader.Load("res://scenes/vehicles/sportscar.tscn");
 
             // Gets trafficlight's hitbox
-            collisionShape = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
+            vehicleTrafficLigthHitbox = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
 
             if (GrandmaScene == null)
             {
@@ -49,6 +51,12 @@ namespace Crosswalk
             else if (BoyScene == null) {
                 GD.Print("Failed to load Boy scene!");
             }
+            else if (ManScene == null) {
+                GD.Print("Failed to load ManScene");
+            }
+            else if (WomanScene == null) {
+                GD.Print("Failed to load WomanScene");
+            }
             StartSpawningPedestrians();
             StartSpawningCars();
             RedLights();
@@ -57,15 +65,16 @@ namespace Crosswalk
         {
             if (!RedLightForCars)
             {
-                collisionShape.Disabled = true;
+                vehicleTrafficLigthHitbox.Disabled = true;
             }
             else
             {
-                collisionShape.Disabled = false;
+                vehicleTrafficLigthHitbox.Disabled = false;
             }
         }
 
-        // Asynchronous method which calls SpawnPedestrian method for set amount of Pedestrians
+        // Asynchronous method that spawns pedestrians at set intervals
+        // Spawns pedestrians until PedestrianCount reaches zero.
         private async void StartSpawningPedestrians()
         {
             while (PedestrianCount > 0)
@@ -81,20 +90,18 @@ namespace Crosswalk
         {
             while (true)
             {
-                SpawnCar();
+                SpawnVehicle();
                 await ToSignal(GetTree().CreateTimer(CarSpawnRate), "timeout");
             }
         }
 
-        // Asynchronous method that spawns pedestrians at set intervals
-        // Spawns pedestrians until PedestrianCount reaches zero.
         private async void RedLights()
         {
             while(true)
             {
                 await ToSignal(GetTree().CreateTimer(TrafficLightsTimer), "timeout");
                 RedLightForCars = !RedLightForCars;
-                GD.Print($"Autoille punainen {RedLightForCars}");
+                GD.Print($"Red ligths for vehicle: {RedLightForCars}");
             }
         }
 
@@ -103,7 +110,7 @@ namespace Crosswalk
             Pedestrian pedestrian = null;
 
             // Randomly generated pedestrian type
-            int rand = random.Next(0, 3);  // 0 = Grandma, 1 = Girl, 2 Boy
+            int rand = random.Next(0, 5);  // 0 = Grandma, 1 = Girl, 2 Boy, 3 Man, 4 Woman
             if (rand == 0 && GrandmaScene != null)
             {
                 pedestrian = (Pedestrian)GrandmaScene.Instantiate();
@@ -115,6 +122,14 @@ namespace Crosswalk
             else if (rand == 2 && BoyScene != null)
             {
                 pedestrian = (Pedestrian)BoyScene.Instantiate();
+            }
+            else if (rand == 3 && ManScene != null)
+            {
+                pedestrian = (Pedestrian)ManScene.Instantiate();
+            }
+            else if (rand == 4 && WomanScene!= null)
+            {
+                pedestrian = (Pedestrian)WomanScene.Instantiate();
             }
             if (pedestrian == null)
             {
@@ -130,12 +145,12 @@ namespace Crosswalk
             AddChild(pedestrian);
         }
 
-        private void SpawnCar()
+        private void SpawnVehicle()
         {
             int rand = random.Next(0, 2); // 0 FamilyCar 1 SportsCar
             Car car = null;
 
-            // Valitse auto
+            // Randomizes vehicle
             if (rand == 0 && FamilyCarScene != null)
             {
                 car = (Car)FamilyCarScene.Instantiate();
@@ -143,44 +158,40 @@ namespace Crosswalk
             else if (rand == 1 && SportsCarScene != null)
             {
                 car = (Car)SportsCarScene.Instantiate();
-                GD.Print("Sporttiauto instantoitu");
             }
 
-            // Valitse spawn-sijainti
+            // Randomizes spawn point for vehicle
             Vector2 spawnPosition = car.StartPositions[GD.RandRange(0, car.StartPositions.Count - 1)];
 
-            // Tarkista, onko spawnpointissa jo auto
+            // Checks if the spawnpoint already has a vehicle
             if (IsSpawnPointCarOccupied(spawnPosition))
             {
-                GD.Print("Spawnpoint on jo varattu, ei spawnata autoa.");
-                return; // Älä spawnaa autoa, jos paikka on varattu
+                GD.Print("Spawnpoint occupied, can not spawn a vehicle");
+                return; // Doesn't spawn a car if car is already near spawn point
             }
-
             car.Initialize(spawnPosition);
             AddChild(car);
         }
 
-        // Tarkistusmetodi, joka varmistaa ettei auto ole liian lähellä spawnpointtia
+        // Method checks there isn't any vehicle too close to spawn point already
         private bool IsSpawnPointCarOccupied(Vector2 spawnPosition)
         {
-            // Määritä sopiva etäisyys, kuinka lähellä spawnpointtia on tarkistettava
+            // Minimum distance before vehicle can be instantiated
             float minDistance = 50.0f;
 
             foreach (Node child in GetChildren())
             {
-                // Tarkista, onko lapsi tyyppiä Car
+                // Checks if child is car
                 if (child is Car existingCar)
                 {
-                    // Tarkista etäisyys nykyisen auton ja spawnpointin välillä
+                    // Compares distance from child in vehicles
                     if (existingCar.Position.DistanceTo(spawnPosition) < minDistance)
                     {
-                        return true; // Jos etäisyys on liian pieni, paikka on varattu
+                        return true; // If distance is too short, returns true
                     }
                 }
             }
-            return false; // Jos ei löytynyt autoa läheltä, paikka on vapaa
+            return false; // No vehicles found too close, returns false to spawn a vehicle
         }
-
-
     }
 }
