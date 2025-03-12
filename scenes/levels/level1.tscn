@@ -34,6 +34,7 @@ shape = SubResource("RectangleShape2D_q8lhg")
 metadata/_edit_lock_ = true
 
 [node name="TrafficLightsPedestriansLeft" type="Area2D" parent="."]
+collision_layer = 8
 metadata/_edit_lock_ = true
 
 [node name="Hitbox" type="CollisionShape2D" parent="TrafficLightsPedestriansLeft"]
@@ -42,6 +43,7 @@ shape = SubResource("RectangleShape2D_6s07b")
 metadata/_edit_lock_ = true
 
 [node name="TrafficLightsPedestriansRight" type="Area2D" parent="."]
+collision_layer = 16
 metadata/_edit_lock_ = true
 
 [node name="Hitbox" type="CollisionShape2D" parent="TrafficLightsPedestriansRight"]

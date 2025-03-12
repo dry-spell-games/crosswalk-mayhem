@@ -26,6 +26,11 @@ window/handheld/orientation=1
 
 project/assembly_name="Crosswalk Mayhem"
 
+[layer_names]
+
+2d_physics/layer_4="PedestrianTrafficLightsLeft"
+2d_physics/layer_5="TrafficLightsPedestrianRight"
+
 [rendering]
 
 renderer/rendering_method="mobile"
