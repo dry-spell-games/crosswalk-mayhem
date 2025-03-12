@@ -10,6 +10,7 @@ namespace Crosswalk
         [Export] private float SpawnRate { get; set; } = 2.0f;
         [Export] private float CarSpawnRate { get; set; } = 10.0f;
         [Export] private float TrafficLightsTimer { get; set; } = 1.0f;
+        [Export] private int PedestrianCount { get; set; } = 20; // How many pedestrians level has
         private bool RedLightForCars = false;
         private PackedScene GrandmaScene;
         private PackedScene GirlScene;
@@ -25,17 +26,17 @@ namespace Crosswalk
         {
             GD.Print("Level 1 started");
 
-            // Ladataan Jalankulkija scenet
+            // Loads pedestrian scenes
             GrandmaScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/grandma.tscn");
             GirlScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/girl.tscn");
             BoyScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/boy.tscn");
 
-            // Ladataan autojen scenet
+            // Loads vehicle scenes
             FamilyCarScene = (PackedScene)ResourceLoader.Load("res://scenes/vehicles/familycar.tscn");
             SportsCarScene = (PackedScene)ResourceLoader.Load("res://scenes/vehicles/sportscar.tscn");
 
-            // Haetaan CollisionShape2d, jotta tarkastus voidaan laittaa päälle/pois
-            collisionShape = GetNode<CollisionShape2D>("TrafficLights/Hitbox");
+            // Gets trafficlight's hitbox
+            collisionShape = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
 
             if (GrandmaScene == null)
             {
@@ -48,7 +49,6 @@ namespace Crosswalk
             else if (BoyScene == null) {
                 GD.Print("Failed to load Boy scene!");
             }
-
             StartSpawningPedestrians();
             StartSpawningCars();
             RedLights();
@@ -65,12 +65,15 @@ namespace Crosswalk
             }
         }
 
+        // Asynchronous method which calls SpawnPedestrian method for set amount of Pedestrians
         private async void StartSpawningPedestrians()
         {
-            while (true)
+            while (PedestrianCount > 0)
             {
                 SpawnPedestrian();
                 await ToSignal(GetTree().CreateTimer(SpawnRate), "timeout");
+                PedestrianCount--;
+                GD.Print($"Pedestrians left: {PedestrianCount}");
             }
         }
 
@@ -82,7 +85,9 @@ namespace Crosswalk
                 await ToSignal(GetTree().CreateTimer(CarSpawnRate), "timeout");
             }
         }
-        // Asynkronoitu metodi, vaihtaa autojen liikennevalot.
+
+        // Asynchronous method that spawns pedestrians at set intervals
+        // Spawns pedestrians until PedestrianCount reaches zero.
         private async void RedLights()
         {
             while(true)
@@ -97,7 +102,7 @@ namespace Crosswalk
         {
             Pedestrian pedestrian = null;
 
-            // Valitaan satunnaisesti, minkä tyyppinen olio luodaan
+            // Randomly generated pedestrian type
             int rand = random.Next(0, 3);  // 0 = Grandma, 1 = Girl, 2 Boy
             if (rand == 0 && GrandmaScene != null)
             {
@@ -117,7 +122,7 @@ namespace Crosswalk
                 return;
             }
 
-            // Spawn positio Pedestrian luokasta.
+            // Spawnposition from abstract class Pedestrian
             Vector2 spawnPosition = pedestrian.StartPositions[GD.RandRange(
                 0, pedestrian.StartPositions.Count - 1)];
 
@@ -145,7 +150,7 @@ namespace Crosswalk
             Vector2 spawnPosition = car.StartPositions[GD.RandRange(0, car.StartPositions.Count - 1)];
 
             // Tarkista, onko spawnpointissa jo auto
-            if (IsSpawnPointOccupied(spawnPosition))
+            if (IsSpawnPointCarOccupied(spawnPosition))
             {
                 GD.Print("Spawnpoint on jo varattu, ei spawnata autoa.");
                 return; // Älä spawnaa autoa, jos paikka on varattu
@@ -156,7 +161,7 @@ namespace Crosswalk
         }
 
         // Tarkistusmetodi, joka varmistaa ettei auto ole liian lähellä spawnpointtia
-        private bool IsSpawnPointOccupied(Vector2 spawnPosition)
+        private bool IsSpawnPointCarOccupied(Vector2 spawnPosition)
         {
             // Määritä sopiva etäisyys, kuinka lähellä spawnpointtia on tarkistettava
             float minDistance = 50.0f;
