@@ -154,61 +154,78 @@ namespace Crosswalk
         /// @event is used because "event" is a reserved keyword in C#.</param>
         /// <param name="shapeIdx">The index of the clicked CollisionShape2D element
         /// (useful if the pedestrian has multiple hitboxes).</param>
-        private async void OnInputEvent(InputEvent @event)
+private async void OnInputEvent(InputEvent @event)
+{
+    // Tarkistetaan, onko tapahtuma hiiren painallus
+    if (@event is InputEventMouseButton mouse && mouse.Pressed)
+    {
+        if (mouse.ButtonIndex == MouseButton.Left) // Vasen hiiren painike
         {
-            // Check if the event is a mouse button press
-            if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
+            if (!canBeStopped)
             {
-                // Left mouse button click: Attempt to stop the pedestrian
-                if (mouseEvent.ButtonIndex == MouseButton.Left)
-                {
-                    // If the pedestrian cannot be stopped due to cooldown, exit early
-                    if (!canBeStopped)
-                    {
-                        GD.Print("Pedestrian cannot be stopped yet! Cooldown active.");
-                        return;
-                    }
-
-                    // Stop the pedestrian and play idle animation
-                    isStopped = true;
-                    canBeStopped = false;
-                    PlayAnimation("idle");
-                    GD.Print("Pedestrian stopped for " + StopDuration + " seconds.");
-
-                    // Wait asynchronously for the stop duration
-                    await ToSignal(GetTree().CreateTimer(StopDuration), "timeout");
-
-                    // Resume walking after the stop duration ends
-                    isStopped = false;
-                    PlayAnimation("walk");
-                    GD.Print("Pedestrian resumed!");
-
-                    // Start cooldown period
-                    GD.Print($"Cooldown started for {StopCooldown} seconds.");
-                    await ToSignal(GetTree().CreateTimer(StopCooldown), "timeout");
-
-                    // Cooldown finished, pedestrian can be stopped again
-                    canBeStopped = true;
-                    GD.Print("Cooldown finished, pedestrian can be stopped again.");
-                }
-
-                // Right mouse button click: Speed up the pedestrian temporarily
-                else if (mouseEvent.ButtonIndex == MouseButton.Right)
-                {
-                    GD.Print("Pedestrian speeding for " + SpeedTimer + " seconds.");
-                    IsSpeeding = true;
-                    PlayAnimation("run");
-
-                    // Wait asynchronously for the speed duration
-                    await ToSignal(GetTree().CreateTimer(SpeedTimer), "timeout");
-
-                    // Return pedestrian to normal walking speed
-                    IsSpeeding = false;
-                    GD.Print("Pedestrian back to normal speed.");
-                    PlayAnimation("walk");
-                }
+                GD.Print("Pedestrian cannot be stopped yet! Cooldown active.");
+                return;
             }
+
+            isStopped = true;
+            canBeStopped = false;
+            PlayAnimation("idle");
+            GD.Print("Pedestrian stopped for " + StopDuration + " seconds.");
+
+            await ToSignal(GetTree().CreateTimer(StopDuration), "timeout");
+
+            isStopped = false;
+            PlayAnimation("walk");
+            GD.Print("Pedestrian resumed!");
+
+            GD.Print($"Cooldown started for {StopCooldown} seconds.");
+            await ToSignal(GetTree().CreateTimer(StopCooldown), "timeout");
+
+            canBeStopped = true;
+            GD.Print("Cooldown finished, pedestrian can be stopped again.");
         }
+        else if (mouse.ButtonIndex == MouseButton.Right) // Oikea hiiren painike
+        {
+            GD.Print("Pedestrian speeding for " + SpeedTimer + " seconds.");
+            IsSpeeding = true;
+            PlayAnimation("run");
+
+            await ToSignal(GetTree().CreateTimer(SpeedTimer), "timeout");
+
+            IsSpeeding = false;
+            GD.Print("Pedestrian back to normal speed.");
+            PlayAnimation("walk");
+        }
+    }
+    // Tarkistetaan, onko tapahtuma kosketusnäytön painallus
+    else if (@event is InputEventScreenTouch touch && touch.Pressed)
+    {
+        if (!canBeStopped)
+        {
+            GD.Print("Pedestrian cannot be stopped yet! Cooldown active.");
+            return;
+        }
+
+        isStopped = true;
+        canBeStopped = false;
+        PlayAnimation("idle");
+        GD.Print("Pedestrian stopped for " + StopDuration + " seconds.");
+
+        await ToSignal(GetTree().CreateTimer(StopDuration), "timeout");
+
+        isStopped = false;
+        PlayAnimation("walk");
+        GD.Print("Pedestrian resumed!");
+
+        GD.Print($"Cooldown started for {StopCooldown} seconds.");
+        await ToSignal(GetTree().CreateTimer(StopCooldown), "timeout");
+
+        canBeStopped = true;
+        GD.Print("Cooldown finished, pedestrian can be stopped again.");
+    }
+}
+
+
 
         // Method gets animation name string as parameter and plays given animation
         protected void PlayAnimation(string animationName)
