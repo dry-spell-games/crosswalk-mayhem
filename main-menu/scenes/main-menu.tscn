@@ -55,6 +55,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/CenterContainer"]
+visible = false
 layout_direction = 3
 layout_mode = 2
 texture = ExtResource("4_4cxmq")

@@ -16,6 +16,7 @@ size = Vector2(6, 130)
 script = ExtResource("1_a7fg4")
 CarSpawnRate = 2.0
 TrafficLightsTimer = 5.0
+PedestrianCount = 2000
 metadata/_edit_lock_ = true
 
 [node name="Kartta" type="Sprite2D" parent="."]
