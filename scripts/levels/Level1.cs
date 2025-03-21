@@ -19,7 +19,6 @@ namespace Crosswalk
         private PackedScene FamilyCarScene;
         private PackedScene SportsCarScene;
         private CollisionShape2D vehicleTrafficLigthHitbox;
-        //Testti kommentti
 
         private Random random = new Random();
 
