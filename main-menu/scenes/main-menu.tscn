@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cjc7sviekaosk"]
+[gd_scene load_steps=2 format=3 uid="uid://cjc7sviekaosk"]
 
 [ext_resource type="Script" path="res://main-menu/scripts/MainMenu.cs" id="1_v08f2"]
-[ext_resource type="Texture2D" uid="uid://7ao07noy21me" path="res://assets/menu/HugoJokaVahingossaSnorttasiKakkaa.png" id="4_4cxmq"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -58,6 +57,5 @@ layout_mode = 2
 visible = false
 layout_direction = 3
 layout_mode = 2
-texture = ExtResource("4_4cxmq")
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]

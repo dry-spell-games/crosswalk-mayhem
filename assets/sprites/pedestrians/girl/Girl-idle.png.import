@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://belx8p80nwx2t"
-path="res://.godot/imported/Girl-idle.png-e47c66ac5a1607deb5683143e3911ef4.ctex"
+path="res://.godot/imported/girl-idle.png-ee6afb76f33113b59bc702be839f10da.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pedestrians/girl/Girl-idle.png"
-dest_files=["res://.godot/imported/Girl-idle.png-e47c66ac5a1607deb5683143e3911ef4.ctex"]
+source_file="res://assets/sprites/pedestrians/girl/girl-idle.png"
+dest_files=["res://.godot/imported/girl-idle.png-ee6afb76f33113b59bc702be839f10da.ctex"]
 
 [params]
 

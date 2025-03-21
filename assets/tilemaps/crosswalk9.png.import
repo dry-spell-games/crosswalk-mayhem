@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djn4ewkoa6dxu"
-path="res://.godot/imported/boy-run.png-ac51d3d6b3f26bf80e7371338c57fc50.ctex"
+uid="uid://f7trhy6bgyph"
+path="res://.godot/imported/crosswalk9.png-cf6e14bc6c3051c0c1d533fae0540c91.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pedestrians/boy/boy-run.png"
-dest_files=["res://.godot/imported/boy-run.png-ac51d3d6b3f26bf80e7371338c57fc50.ctex"]
+source_file="res://assets/tilemaps/crosswalk9.png"
+dest_files=["res://.godot/imported/crosswalk9.png-cf6e14bc6c3051c0c1d533fae0540c91.ctex"]
 
 [params]
 
