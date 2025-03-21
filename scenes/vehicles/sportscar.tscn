@@ -1,25 +1,25 @@
 [gd_scene load_steps=7 format=3 uid="uid://cbnmdpuxpaqh5"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Sportscar.cs" id="1_3lwgf"]
-[ext_resource type="Texture2D" uid="uid://c6fanyr3mj4qe" path="res://assets/sprites/vehicles/sportscar/Lambo.png" id="1_n42tr"]
+[ext_resource type="Texture2D" uid="uid://c6fanyr3mj4qe" path="res://assets/sprites/vehicles/sportscar/Lambo.png" id="2_idu1m"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cwhhw"]
 radius = 23.0
 height = 98.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_u3yoc"]
-atlas = ExtResource("1_n42tr")
+[sub_resource type="AtlasTexture" id="AtlasTexture_cfsa4"]
+atlas = ExtResource("2_idu1m")
 region = Rect2(0, 0, 64, 96)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ae281"]
-atlas = ExtResource("1_n42tr")
+[sub_resource type="AtlasTexture" id="AtlasTexture_ufw6f"]
+atlas = ExtResource("2_idu1m")
 region = Rect2(0, 0, 64, 96)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_74clb"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_u3yoc")
+"texture": SubResource("AtlasTexture_cfsa4")
 }],
 "loop": true,
 "name": &"drive",
@@ -27,7 +27,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ae281")
+"texture": SubResource("AtlasTexture_ufw6f")
 }],
 "loop": true,
 "name": &"idle",
@@ -44,7 +44,7 @@ metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_74clb")
-animation = &"idle"
+animation = &"drive"
 autoplay = "drive"
 metadata/_edit_lock_ = true
 

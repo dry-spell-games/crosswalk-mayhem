@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dq5qtsljaauhs"
-path="res://.godot/imported/Boy-walk.PNG-3dd42c3325abf80f692990c933343093.ctex"
+path="res://.godot/imported/boy-walk.png-6561823fc1de060acde7f1415ef83242.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pedestrians/boy/Boy-walk.PNG"
-dest_files=["res://.godot/imported/Boy-walk.PNG-3dd42c3325abf80f692990c933343093.ctex"]
+source_file="res://assets/sprites/pedestrians/boy/boy-walk.png"
+dest_files=["res://.godot/imported/boy-walk.png-6561823fc1de060acde7f1415ef83242.ctex"]
 
 [params]
 
