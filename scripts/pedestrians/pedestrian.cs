@@ -1,7 +1,7 @@
 using Godot;
 using System;
-using System.Collections.Generic;
-using System.Linq; // Required for arraylist
+using System.Collections.Generic; // Required for arraylist
+using System.Linq;
 
 namespace Crosswalk
 {
@@ -19,6 +19,11 @@ namespace Crosswalk
         [Export] public float SpeedMultiplierFast { get; set; } = 3.0f; // Multiplier for sprinting
         [Export] public float SpeedMultiplierNormal { get; set; } = 1.0f;
         [Export] public virtual float FlightDirection { get; set; } // Direction of flight
+
+        // Attributes for mobile control
+        private const float DoubleTapThreshold = 0.3f; // Max time for double tap
+        private float lastTapTime = 0f;
+        private bool isWaitingForDoubleTap = false;
 
         // ArrayList can not be exported
         public List<Vector2> StartPositions { get; set; } = new List<Vector2>
@@ -46,7 +51,7 @@ namespace Crosswalk
             // Signals for area_entered and input_event
             Connect("area_entered", new Callable(this, nameof(OnAreaEntered)));
 
-            // Gets InteractionArea node and cinnects signal to it
+            // Gets InteractionArea node and connects signal to it
             var interactionArea = GetNode<Area2D>("InteractionArea");
             if (interactionArea != null)
             {
@@ -73,13 +78,11 @@ namespace Crosswalk
             {
                 Speed = MathF.Abs(Speed); // Else speed is positive
             }
-
             GD.Print($"{this} spawned at {Position} with speed {Speed}");
         }
 
         public override void _Process(double delta)
         {
-
             if (isStopped)
             {
                 PlayAnimation("idle");
@@ -99,7 +102,6 @@ namespace Crosswalk
                 }
             }
         }
-
 
         protected virtual void Move(double delta, bool IsSpeeding)
         {
@@ -154,12 +156,45 @@ namespace Crosswalk
         /// @event is used because "event" is a reserved keyword in C#.</param>
         /// <param name="shapeIdx">The index of the clicked CollisionShape2D element
         /// (useful if the pedestrian has multiple hitboxes).</param>
-private async void OnInputEvent(InputEvent @event)
-{
-    // Tarkistetaan, onko tapahtuma hiiren painallus
-    if (@event is InputEventMouseButton mouse && mouse.Pressed)
-    {
-        if (mouse.ButtonIndex == MouseButton.Left) // Vasen hiiren painike
+        private void OnInputEvent(InputEvent @event)
+        {
+            // Input for mobile devices works on mouseclick from godot project settings
+            if (@event is InputEventScreenTouch touch && touch.Pressed)
+            {
+                HandleTouchInput(touch);
+            }
+        }
+
+        // Handles mobile input asynchronously
+        private async void HandleTouchInput(InputEventScreenTouch touch)
+        {
+            float currentTime = Time.GetTicksMsec() / 1000f;
+
+            // If double tap happens in 0.3 seconds
+            if (isWaitingForDoubleTap && (currentTime - lastTapTime) < DoubleTapThreshold)
+            {
+                StartSpeedBoost(); // Double tap speeds up
+                isWaitingForDoubleTap = false; // Resets
+            }
+            else
+            {
+                isWaitingForDoubleTap = true;
+                lastTapTime = currentTime;
+
+                // Waits for possible second tap to activate double tap
+                await ToSignal(GetTree().CreateTimer(DoubleTapThreshold), "timeout");
+
+                // In case of only one tap in given time, stops pedestrian
+                if (isWaitingForDoubleTap)
+                {
+                    HandleTapOrStop();
+                    isWaitingForDoubleTap = false;
+                }
+            }
+        }
+
+        // Stops pedestrian if it's possible
+        private async void HandleTapOrStop()
         {
             if (!canBeStopped)
             {
@@ -184,48 +219,17 @@ private async void OnInputEvent(InputEvent @event)
             canBeStopped = true;
             GD.Print("Cooldown finished, pedestrian can be stopped again.");
         }
-        else if (mouse.ButtonIndex == MouseButton.Right) // Oikea hiiren painike
+
+        // Sets IsSpeeding to true while timer is running.
+        // IsSpeeding is checked at Move method
+        private async void StartSpeedBoost()
         {
             GD.Print("Pedestrian speeding for " + SpeedTimer + " seconds.");
             IsSpeeding = true;
-            PlayAnimation("run");
-
             await ToSignal(GetTree().CreateTimer(SpeedTimer), "timeout");
-
             IsSpeeding = false;
             GD.Print("Pedestrian back to normal speed.");
-            PlayAnimation("walk");
         }
-    }
-    // Tarkistetaan, onko tapahtuma kosketusnäytön painallus
-    else if (@event is InputEventScreenTouch touch && touch.Pressed)
-    {
-        if (!canBeStopped)
-        {
-            GD.Print("Pedestrian cannot be stopped yet! Cooldown active.");
-            return;
-        }
-
-        isStopped = true;
-        canBeStopped = false;
-        PlayAnimation("idle");
-        GD.Print("Pedestrian stopped for " + StopDuration + " seconds.");
-
-        await ToSignal(GetTree().CreateTimer(StopDuration), "timeout");
-
-        isStopped = false;
-        PlayAnimation("walk");
-        GD.Print("Pedestrian resumed!");
-
-        GD.Print($"Cooldown started for {StopCooldown} seconds.");
-        await ToSignal(GetTree().CreateTimer(StopCooldown), "timeout");
-
-        canBeStopped = true;
-        GD.Print("Cooldown finished, pedestrian can be stopped again.");
-    }
-}
-
-
 
         // Method gets animation name string as parameter and plays given animation
         protected void PlayAnimation(string animationName)

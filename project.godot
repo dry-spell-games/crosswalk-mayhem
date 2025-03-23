@@ -26,6 +26,10 @@ window/handheld/orientation=1
 
 project/assembly_name="Crosswalk Mayhem"
 
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
 [layer_names]
 
 2d_physics/layer_4="PedestrianTrafficLightsLeft"

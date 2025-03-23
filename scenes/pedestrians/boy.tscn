@@ -1,9 +1,9 @@
 [gd_scene load_steps=29 format=3 uid="uid://nqa2ngpkufgk"]
 
 [ext_resource type="Script" path="res://scripts/pedestrians/Boy.cs" id="1_avtv0"]
-[ext_resource type="Texture2D" uid="uid://bikq1arr5raih" path="res://assets/sprites/pedestrians/boy/Boy-idle.png" id="2_0b5xe"]
-[ext_resource type="Texture2D" uid="uid://djn4ewkoa6dxu" path="res://assets/sprites/pedestrians/boy/Boy-run.png" id="2_0wp6t"]
-[ext_resource type="Texture2D" uid="uid://dq5qtsljaauhs" path="res://assets/sprites/pedestrians/boy/Boy-walk.PNG" id="3_jvh5o"]
+[ext_resource type="Texture2D" uid="uid://bikq1arr5raih" path="res://assets/sprites/pedestrians/boy/boy-idle.png" id="2_0b5xe"]
+[ext_resource type="Texture2D" uid="uid://djn4ewkoa6dxu" path="res://assets/sprites/pedestrians/boy/boy-run.png" id="2_0wp6t"]
+[ext_resource type="Texture2D" uid="uid://dq5qtsljaauhs" path="res://assets/sprites/pedestrians/boy/boy-walk.png" id="3_jvh5o"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_posrf"]
 size = Vector2(22, 34)
