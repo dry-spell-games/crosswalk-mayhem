@@ -95,11 +95,31 @@ namespace Crosswalk
             // Goes through every Pedestrian class' child and removes those which are out of bounds
             foreach (Area2D pedestrian in GetTree().GetNodesInGroup("pedestrians").Cast<Area2D>())
             {
-                if (pedestrian.Position.X > 410 || pedestrian.Position.X < -50) // Tarkista sijainti
+                if (pedestrian.Position.X > 410 || pedestrian.Position.X < -40) // Tarkista sijainti
                 {
-                    GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
-                    pedestrian.QueueFree(); // Poista jalankulkija
-                }
+                    if (!pedestrian.IsQueuedForDeletion()) // Tarkista, onko se jo poistettu
+                    {
+                        GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
+
+                        switch (pedestrian.Name)
+                        {
+                            case "Grandma":
+                            case "Grandpa":
+                                GameManager.Instance.AddScore(50);
+                                break;
+                            case "Girl":
+                            case "Boy":
+                                GameManager.Instance.AddScore(30);
+                                break;
+                            case "Woman":
+                            case "Man":
+                                GameManager.Instance.AddScore(20);
+                                break;
+                        }
+
+                        pedestrian.QueueFree(); // Merkitse poistettavaksi
+                    }
+}
             }
         }
 
