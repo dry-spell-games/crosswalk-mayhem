@@ -119,7 +119,7 @@ namespace Crosswalk
 
                         pedestrian.QueueFree(); // Merkitse poistettavaksi
                     }
-}
+                }
             }
         }
 
