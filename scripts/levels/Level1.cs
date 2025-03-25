@@ -20,6 +20,8 @@ namespace Crosswalk
         private PackedScene FamilyCarScene;
         private PackedScene SportsCarScene;
         private CollisionShape2D vehicleTrafficLigthHitbox;
+        private CollisionShape2D pedestrianTrafficLightLeft;
+        private CollisionShape2D pedestrianTrafficLightRight;
 
         private Random random = new Random();
 
@@ -40,8 +42,10 @@ namespace Crosswalk
             // Loads GUI scene
             GuiScene = (PackedScene)GD.Load("res://gui/gui.tscn");
 
-            // Gets trafficlight's hitbox
+            // Gets trafficlight's hitboxes
             vehicleTrafficLigthHitbox = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
+            pedestrianTrafficLightLeft = GetNode<CollisionShape2D>("TrafficLightsPedestriansLeft/Hitbox");
+            pedestrianTrafficLightRight = GetNode<CollisionShape2D>("TrafficLightsPedestriansRight/Hitbox");
 
             // Instantiates GUI for level
             Node guiInstance = GuiScene.Instantiate();
@@ -73,10 +77,14 @@ namespace Crosswalk
             if (!RedLightForCars)
             {
                 vehicleTrafficLigthHitbox.Disabled = true;
+                pedestrianTrafficLightLeft.Disabled = false;
+                pedestrianTrafficLightRight.Disabled = false;
             }
             else
             {
                 vehicleTrafficLigthHitbox.Disabled = false;
+                pedestrianTrafficLightLeft.Disabled = true;
+                pedestrianTrafficLightRight.Disabled = true;
             }
         }
 
@@ -109,6 +117,7 @@ namespace Crosswalk
                 await ToSignal(GetTree().CreateTimer(TrafficLightsTimer), "timeout");
                 RedLightForCars = !RedLightForCars;
                 GD.Print($"Red ligths for vehicle: {RedLightForCars}");
+                GD.Print($"Red ligths for pedestrians: {!RedLightForCars}");
             }
         }
 
