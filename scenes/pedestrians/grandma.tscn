@@ -206,6 +206,7 @@ metadata/_edit_lock_ = true
 sprite_frames = SubResource("SpriteFrames_slsle")
 animation = &"idle"
 autoplay = "walk"
+frame_progress = 0.678657
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -15,6 +15,10 @@ run/main_scene="res://main-menu/scenes/main-menu.tscn"
 config/features=PackedStringArray("4.3", "C#", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameManager="*res://scripts/GameManager.cs"
+
 [display]
 
 window/size/viewport_width=360
@@ -25,6 +29,10 @@ window/handheld/orientation=1
 [dotnet]
 
 project/assembly_name="Crosswalk Mayhem"
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [layer_names]
 

@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://7rrqanr4yqyo"]
+[gd_scene load_steps=7 format=3 uid="uid://7rrqanr4yqyo"]
 
 [ext_resource type="Script" path="res://scripts/levels/Level1.cs" id="1_a7fg4"]
 [ext_resource type="Texture2D" uid="uid://f7trhy6bgyph" path="res://assets/tilemaps/crosswalk9.png" id="2_2x81h"]
+[ext_resource type="AudioStream" uid="uid://ci2t81yi1whho" path="res://assets/audio/music/CrosswalkMayhem.WAV" id="3_m3sto"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q8lhg"]
 size = Vector2(132, 8)
@@ -51,3 +52,8 @@ metadata/_edit_lock_ = true
 position = Vector2(264, 543)
 shape = SubResource("RectangleShape2D_wmxjj")
 metadata/_edit_lock_ = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_m3sto")
+volume_db = 6.19
+autoplay = true
