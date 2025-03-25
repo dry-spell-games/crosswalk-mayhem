@@ -11,6 +11,7 @@ namespace Crosswalk
         [Export] private float TrafficLightsTimer { get; set; } = 1.0f;
         [Export] private int PedestrianCount { get; set; } = 20; // How many pedestrians level has
         private bool RedLightForCars = false;
+        private PackedScene GuiScene;
         private PackedScene GrandmaScene;
         private PackedScene GirlScene;
         private PackedScene BoyScene;
@@ -27,18 +28,24 @@ namespace Crosswalk
             GD.Print("Level 1 started");
 
             // Loads pedestrian scenes
-            GrandmaScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/grandma.tscn");
-            GirlScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/girl.tscn");
-            BoyScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/boy.tscn");
-            ManScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/man.tscn");
-            WomanScene = (PackedScene)ResourceLoader.Load("res://scenes/pedestrians/woman.tscn");
+            GrandmaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandma.tscn");
+            GirlScene = (PackedScene)GD.Load("res://scenes/pedestrians/girl.tscn");
+            BoyScene = (PackedScene)GD.Load("res://scenes/pedestrians/boy.tscn");
+            ManScene = (PackedScene)GD.Load("res://scenes/pedestrians/man.tscn");
+            WomanScene = (PackedScene)GD.Load("res://scenes/pedestrians/woman.tscn");
 
             // Loads vehicle scenes
-            FamilyCarScene = (PackedScene)ResourceLoader.Load("res://scenes/vehicles/familycar.tscn");
-            SportsCarScene = (PackedScene)ResourceLoader.Load("res://scenes/vehicles/sportscar.tscn");
+            FamilyCarScene = (PackedScene)GD.Load("res://scenes/vehicles/familycar.tscn");
+            SportsCarScene = (PackedScene)GD.Load("res://scenes/vehicles/sportscar.tscn");
+            // Loads GUI scene
+            GuiScene = (PackedScene)GD.Load("res://gui/gui.tscn");
 
             // Gets trafficlight's hitbox
             vehicleTrafficLigthHitbox = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
+
+            // Instantiates GUI for level
+            Node guiInstance = GuiScene.Instantiate();
+            AddChild(guiInstance);
 
             if (GrandmaScene == null)
             {
