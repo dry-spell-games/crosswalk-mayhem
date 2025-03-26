@@ -178,7 +178,7 @@ size = Vector2(24, 40)
 
 [node name="Girl" type="Area2D"]
 collision_layer = 3
-collision_mask = 3
+collision_mask = 27
 script = ExtResource("1_n4ap3")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
