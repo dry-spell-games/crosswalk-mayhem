@@ -2,18 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-
-uid="uid://xwj62sgau52w"
-
-path="res://.godot/imported/suv.png-02594ebad65faa2506efa5c33672b24c.ctex"
+uid="uid://dmi32d1jl80p3"
+path="res://.godot/imported/ground.png-cf5b4399e32fcba10160cb57ee35a163.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/vehicles/suv.png"
-dest_files=["res://.godot/imported/suv.png-02594ebad65faa2506efa5c33672b24c.ctex"]
+source_file="res://assets/tilemaps/ground.png"
+dest_files=["res://.godot/imported/ground.png-cf5b4399e32fcba10160cb57ee35a163.ctex"]
 
 [params]
 

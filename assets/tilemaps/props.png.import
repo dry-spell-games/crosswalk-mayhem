@@ -2,18 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-
-uid="uid://xwj62sgau52w"
-
-path="res://.godot/imported/suv.png-02594ebad65faa2506efa5c33672b24c.ctex"
+uid="uid://dxa44h77vo0ol"
+path="res://.godot/imported/props.png-a7b48ad647e8f01d8169f58227138993.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/vehicles/suv.png"
-dest_files=["res://.godot/imported/suv.png-02594ebad65faa2506efa5c33672b24c.ctex"]
+source_file="res://assets/tilemaps/props.png"
+dest_files=["res://.godot/imported/props.png-a7b48ad647e8f01d8169f58227138993.ctex"]
 
 [params]
 
