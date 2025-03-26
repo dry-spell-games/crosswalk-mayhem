@@ -19,6 +19,8 @@ namespace Crosswalk
         [Export] public float SpeedMultiplierFast { get; set; } = 3.0f; // Multiplier for sprinting
         [Export] public float SpeedMultiplierNormal { get; set; } = 1.0f;
         [Export] public virtual float FlightDirection { get; set; } // Direction of flight
+        private bool RedLightsForPedestrians = false;
+
 
         // Attributes for mobile control
         private const float DoubleTapThreshold = 0.3f; // Max time for double tap
@@ -48,8 +50,9 @@ namespace Crosswalk
             InitialSpeed = Speed; // Saves original speed
             AddToGroup("pedestrians"); // Adds pedestrians to group so they can be removed later
 
-            // Signals for area_entered and input_event
+            // Signal for area_entered
             Connect("area_entered", new Callable(this, nameof(OnAreaEntered)));
+            // Connect("LightChanged", new Callable(this, nameof(Level1.LightChanged)));
 
             // Gets InteractionArea node and connects signal to it
             var interactionArea = GetNode<Area2D>("InteractionArea");
@@ -119,7 +122,7 @@ namespace Crosswalk
 
                         pedestrian.QueueFree(); // Merkitse poistettavaksi
                     }
-}
+                }
             }
         }
 
@@ -143,13 +146,19 @@ namespace Crosswalk
             }
         }
 
-        private void OnAreaEntered(Area2D area)
+        public void OnAreaEntered(Area2D area)
         {
             if (area is Car)
             {
                 GD.Print("Pedestrian detected a Car!");
                 HandleCarCollision(area as Car);
             }
+            // TO-DO korjaa tämä niin, että jalankulkijat jatkavat liikettä kun valot vaihtuu!!@
+            /*if (area.Name == "TrafficLightsPedestriansLeft" || area.Name == "TrafficLightsPedestriansLeft")
+            {
+                GD.Print("Jalankulkija osui liikennevalojen törmäysalueeseen!");
+                isStopped = true; // Stops pedestrian
+            }*/
         }
 
         protected void Fly(double delta)

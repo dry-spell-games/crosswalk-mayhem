@@ -1,5 +1,8 @@
 using Godot;
 using System;
+using System.Dynamic;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
 namespace Crosswalk
@@ -10,7 +13,7 @@ namespace Crosswalk
         [Export] private float CarSpawnRate { get; set; } = 10.0f;
         [Export] private float TrafficLightsTimer { get; set; } = 1.0f;
         [Export] private int PedestrianCount { get; set; } = 20; // How many pedestrians level has
-        private bool RedLightForCars = false;
+        public static bool RedLightForCars { get; private set; } = false;
         private PackedScene GuiScene;
         private PackedScene GrandmaScene;
         private PackedScene GirlScene;
@@ -22,8 +25,9 @@ namespace Crosswalk
         private CollisionShape2D vehicleTrafficLigthHitbox;
         private CollisionShape2D pedestrianTrafficLightLeft;
         private CollisionShape2D pedestrianTrafficLightRight;
-
         private Random random = new Random();
+        // Signal for redlights
+        [Signal] public delegate void LightChangedEventHandler(bool RedLightForCars);
 
         public override void _Ready()
         {
@@ -118,6 +122,7 @@ namespace Crosswalk
                 RedLightForCars = !RedLightForCars;
                 GD.Print($"Red ligths for vehicle: {RedLightForCars}");
                 GD.Print($"Red ligths for pedestrians: {!RedLightForCars}");
+                EmitSignal(SignalName.LightChanged, RedLightForCars);
             }
         }
 

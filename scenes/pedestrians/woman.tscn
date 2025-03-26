@@ -198,7 +198,7 @@ size = Vector2(22, 32)
 size = Vector2(29, 48)
 
 [node name="Woman" type="Area2D"]
-collision_mask = 3
+collision_mask = 27
 script = ExtResource("1_d5h7n")
 metadata/_edit_lock_ = true
 
