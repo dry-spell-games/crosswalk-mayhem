@@ -8,7 +8,6 @@ namespace Crosswalk{
 
         public int Score { get; private set; }
         private Label scoreLabel; // Reference to score label
-
         public override void _Ready()
         {
             if (Instance == null)
