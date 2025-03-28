@@ -192,7 +192,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r5o7i"]
-size = Vector2(33, 32)
+size = Vector2(33, 18)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5uvih"]
 size = Vector2(32, 48)
@@ -210,8 +210,7 @@ frame_progress = 0.885564
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2(1, 9)
+position = Vector2(1, 16)
 shape = SubResource("RectangleShape2D_r5o7i")
 metadata/_edit_lock_ = true
 
