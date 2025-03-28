@@ -52,7 +52,6 @@ namespace Crosswalk
 
             // Signal for area_entered
             Connect("area_entered", new Callable(this, nameof(OnAreaEntered)));
-            // Connect("LightChanged", new Callable(this, nameof(Level1.LightChanged)));
 
             // Gets InteractionArea node and connects signal to it
             var interactionArea = GetNode<Area2D>("InteractionArea");
@@ -153,12 +152,6 @@ namespace Crosswalk
                 GD.Print("Pedestrian detected a Car!");
                 HandleCarCollision(area as Car);
             }
-            // TO-DO korjaa tämä niin, että jalankulkijat jatkavat liikettä kun valot vaihtuu!!@
-            /*if (area.Name == "TrafficLightsPedestriansLeft" || area.Name == "TrafficLightsPedestriansLeft")
-            {
-                GD.Print("Jalankulkija osui liikennevalojen törmäysalueeseen!");
-                isStopped = true; // Stops pedestrian
-            }*/
         }
 
         protected void Fly(double delta)

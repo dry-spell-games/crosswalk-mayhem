@@ -189,7 +189,6 @@ frame_progress = 0.940782
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(0, 6.5)
 shape = SubResource("RectangleShape2D_edhc4")
 metadata/_edit_lock_ = true
