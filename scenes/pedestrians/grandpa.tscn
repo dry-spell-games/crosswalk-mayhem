@@ -1,5 +1,6 @@
-[gd_scene load_steps=55 format=3 uid="uid://blfc75o2okftv"]
+[gd_scene load_steps=56 format=3 uid="uid://blfc75o2okftv"]
 
+[ext_resource type="Script" path="res://scripts/pedestrians/Grandpa.cs" id="1_kf3rc"]
 [ext_resource type="Texture2D" uid="uid://ctu6kirurpk1k" path="res://assets/sprites/pedestrians/grandpa/granpa-spritesheet.png" id="1_m7fco"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gqxm3"]
@@ -377,6 +378,7 @@ size = Vector2(22, 11)
 size = Vector2(30, 34)
 
 [node name="Grandpa" type="Area2D"]
+script = ExtResource("1_kf3rc")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_wgviw")
