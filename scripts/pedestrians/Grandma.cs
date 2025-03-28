@@ -11,6 +11,7 @@ namespace Crosswalk
         [Export] public override float StopCooldown { get; set; } = 10.0f;
         [Export] public override float SpeedTimer { get; set; } = 2.0f;
         [Export] public override float FlightDirection { get; set; }
+        private Random random = new Random();
 
 
         private AnimatedSprite2D animatedSprite;
@@ -21,6 +22,7 @@ namespace Crosswalk
             FlightDirection = GD.RandRange(-300, 300);
 
             animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+            StartRandomStop();
         }
 
         public override void _Process(double delta)
@@ -32,6 +34,19 @@ namespace Crosswalk
             else
             {
                 base._Process(delta);
+            }
+        }
+        private async void StartRandomStop()
+        {
+            while (true)
+            {
+                await ToSignal(GetTree().CreateTimer(random.Next(3, 8)), "timeout"); // Odottaa 3-8 sekuntia ennen pysähtymistä
+                isStopped = true;
+                GD.Print("Grandma stopped!");
+
+                await ToSignal(GetTree().CreateTimer(random.Next(2, 5)), "timeout"); // Odottaa 2-5 sekuntia pysähdyksissä
+                isStopped = false;
+                GD.Print("Grandma started moving again!");
             }
         }
 
