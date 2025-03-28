@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cv4gmabr75y6e"]
+
+[ext_resource type="Script" path="res://scripts/levels/Background.cs" id="1_1hpe8"]
+
+[node name="Background" type="Node2D"]
+position = Vector2(-28, 0)
+script = ExtResource("1_1hpe8")
