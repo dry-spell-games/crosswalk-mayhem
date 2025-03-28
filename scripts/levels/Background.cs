@@ -4,8 +4,14 @@ using System.Collections.Generic;
 
 namespace Crosswalk
 {
-	public partial class Background : Node
+    /// <summary>
+    /// Background node responsible for loading and instantiating a random background map
+    /// based on the current game difficulty level.
+    /// Different difficulty levels pull maps from different folders, allowing for visual variation.
+    /// </summary>
+    public partial class Background : Node
 	{
+		// Exported folder paths for each difficulty level
 		[Export] private string veryEasyLevelsPath = "res://scenes/level-background/maps/very-easy-maps";
 		[Export] private string easyLevelsPath = "res://scenes/level-background/maps/easy-maps";
 		[Export] private string normalLevelsPath = "res://scenes/level-background/maps/normal-maps";
@@ -13,23 +19,35 @@ namespace Crosswalk
 		[Export] private string veryHardLevelsPath = "res://scenes/level-background/maps/very-hard-maps";
 		[Export] private string mayhemLevelsPath = "res://scenes/level-background/maps/mayhem-maps";
 
-		string _difficulty = "normal";
-		private PackedScene _mapScene;
-		private List<PackedScene> _mapScenes = new List<PackedScene>();
+        // Current difficulty setting (can be set dynamically elsewhere in the project)
+        private string _difficulty = "normal";
 
-		private void LoadScenesFromFolder(string folderPath)
+        // Reference to the selected map scene
+        private PackedScene _mapScene;
+
+        // List of all available map scenes loaded from the folder
+        private List<PackedScene> _mapScenes = new List<PackedScene>();
+
+        /// <summary>
+        /// Loads all .tscn scenes from a given folder and adds them to the _mapScenes list.
+        /// </summary>
+        /// <param name="folderPath">Folder path to load .tscn scenes from.</param>
+        private void LoadScenesFromFolder(string folderPath)
         {
             var dirAccess = DirAccess.Open(folderPath);
             if (dirAccess != null)
             {
                 dirAccess.ListDirBegin();
+
                 string fileName = dirAccess.GetNext();
                 while (fileName != "")
                 {
+                    // Check if file is a scene file
                     if (fileName.EndsWith(".tscn"))
                     {
                         string scenePath = folderPath + "/" + fileName;
                         PackedScene scene = (PackedScene)ResourceLoader.Load(scenePath);
+
                         if (scene != null)
                         {
                             _mapScenes.Add(scene);
@@ -39,8 +57,10 @@ namespace Crosswalk
                             GD.PrintErr("Failed to load scene: " + scenePath);
                         }
                     }
+
                     fileName = dirAccess.GetNext();
                 }
+
                 dirAccess.ListDirEnd();
             }
             else
@@ -49,33 +69,48 @@ namespace Crosswalk
             }
         }
 
-		private void LoadScenes()
-		{
-			switch(_difficulty)
-			{
-				case "very-easy":
-					break;
-				case "easy":
-					break;
-				case "normal":
-					LoadScenesFromFolder(normalLevelsPath);
-					break;
-				case "hard":
-					break;
-				case "very-hard":
-					break;
-				case "mayhem":
-					break;
-			}
-		}
-
-		private void InstantiateMap()
+        /// <summary>
+        /// Chooses which folder to load map scenes from based on the current difficulty setting.
+        /// Only "normal" is implemented for now.
+        /// </summary>
+        private void LoadScenes()
         {
-			LoadScenes();
+            switch (_difficulty)
+            {
+                case "very-easy":
+                    LoadScenesFromFolder(veryEasyLevelsPath);
+                    break;
+                case "easy":
+                    LoadScenesFromFolder(easyLevelsPath);
+                    break;
+                case "normal":
+                    LoadScenesFromFolder(normalLevelsPath);
+                    break;
+                case "hard":
+                    LoadScenesFromFolder(hardLevelsPath);
+                    break;
+                case "very-hard":
+                    LoadScenesFromFolder(veryHardLevelsPath);
+                    break;
+                case "mayhem":
+                    LoadScenesFromFolder(mayhemLevelsPath);
+                    break;
+                default:
+                    GD.PrintErr("Unknown difficulty: " + _difficulty);
+                    break;
+            }
+        }
 
+        /// <summary>
+        /// Loads background map scenes and instantiates one at random into the scene tree.
+        /// </summary>
+        private void InstantiateMap()
+        {
+            LoadScenes();
+
+            // Only instantiate a map if none is currently loaded and we have options
             if (_mapScene == null && _mapScenes.Count > 0)
             {
-                // Select a random map from the list
                 _mapScene = _mapScenes[RandomMap()];
 
                 if (_mapScene == null)
@@ -84,27 +119,28 @@ namespace Crosswalk
                 }
                 else
                 {
-                    Node mapInstance = _mapScene.Instantiate();  // Correct syntax for Instantiation
-                    AddChild(mapInstance);  // Add the instantiated map scene to the current scene
+                    Node mapInstance = _mapScene.Instantiate();
+                    AddChild(mapInstance);
                 }
             }
         }
 
-		private int RandomMap()
+        /// <summary>
+        /// Returns a random index within the bounds of _mapScenes list.
+        /// </summary>
+        private int RandomMap()
         {
             Random random = new Random();
-            return random.Next(0, _mapScenes.Count);  // Access _mapScenes for random index
+            return random.Next(0, _mapScenes.Count);
         }
 
-		// Called when the node enters the scene tree for the first time.
-		public override void _Ready()
-		{
-			InstantiateMap();
-		}
-
-		// Called every frame. 'delta' is the elapsed time since the previous frame.
-		public override void _Process(double delta)
-		{
-		}
-	}
+        /// <summary>
+        /// Called automatically by Godot when the node enters the scene tree.
+        /// Triggers the background map instantiation process.
+        /// </summary>
+        public override void _Ready()
+        {
+            InstantiateMap();
+        }
+    }
 }
