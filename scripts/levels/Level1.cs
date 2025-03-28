@@ -11,9 +11,15 @@ namespace Crosswalk
     {
         [Export] private float SpawnRate { get; set; } = 2.0f;
         [Export] private float CarSpawnRate { get; set; } = 10.0f;
-        [Export] private float TrafficLightsTimer { get; set; } = 1.0f;
         [Export] private int PedestrianCount { get; set; } = 20; // How many pedestrians level has
-        public static bool RedLightForCars { get; private set; } = false;
+        // Traffic lights
+        [Export] private float _carGreenTimer { get; set; } = 1.0f;
+        public static bool _carGreen { get; private set; } = true;
+        [Export] public float _pedestrianGreenTimer { get; private set; } = 1.0f;
+        public static bool _pedestrianGreen { get; private set; } = false;
+        [Export] public float _blinkTimer { get; private set; } = 10.0f;
+        public static bool _blink { get; private set; } = false;
+        [Export] private float _lightTransitionTimer { get; set; } = 1.0f;
         private PackedScene GuiScene;
         private PackedScene GrandmaScene;
         private PackedScene GirlScene;
@@ -26,8 +32,10 @@ namespace Crosswalk
         private CollisionShape2D pedestrianTrafficLightLeft;
         private CollisionShape2D pedestrianTrafficLightRight;
         private Random random = new Random();
-        // Signal for redlights
-        [Signal] public delegate void LightChangedEventHandler(bool RedLightForCars);
+        // Signals for traffic lights
+        //[Signal] public delegate void CarLightEventHandler(bool _carGreen);
+        [Signal] public delegate void PedestrianLightEventHandler(bool _pedestrianGreen);
+        //[Signal] public delegate void BlinkEventHandler(bool _pedestrianGreen);
 
         public override void _Ready()
         {
@@ -74,11 +82,12 @@ namespace Crosswalk
             }
             StartSpawningPedestrians();
             StartSpawningCars();
-            RedLights();
+            TrafficLights();
+            EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
         }
         public override void _Process(Double delta)
         {
-            if (!RedLightForCars)
+            if (_carGreen)
             {
                 vehicleTrafficLigthHitbox.Disabled = true;
                 pedestrianTrafficLightLeft.Disabled = false;
@@ -114,15 +123,26 @@ namespace Crosswalk
             }
         }
 
-        private async void RedLights()
+        private async void TrafficLights()
         {
             while(true)
             {
-                await ToSignal(GetTree().CreateTimer(TrafficLightsTimer), "timeout");
-                RedLightForCars = !RedLightForCars;
-                GD.Print($"Red ligths for vehicle: {RedLightForCars}");
-                GD.Print($"Red ligths for pedestrians: {!RedLightForCars}");
-                EmitSignal(SignalName.LightChanged, RedLightForCars);
+                GD.Print("Green light for cars");
+                //EmitSignal(SignalName.CarLight, _carGreen);
+                await ToSignal(GetTree().CreateTimer(_carGreenTimer), "timeout");
+                _carGreen = false;
+                //EmitSignal(SignalName.CarLight, _carGreen);
+                GD.Print("Traffic light transition");
+                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer), "timeout");
+                _pedestrianGreen = true;
+                GD.Print("Green ligth for pedestrians");
+                EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
+                await ToSignal(GetTree().CreateTimer(_pedestrianGreenTimer), "timeout");
+                _pedestrianGreen = false;
+                EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
+                GD.Print("Traffic light transition");
+                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer), "timeout");
+                _carGreen = true;
             }
         }
 
