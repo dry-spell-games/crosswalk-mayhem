@@ -8,6 +8,15 @@ namespace Crosswalk{
 
         public int Score { get; private set; }
         private Label scoreLabel; // Reference to score label
+
+        public int _difLvl = 3; // Game difficulty level
+
+        public int DifLvl
+        {
+            get { return _difLvl; }
+            set { _difLvl = value; }
+        }
+
         public override void _Ready()
         {
             if (Instance == null)
