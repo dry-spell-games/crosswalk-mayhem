@@ -15,6 +15,7 @@ namespace Crosswalk
         private bool isAccelerating = false;
         protected float InitialSpeed;
         private AnimatedSprite2D animatedSprite; // Viittaa AnimatedSprite2D-komponenttiin
+        private AnimatedSprite2D windShield;
         private RayCast2D[] raycasts;
         public List<Vector2> StartPositions { get; set; } = new List<Vector2>
 
@@ -26,6 +27,13 @@ namespace Crosswalk
         public override void _Ready()
         {
             animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+            // Animation for windshield on a different sprite
+            windShield = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
+            if (windShield != null)
+            {
+                windShield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
+                windShield.Play("drive");
+            }
             AddToGroup("cars"); // Lisätään autot ryhmään, jotta ne voidaan poistaa
             InitialSpeed = Speed;
 
@@ -61,11 +69,19 @@ namespace Crosswalk
             if (Speed < 1)
             {
                 animatedSprite.Pause();
+                if (windShield != null)
+                {
+                    windShield.Pause();
+                }
             }
             else
             {
                 Move(delta);
                 animatedSprite.Play();
+                if (windShield != null)
+                {
+                    windShield.Play();
+                }
             }
 
             // Käy läpi kaikki Car-luokan lapset ja poista ne, jos ne menevät alueen ulkopuolelle
@@ -109,7 +125,10 @@ namespace Crosswalk
                 GD.Print($"Starting animation: {animationName}");
                 animatedSprite.Play(animationName);
             }
-            animatedSprite.SpeedScale = Mathf.Clamp(Speed / InitialSpeed, 1.0f, 50.0f);
+            if (windShield != null && windShield.Animation != animationName)
+            {
+                windShield.Play(animationName);
+            }
         }
     }
 }
