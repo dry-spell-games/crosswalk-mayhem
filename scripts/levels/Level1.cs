@@ -30,6 +30,7 @@ namespace Crosswalk
         private PackedScene FamilyCarScene;
         private PackedScene SportsCarScene;
         private PackedScene SedanScene;
+        private PackedScene SuvScene;
         private CollisionShape2D vehicleTrafficLigthHitbox;
         private CollisionShape2D pedestrianTrafficLightLeft;
         private CollisionShape2D pedestrianTrafficLightRight;
@@ -55,6 +56,7 @@ namespace Crosswalk
             FamilyCarScene = (PackedScene)GD.Load("res://scenes/vehicles/familycar.tscn");
             SportsCarScene = (PackedScene)GD.Load("res://scenes/vehicles/sportscar.tscn");
             SedanScene = (PackedScene)GD.Load("res://scenes/vehicles/sedan.tscn");
+            SuvScene = (PackedScene)GD.Load("res://scenes/vehicles/suv.tscn");
             // Loads GUI scene
             GuiScene = (PackedScene)GD.Load("res://gui/gui.tscn");
 
@@ -199,7 +201,7 @@ namespace Crosswalk
 
         private void SpawnVehicle()
         {
-            int rand = random.Next(0, 3); // 0 FamilyCar 1 SportsCar 2 Green Sedan
+            int rand = random.Next(0, 4); // 0 FamilyCar 1 SportsCar 2 Green Sedan 3 Blue SUV
             Car car = null;
 
             // Randomizes vehicle
@@ -214,6 +216,10 @@ namespace Crosswalk
             else if (rand == 2 && SedanScene != null)
             {
                 car = (Car)SedanScene.Instantiate();
+            }
+            else if (rand == 3 && SuvScene != null)
+            {
+                car = (Car)SuvScene.Instantiate();
             }
 
             // Randomizes spawn point for vehicle

@@ -104,7 +104,7 @@ z_as_relative = false
 y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_tngcq")
 animation = &"drive"
-frame_progress = 0.530165
+frame_progress = 0.883468
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
