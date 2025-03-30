@@ -5,9 +5,9 @@ namespace Crosswalk
 {
     public partial class Grandpa : Pedestrian
     {
-        [Export] public override float Speed { get; set; } = 30.0f;
+        [Export] public override float Speed { get; set; } = 20.0f;
         [Export] public override float RotationSpeed { get; set; } = 30000;
-        [Export] public override float StopDuration { get; set; } = 3.0f;
+        [Export] public override float StopDuration { get; set; } = 5.0f;
         [Export] public override float StopCooldown { get; set; } = 10.0f;
         [Export] public override float SpeedTimer { get; set; } = 2.0f;
         [Export] public override float FlightDirection { get; set; }
@@ -44,7 +44,7 @@ namespace Crosswalk
                 isStopped = true;
                 GD.Print("Grandpa randomly stopped!");
 
-                await ToSignal(GetTree().CreateTimer(random.Next(2, 5)), "timeout"); // Odottaa 2-5 sekuntia pysähdyksissä
+                await ToSignal(GetTree().CreateTimer(random.Next(4, 6)), "timeout"); // Odottaa 2-5 sekuntia pysähdyksissä
                 isStopped = false;
                 GD.Print("Grandpa started moving again!");
             }

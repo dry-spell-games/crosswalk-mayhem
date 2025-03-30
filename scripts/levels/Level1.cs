@@ -22,6 +22,7 @@ namespace Crosswalk
         [Export] private float _lightTransitionTimer { get; set; } = 1.0f;
         private PackedScene GuiScene;
         private PackedScene GrandmaScene;
+        private PackedScene GrandpaScene;
         private PackedScene GirlScene;
         private PackedScene BoyScene;
         private PackedScene ManScene;
@@ -44,6 +45,7 @@ namespace Crosswalk
 
             // Loads pedestrian scenes
             GrandmaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandma.tscn");
+            GrandpaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandpa.tscn");
             GirlScene = (PackedScene)GD.Load("res://scenes/pedestrians/girl.tscn");
             BoyScene = (PackedScene)GD.Load("res://scenes/pedestrians/boy.tscn");
             ManScene = (PackedScene)GD.Load("res://scenes/pedestrians/man.tscn");
@@ -68,6 +70,10 @@ namespace Crosswalk
             if (GrandmaScene == null)
             {
                 GD.PrintErr("Failed to load Grandma scene!");
+            }
+            if (GrandpaScene == null)
+            {
+                GD.PrintErr("Failed to load Grandpa scene");
             }
             else if (GirlScene == null) {
                 GD.Print("Failed to load Girl scene!");
@@ -152,7 +158,7 @@ namespace Crosswalk
             Pedestrian pedestrian = null;
 
             // Randomly generated pedestrian type
-            int rand = random.Next(0, 5);  // 0 = Grandma, 1 = Girl, 2 Boy, 3 Man, 4 Woman
+            int rand = random.Next(0, 6);  // 0 = Grandma, 1 = Girl, 2 Boy, 3 Man, 4 Woman, 5 Grandpa
             if (rand == 0 && GrandmaScene != null)
             {
                 pedestrian = (Pedestrian)GrandmaScene.Instantiate();
@@ -172,6 +178,10 @@ namespace Crosswalk
             else if (rand == 4 && WomanScene!= null)
             {
                 pedestrian = (Pedestrian)WomanScene.Instantiate();
+            }
+            else if (rand == 5 && GrandpaScene != null)
+            {
+                pedestrian = (Pedestrian)GrandpaScene.Instantiate();
             }
             if (pedestrian == null)
             {
