@@ -368,7 +368,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk",
-"speed": 5.0
+"speed": 7.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qwb6e"]
@@ -378,14 +378,14 @@ size = Vector2(22, 11)
 size = Vector2(30, 34)
 
 [node name="Grandpa" type="Area2D"]
+collision_mask = 3
 script = ExtResource("1_kf3rc")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_wgviw")
-animation = &"idle"
+animation = &"walk"
 autoplay = "walk"
-frame = 25
-frame_progress = 0.200563
+frame_progress = 0.22007
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
