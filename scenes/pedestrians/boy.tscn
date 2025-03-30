@@ -177,7 +177,6 @@ animations = [{
 size = Vector2(24, 41)
 
 [node name="Boy" type="Area2D"]
-collision_layer = 3
 collision_mask = 27
 script = ExtResource("1_avtv0")
 
