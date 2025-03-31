@@ -1,37 +1,90 @@
-[gd_scene load_steps=7 format=3 uid="uid://cbnmdpuxpaqh5"]
+[gd_scene load_steps=16 format=3 uid="uid://cbnmdpuxpaqh5"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Sportscar.cs" id="1_3lwgf"]
-[ext_resource type="Texture2D" uid="uid://c6fanyr3mj4qe" path="res://assets/sprites/vehicles/sportscar/Lambo.png" id="2_idu1m"]
+[ext_resource type="Texture2D" uid="uid://cwp2aey5m6pd0" path="res://assets/sprites/vehicles/sports.png" id="2_wnf5d"]
+[ext_resource type="Texture2D" uid="uid://bpd7c4lo5e5j1" path="res://assets/sprites/vehicles/sports-windshield.png" id="3_ali8v"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cwhhw"]
 radius = 23.0
 height = 98.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cfsa4"]
-atlas = ExtResource("2_idu1m")
-region = Rect2(0, 0, 64, 96)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ufw6f"]
-atlas = ExtResource("2_idu1m")
-region = Rect2(0, 0, 64, 96)
+[sub_resource type="AtlasTexture" id="AtlasTexture_xyngn"]
+atlas = ExtResource("2_wnf5d")
+region = Rect2(0, 0, 58, 108)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_74clb"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_cfsa4")
+"texture": SubResource("AtlasTexture_xyngn")
 }],
 "loop": true,
 "name": &"drive",
-"speed": 30.0
-}, {
+"speed": 10.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtboq"]
+atlas = ExtResource("3_ali8v")
+region = Rect2(0, 36, 58, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eq3s2"]
+atlas = ExtResource("3_ali8v")
+region = Rect2(58, 36, 58, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2rofs"]
+atlas = ExtResource("3_ali8v")
+region = Rect2(116, 36, 58, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xs0rw"]
+atlas = ExtResource("3_ali8v")
+region = Rect2(174, 36, 58, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sfsuj"]
+atlas = ExtResource("3_ali8v")
+region = Rect2(232, 36, 58, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7htjs"]
+atlas = ExtResource("3_ali8v")
+region = Rect2(290, 36, 58, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3h76o"]
+atlas = ExtResource("3_ali8v")
+region = Rect2(348, 36, 58, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yifm6"]
+atlas = ExtResource("3_ali8v")
+region = Rect2(406, 36, 58, 36)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ot6td"]
+animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ufw6f")
+"texture": SubResource("AtlasTexture_qtboq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eq3s2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2rofs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xs0rw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sfsuj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7htjs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3h76o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yifm6")
 }],
 "loop": true,
-"name": &"idle",
-"speed": 5.0
+"name": &"drive",
+"speed": 15.0
 }]
 
 [node name="Sportscar" type="Area2D"]
@@ -43,16 +96,25 @@ shape = SubResource("CapsuleShape2D_cwhhw")
 metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+z_index = 1
 sprite_frames = SubResource("SpriteFrames_74clb")
 animation = &"drive"
 autoplay = "drive"
+frame_progress = 0.00717464
 metadata/_edit_lock_ = true
+
+[node name="Windshield" type="AnimatedSprite2D" parent="AnimatedSprite2D"]
+z_as_relative = false
+y_sort_enabled = true
+sprite_frames = SubResource("SpriteFrames_ot6td")
+animation = &"drive"
+autoplay = "drive"
 
 [node name="RaycastHolder" type="Node2D" parent="."]
 
 [node name="RCMiddle" type="RayCast2D" parent="RaycastHolder"]
 position = Vector2(0, 52)
 target_position = Vector2(0, 100)
-collision_mask = 6
+collision_mask = 2
 hit_from_inside = true
 collide_with_areas = true
