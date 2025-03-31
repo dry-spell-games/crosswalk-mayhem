@@ -5,8 +5,8 @@ using System.ComponentModel;
 namespace Crosswalk {
     public partial class Sportscar : Car
     {
-        [Export] public override float Speed { get; set; } = 500.0f;
-        [Export] public override float BrakingForce { get; set; } = 1500.0f;
+        [Export] public override float Speed { get; set; } = 600.0f;
+        [Export] public override float BrakingForce { get; set; } = 2000.0f;
         [Export] public override float AccelerationForce { get; set;} = 500.0f;
         private AnimatedSprite2D animatedSprite;
 
