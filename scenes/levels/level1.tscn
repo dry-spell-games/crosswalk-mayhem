@@ -134,7 +134,7 @@ metadata/_edit_lock_ = true
 [node name="Background" parent="." instance=ExtResource("2_tpp4d")]
 
 [node name="PedestrianLightL" type="AnimatedSprite2D" parent="Background"]
-z_index = 2
+z_index = 6
 position = Vector2(112, 385)
 sprite_frames = SubResource("SpriteFrames_12x3j")
 animation = &"red"
@@ -142,7 +142,7 @@ frame_progress = 0.305191
 script = ExtResource("4_wkjvx")
 
 [node name="PedestrianLightR" type="AnimatedSprite2D" parent="Background"]
-z_index = 2
+z_index = 6
 position = Vector2(318, 385)
 sprite_frames = SubResource("SpriteFrames_12x3j")
 animation = &"green"

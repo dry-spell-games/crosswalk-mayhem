@@ -30,6 +30,9 @@ namespace Crosswalk
         private PackedScene FamilyCarScene;
         private PackedScene SportsCarScene;
         private PackedScene SedanScene;
+        private PackedScene SedanScene1;
+        private PackedScene SedanScene2;
+        private PackedScene SedanScene3;
         private PackedScene SuvScene;
         private CollisionShape2D vehicleTrafficLigthHitbox;
         private CollisionShape2D pedestrianTrafficLightLeft;
@@ -56,7 +59,11 @@ namespace Crosswalk
             FamilyCarScene = (PackedScene)GD.Load("res://scenes/vehicles/familycar.tscn");
             SportsCarScene = (PackedScene)GD.Load("res://scenes/vehicles/sportscar.tscn");
             SedanScene = (PackedScene)GD.Load("res://scenes/vehicles/sedan.tscn");
+            SedanScene1 = (PackedScene)GD.Load("res://scenes/vehicles/sedan1.tscn");
+            SedanScene2 = (PackedScene)GD.Load("res://scenes/vehicles/sedan2.tscn");
+            SedanScene3 = (PackedScene)GD.Load("res://scenes/vehicles/sedan3.tscn");
             SuvScene = (PackedScene)GD.Load("res://scenes/vehicles/suv.tscn");
+
             // Loads GUI scene
             GuiScene = (PackedScene)GD.Load("res://gui/gui.tscn");
 
@@ -201,7 +208,8 @@ namespace Crosswalk
 
         private void SpawnVehicle()
         {
-            int rand = random.Next(0, 4); // 0 FamilyCar 1 SportsCar 2 Green Sedan 3 Blue SUV
+            int rand = random.Next(0, 7); // 0 FamilyCar, 1 SportsCar, 2 Blue Sedan, 3 Blue SUV
+            // 4 Green Sedan, 5 Red Sedan, 6 Yellow Sedan,
             Car car = null;
 
             // Randomizes vehicle
@@ -220,6 +228,18 @@ namespace Crosswalk
             else if (rand == 3 && SuvScene != null)
             {
                 car = (Car)SuvScene.Instantiate();
+            }
+            else if (rand == 4 && SedanScene1 != null)
+            {
+                car = (Car)SedanScene1.Instantiate();
+            }
+            else if (rand == 5 && SedanScene2 != null)
+            {
+                car = (Car)SedanScene2.Instantiate();
+            }
+            else if (rand == 6 && SedanScene3 != null)
+            {
+                car = (Car)SedanScene3.Instantiate();
             }
 
             // Randomizes spawn point for vehicle
