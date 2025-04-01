@@ -6,7 +6,12 @@ namespace Crosswalk{
     {
         public static GameManager Instance { get; private set; }
 
-        public int Score { get; private set; }
+        public int _score { get; private set; }
+        public int _highScore { get; private set; }
+        public int _life { get; private set; }
+        public int _musicVolume { get; private set; }
+        public int _effectVolume { get; private set; }
+        public String _language { get; private set; }
         private Label scoreLabel; // Reference to score label
 
         public int _difLvl = 3; // Game difficulty level
@@ -37,8 +42,8 @@ namespace Crosswalk{
 
         public void AddScore(int amount)
         {
-            Score += amount;
-            GD.Print("Score: " + Score);
+            _score += amount;
+            GD.Print("Score: " + _score);
             UpdateScoreLabel();
         }
 
@@ -46,13 +51,13 @@ namespace Crosswalk{
         {
             if (scoreLabel != null)
             {
-                scoreLabel.Text = $"Score: {Score}";
+                scoreLabel.Text = $"Score: {_score}";
             }
         }
 
         public void ResetScore()
         {
-            Score = 0;
+            _score = 0;
             UpdateScoreLabel();
         }
     }
