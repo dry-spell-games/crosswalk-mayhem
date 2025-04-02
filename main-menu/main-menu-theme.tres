@@ -1,0 +1,29 @@
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://b6hfafi3wwvfx"]
+
+[ext_resource type="FontFile" uid="uid://ckqa3vdfv7qot" path="res://assets/fonts/public-pixel-font/PublicPixel-rv0pA.ttf" id="1_idy7g"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g10lb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6lupi"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bqeqi"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oaaxm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8hdwv"]
+
+[resource]
+default_font = ExtResource("1_idy7g")
+default_font_size = 16
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(0.172549, 0.117647, 0.192157, 1)
+Button/constants/align_to_largest_stylebox = 0
+Button/constants/h_separation = 4
+Button/constants/icon_max_width = 0
+Button/constants/outline_size = 0
+Button/styles/disabled = SubResource("StyleBoxEmpty_g10lb")
+Button/styles/focus = SubResource("StyleBoxEmpty_6lupi")
+Button/styles/hover = SubResource("StyleBoxEmpty_bqeqi")
+Button/styles/normal = SubResource("StyleBoxEmpty_oaaxm")
+Button/styles/pressed = SubResource("StyleBoxEmpty_8hdwv")
+Label/colors/font_color = Color(0.87451, 0.87451, 0.87451, 1)
