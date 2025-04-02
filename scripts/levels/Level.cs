@@ -9,17 +9,18 @@ namespace Crosswalk
 {
     public partial class Level : Node2D
     {
-        [Export] private float[] SpawnRate  = {4, 3.5f, 3, 2.5f, 2, 1.5f};
-        [Export] private int[] CarSpawnRate = {7, 6, 5, 4, 3, 2};
-        [Export] private int PedestrianCount { get; set; } = 20; // How many pedestrians level has
+        [Export] private float[] _spawnRate  = {4, 3.5f, 3, 2.5f, 2, 1.5f};
+        [Export] private int[] _carSpawnRate = {7, 6, 5, 4, 3, 2};
+         // How many pedestrians level has
+        [Export] private int[] _pedestrianCount = {20, 30, 50, 75, 100, 2000};
         // Traffic lights
-        [Export] private float _carGreenTimer { get; set; } = 1.0f;
+        [Export] private float[] _carGreenTimer = {5, 6, 7, 8, 9, 10};
         public static bool _carGreen { get; private set; } = true;
-        [Export] public float _pedestrianGreenTimer { get; private set; } = 1.0f;
+        [Export] public float[] _pedestrianGreenTimer = {8, 7, 6, 5, 4, 3};
         public static bool _pedestrianGreen { get; private set; } = false;
-        [Export] public float _blinkTimer { get; private set; } = 10.0f;
+        [Export] public float[] _blinkTimer = {2, 2, 2, 2, 1, 1};
         public static bool _blink { get; private set; } = false;
-        [Export] private float _lightTransitionTimer { get; set; } = 1.0f;
+        [Export] private float[] _lightTransitionTimer = {4, 3, 2, 2, 2, 1};
         private PackedScene GuiScene;
         private PackedScene GrandmaScene;
         private PackedScene GrandpaScene;
@@ -37,7 +38,7 @@ namespace Crosswalk
         private PackedScene SuvScene1;
         private PackedScene SuvScene2;
         private PackedScene SuvScene3;
-        private CollisionShape2D vehicleTrafficLigthHitbox;
+        private CollisionShape2D vehicleTrafficLightHitbox;
         private Random random = new Random();
         // Signals for traffic lights
         //[Signal] public delegate void CarLightEventHandler(bool _carGreen);
@@ -45,8 +46,12 @@ namespace Crosswalk
         //[Signal] public delegate void BlinkEventHandler(bool _pedestrianGreen);
         private int _difficulty = GameManager.Instance._difLvl;
 
+
+
         public override void _Ready()
         {
+                    // @@@@@ TESTI VAIKEUDEN ASETUS@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            _difficulty = 3;
             GD.Print($"Level {_difficulty} started");
 
             // Loads pedestrian scenes
@@ -73,7 +78,7 @@ namespace Crosswalk
             GuiScene = (PackedScene)GD.Load("res://gui/gui.tscn");
 
             // Gets trafficlight's hitboxes
-            vehicleTrafficLigthHitbox = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
+            vehicleTrafficLightHitbox = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
 
             // Instantiates GUI for level
             Node guiInstance = GuiScene.Instantiate();
@@ -108,11 +113,11 @@ namespace Crosswalk
         {
             if (_carGreen)
             {
-                vehicleTrafficLigthHitbox.Disabled = true;
+                vehicleTrafficLightHitbox.Disabled = true;
             }
             else
             {
-                vehicleTrafficLigthHitbox.Disabled = false;
+                vehicleTrafficLightHitbox.Disabled = false;
             }
         }
 
@@ -120,12 +125,12 @@ namespace Crosswalk
         // Spawns pedestrians until PedestrianCount reaches zero.
         private async void StartSpawningPedestrians()
         {
-            while (PedestrianCount > 0)
+            while (_pedestrianCount[_difficulty] > 0)
             {
                 SpawnPedestrian();
-                await ToSignal(GetTree().CreateTimer(SpawnRate[_difficulty]), "timeout");
-                PedestrianCount--;
-                GD.Print($"Pedestrians left: {PedestrianCount}");
+                await ToSignal(GetTree().CreateTimer(_spawnRate[_difficulty]), "timeout");
+                _pedestrianCount[_difficulty]--;
+                GD.Print($"Pedestrians left: {_pedestrianCount[_difficulty]}");
             }
         }
 
@@ -134,7 +139,7 @@ namespace Crosswalk
             while (true)
             {
                 SpawnVehicle();
-                await ToSignal(GetTree().CreateTimer(CarSpawnRate[_difficulty]), "timeout");
+                await ToSignal(GetTree().CreateTimer(_carSpawnRate[_difficulty]), "timeout");
             }
         }
 
@@ -144,32 +149,40 @@ namespace Crosswalk
             {
                 GD.Print("Green light for cars");
                 //EmitSignal(SignalName.CarLight, _carGreen);
-                await ToSignal(GetTree().CreateTimer(_carGreenTimer), "timeout");
+                await ToSignal(GetTree().CreateTimer(_carGreenTimer[_difficulty]), "timeout");
                 _carGreen = false;
                 //EmitSignal(SignalName.CarLight, _carGreen);
                 GD.Print("Traffic light transition");
-                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer), "timeout");
+                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty]), "timeout");
                 _pedestrianGreen = true;
                 GD.Print("Green ligth for pedestrians");
                 EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
-                await ToSignal(GetTree().CreateTimer(_pedestrianGreenTimer), "timeout");
+                await ToSignal(GetTree().CreateTimer(_pedestrianGreenTimer[_difficulty]), "timeout");
                 _pedestrianGreen = false;
                 EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
                 GD.Print("Traffic light transition");
-                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer), "timeout");
+                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty]), "timeout");
                 _carGreen = true;
             }
         }
 
         private void SpawnPedestrian()
         {
-            Pedestrian pedestrian = null;
-
             // Randomly generated pedestrian type
-            int rand = random.Next(0, 6);  // 0 = Grandma, 1 = Girl, 2 Boy, 3 Man, 4 Woman, 5 Grandpa
-            if (rand == 0 && GrandmaScene != null)
+            int rand;
+            Pedestrian pedestrian = null;
+            // Difficulties 0-1 don't include "The Elderly"
+            if (_difficulty < 2)
             {
-                pedestrian = (Pedestrian)GrandmaScene.Instantiate();
+                rand = random.Next(0,4);
+            }
+            else {
+            rand = random.Next(0, 6);  // 0 = Grandma, 1 = Girl, 2 Boy, 3 Man, 4 Woman, 5 Grandpa
+            }
+
+            if (rand == 0 && WomanScene != null)
+            {
+                pedestrian = (Pedestrian)WomanScene.Instantiate();
             }
             else if (rand == 1 && GirlScene != null)
             {
@@ -183,9 +196,9 @@ namespace Crosswalk
             {
                 pedestrian = (Pedestrian)ManScene.Instantiate();
             }
-            else if (rand == 4 && WomanScene!= null)
+            else if (rand == 4 && GrandmaScene!= null)
             {
-                pedestrian = (Pedestrian)WomanScene.Instantiate();
+                pedestrian = (Pedestrian)GrandmaScene.Instantiate();
             }
             else if (rand == 5 && GrandpaScene != null)
             {
@@ -207,50 +220,59 @@ namespace Crosswalk
 
         private void SpawnVehicle()
         {
-            int rand = random.Next(0, 10); // 0 FamilyCar, 1 SportsCar, 2 Blue Sedan, 3 Blue SUV
+             // 0 FamilyCar, 1 SportsCar, 2 Blue Sedan, 3 Blue SUV
             // 4 Green Sedan, 5 Red Sedan, 6 Yellow Sedan, 7 Yellow SUV, 8 Green SUV, 9 Red SUV
             Car car = null;
+            int rand; // Randomizes vehicle
+            if (_difficulty < 2)
+            {
+                rand = random.Next(0, 9); // Levels 0-1 do NOT include sportscar
+            }
+            else
+            {
+                rand = random.Next(0, 10);
+            }
 
-            // Randomizes vehicle
+            // Instantiates randomized vehicle
             if (rand == 0 && FamilyCarScene != null)
             {
                 car = (Car)FamilyCarScene.Instantiate();
             }
-            else if (rand == 1 && SportsCarScene != null)
-            {
-                car = (Car)SportsCarScene.Instantiate();
-            }
-            else if (rand == 2 && SedanScene != null)
+            else if (rand == 1 && SedanScene != null)
             {
                 car = (Car)SedanScene.Instantiate();
             }
-            else if (rand == 3 && SuvScene != null)
+            else if (rand == 2 && SuvScene != null)
             {
                 car = (Car)SuvScene.Instantiate();
             }
-            else if (rand == 4 && SedanScene1 != null)
+            else if (rand == 3 && SedanScene1 != null)
             {
                 car = (Car)SedanScene1.Instantiate();
             }
-            else if (rand == 5 && SedanScene2 != null)
+            else if (rand == 4 && SedanScene2 != null)
             {
                 car = (Car)SedanScene2.Instantiate();
             }
-            else if (rand == 6 && SedanScene3 != null)
+            else if (rand == 5 && SedanScene3 != null)
             {
                 car = (Car)SedanScene3.Instantiate();
             }
-            else if (rand == 7 && SuvScene1 != null)
+            else if (rand == 6 && SuvScene1 != null)
             {
                 car = (Car)SuvScene1.Instantiate();
             }
-            else if (rand == 8 && SuvScene2 != null)
+            else if (rand == 7 && SuvScene2 != null)
             {
                 car = (Car)SuvScene2.Instantiate();
             }
-            else if (rand == 9 && SuvScene3 != null)
+            else if (rand == 8 && SuvScene3 != null)
             {
                 car = (Car)SuvScene3.Instantiate();
+            }
+            else if (rand == 9 && SportsCarScene != null)
+            {
+                car = (Car)SportsCarScene.Instantiate();
             }
 
             // Randomizes spawn point for vehicle

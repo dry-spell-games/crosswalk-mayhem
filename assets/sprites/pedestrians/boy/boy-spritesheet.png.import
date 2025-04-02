@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bf5egufgx7vfs"
-path="res://.godot/imported/granny.png-cf7b2c260d31ea29c68c01a2008186e8.ctex"
+uid="uid://rnm0ohnyd0ba"
+path="res://.godot/imported/boy-spritesheet.png-545618d9e6f1217942599b9c0fc0d5fc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pedestrians/grandma/granny.png"
-dest_files=["res://.godot/imported/granny.png-cf7b2c260d31ea29c68c01a2008186e8.ctex"]
+source_file="res://assets/sprites/pedestrians/boy/boy-spritesheet.png"
+dest_files=["res://.godot/imported/boy-spritesheet.png-545618d9e6f1217942599b9c0fc0d5fc.ctex"]
 
 [params]
 
