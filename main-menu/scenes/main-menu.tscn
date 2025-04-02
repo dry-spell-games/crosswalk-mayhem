@@ -3,9 +3,136 @@
 [ext_resource type="Texture2D" uid="uid://4y3dp88hn7ea" path="res://assets/menu/menu-background.png" id="1_t1m1g"]
 [ext_resource type="Script" path="res://main-menu/scripts/MainMenu.cs" id="1_v08f2"]
 [ext_resource type="Texture2D" uid="uid://ckr3q7pv5gpbv" path="res://assets/menu/signs.png" id="2_7jrwg"]
-[ext_resource type="Theme" path="res://main-menu/main-menu-theme.tres" id="3_7mjou"]
+[ext_resource type="Theme" uid="uid://b6hfafi3wwvfx" path="res://main-menu/main-menu-theme.tres" id="3_7mjou"]
+[ext_resource type="Theme" uid="uid://bpbsfc4j1p232" path="res://main-menu/lang-button-theme.tres" id="5_ur348"]
+[ext_resource type="Texture2D" uid="uid://clr21xt6ww6ge" path="res://assets/menu/fin-flag.png" id="6_yjtbi"]
+[ext_resource type="Texture2D" uid="uid://df0p6jg6q3swa" path="res://assets/menu/en-flag.png" id="7_gs283"]
 
-[node name="Main-menu" type="Control"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_jc418"]
+atlas = ExtResource("6_yjtbi")
+region = Rect2(0, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6tnpn"]
+atlas = ExtResource("6_yjtbi")
+region = Rect2(39, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqrub"]
+atlas = ExtResource("6_yjtbi")
+region = Rect2(78, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mkwqb"]
+atlas = ExtResource("6_yjtbi")
+region = Rect2(117, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lyqsy"]
+atlas = ExtResource("6_yjtbi")
+region = Rect2(156, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ox3o"]
+atlas = ExtResource("6_yjtbi")
+region = Rect2(195, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ucnc4"]
+atlas = ExtResource("6_yjtbi")
+region = Rect2(234, 0, 39, 35)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wno1q"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jc418")
+}],
+"loop": true,
+"name": &"still",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_6tnpn")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_gqrub")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_mkwqb")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_lyqsy")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_4ox3o")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_ucnc4")
+}],
+"loop": true,
+"name": &"wave",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xe3pv"]
+atlas = ExtResource("7_gs283")
+region = Rect2(0, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0uyxg"]
+atlas = ExtResource("7_gs283")
+region = Rect2(39, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bfcfa"]
+atlas = ExtResource("7_gs283")
+region = Rect2(78, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cll04"]
+atlas = ExtResource("7_gs283")
+region = Rect2(117, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7feu"]
+atlas = ExtResource("7_gs283")
+region = Rect2(156, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jv1d4"]
+atlas = ExtResource("7_gs283")
+region = Rect2(195, 0, 39, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xixs7"]
+atlas = ExtResource("7_gs283")
+region = Rect2(234, 0, 39, 35)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uo3yt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xe3pv")
+}],
+"loop": true,
+"name": &"still",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_0uyxg")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_bfcfa")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_cll04")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_v7feu")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_jv1d4")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_xixs7")
+}],
+"loop": true,
+"name": &"wave",
+"speed": 5.0
+}]
+
+[node name="Main-menu" type="Control" node_paths=PackedStringArray("_signs", "_english", "_finnish")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,6 +140,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_v08f2")
+_signs = NodePath("Signs")
+_english = NodePath("English/EnFlag")
+_finnish = NodePath("Finnish/FinFlag")
 
 [node name="Background" type="TextureRect" parent="."]
 layout_mode = 0
@@ -23,9 +153,9 @@ texture = ExtResource("1_t1m1g")
 [node name="Signs" type="TextureRect" parent="."]
 layout_mode = 0
 offset_left = 68.0
-offset_top = 352.0
+offset_top = 640.0
 offset_right = 292.0
-offset_bottom = 640.0
+offset_bottom = 928.0
 texture = ExtResource("2_7jrwg")
 
 [node name="Play" type="Button" parent="Signs"]
@@ -58,7 +188,7 @@ theme = ExtResource("3_7mjou")
 theme_override_colors/font_pressed_color = Color(0.419608, 0.14902, 0.262745, 1)
 text = "QUIT"
 
-[node name="Button" type="Button" parent="Signs"]
+[node name="Tutorial" type="Button" parent="Signs"]
 layout_mode = 0
 offset_left = 152.0
 offset_top = 151.0
@@ -71,4 +201,36 @@ theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_color = Color(0.172549, 0.117647, 0.192157, 1)
 text = "?"
 
+[node name="Finnish" type="Button" parent="."]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 16.0
+offset_right = 299.0
+offset_bottom = 51.0
+theme = ExtResource("5_ur348")
+
+[node name="FinFlag" type="AnimatedSprite2D" parent="Finnish"]
+position = Vector2(18.5, 17.5)
+sprite_frames = SubResource("SpriteFrames_wno1q")
+animation = &"still"
+autoplay = "still"
+frame_progress = 0.578165
+
+[node name="English" type="Button" parent="."]
+layout_mode = 0
+offset_left = 212.0
+offset_top = 16.0
+offset_right = 251.0
+offset_bottom = 51.0
+theme = ExtResource("5_ur348")
+
+[node name="EnFlag" type="AnimatedSprite2D" parent="English"]
+position = Vector2(19, 18)
+sprite_frames = SubResource("SpriteFrames_uo3yt")
+animation = &"still"
+autoplay = "still"
+
 [connection signal="pressed" from="Signs/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Signs/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="Finnish" to="." method="_on_finnish_pressed"]
+[connection signal="pressed" from="English" to="." method="_on_english_pressed"]
