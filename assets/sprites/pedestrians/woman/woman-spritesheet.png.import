@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tp5dpv15itqy"
-path="res://.godot/imported/girl-run.png-4bbdcf3949ca74f6fca51161bebafd29.ctex"
+uid="uid://b3t2g3n8e4vcs"
+path="res://.godot/imported/woman-spritesheet.png-12da48e7cd1a1d9e17a7d69e63b53642.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pedestrians/girl/girl-run.png"
-dest_files=["res://.godot/imported/girl-run.png-4bbdcf3949ca74f6fca51161bebafd29.ctex"]
+source_file="res://assets/sprites/pedestrians/woman/woman-spritesheet.png"
+dest_files=["res://.godot/imported/woman-spritesheet.png-12da48e7cd1a1d9e17a7d69e63b53642.ctex"]
 
 [params]
 

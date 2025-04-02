@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djn4ewkoa6dxu"
-path="res://.godot/imported/boy-run.png-ac51d3d6b3f26bf80e7371338c57fc50.ctex"
+uid="uid://cvej1mrcy6bnp"
+path="res://.godot/imported/girl-spritesheet.png-bb0f00819d27eb04e5ed711d8fc12aaa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pedestrians/boy/boy-run.png"
-dest_files=["res://.godot/imported/boy-run.png-ac51d3d6b3f26bf80e7371338c57fc50.ctex"]
+source_file="res://assets/sprites/pedestrians/girl/girl-spritesheet.png"
+dest_files=["res://.godot/imported/girl-spritesheet.png-bb0f00819d27eb04e5ed711d8fc12aaa.ctex"]
 
 [params]
 

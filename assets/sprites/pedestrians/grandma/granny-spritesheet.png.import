@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://belx8p80nwx2t"
-path="res://.godot/imported/girl-idle.png-ee6afb76f33113b59bc702be839f10da.ctex"
+uid="uid://hinkq0cjgojq"
+path="res://.godot/imported/granny-spritesheet.png-4204e8862161b2313755e12a6935f6bb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pedestrians/girl/girl-idle.png"
-dest_files=["res://.godot/imported/girl-idle.png-ee6afb76f33113b59bc702be839f10da.ctex"]
+source_file="res://assets/sprites/pedestrians/grandma/granny-spritesheet.png"
+dest_files=["res://.godot/imported/granny-spritesheet.png-4204e8862161b2313755e12a6935f6bb.ctex"]
 
 [params]
 
