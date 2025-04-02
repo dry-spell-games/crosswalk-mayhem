@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://k8fk7w3q5g3h"]
+[gd_scene load_steps=56 format=3 uid="uid://blfc75o2okftv"]
 
 [ext_resource type="Script" path="res://scripts/pedestrians/Grandpa.cs" id="1_kf3rc"]
 [ext_resource type="Texture2D" uid="uid://ctu6kirurpk1k" path="res://assets/sprites/pedestrians/grandpa/granpa-spritesheet.png" id="1_m7fco"]

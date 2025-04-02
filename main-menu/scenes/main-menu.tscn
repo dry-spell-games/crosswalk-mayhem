@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://ln56252l0570"]
+[gd_scene load_steps=5 format=3 uid="uid://cjc7sviekaosk"]
 
 [ext_resource type="Texture2D" uid="uid://4y3dp88hn7ea" path="res://assets/menu/menu-background.png" id="1_t1m1g"]
 [ext_resource type="Script" path="res://main-menu/scripts/MainMenu.cs" id="1_v08f2"]
 [ext_resource type="Texture2D" uid="uid://ckr3q7pv5gpbv" path="res://assets/menu/signs.png" id="2_7jrwg"]
-[ext_resource type="Theme" uid="uid://b6hfafi3wwvfx" path="res://main-menu/main-menu-theme.tres" id="3_7mjou"]
+[ext_resource type="Theme" path="res://main-menu/main-menu-theme.tres" id="3_7mjou"]
 
 [node name="Main-menu" type="Control"]
 layout_mode = 3
