@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bikq1arr5raih"
-path="res://.godot/imported/boy-idle.png-aa97ae1ce1c43ce4d240521aa77c2c03.ctex"
+uid="uid://caoe8pm4v6ha6"
+path="res://.godot/imported/man-spritesheet.png-e749a97842e617028e479d5e8a8052a3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/pedestrians/boy/boy-idle.png"
-dest_files=["res://.godot/imported/boy-idle.png-aa97ae1ce1c43ce4d240521aa77c2c03.ctex"]
+source_file="res://assets/sprites/pedestrians/man/man-spritesheet.png"
+dest_files=["res://.godot/imported/man-spritesheet.png-e749a97842e617028e479d5e8a8052a3.ctex"]
 
 [params]
 
