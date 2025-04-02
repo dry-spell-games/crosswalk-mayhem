@@ -11,7 +11,7 @@ namespace Crosswalk{
         public int _life { get; private set; }
         public int _musicVolume { get; private set; }
         public int _effectVolume { get; private set; }
-        public String _language { get; private set; }
+        public String _language { get; set; } = "english";
         private Label scoreLabel; // Reference to score label
 
         public int _difLvl = 3; // Game difficulty level

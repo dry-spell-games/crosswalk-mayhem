@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=7 format=3 uid="uid://b6hfafi3wwvfx"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://b6hfafi3wwvfx"]
 
 [ext_resource type="FontFile" uid="uid://ckqa3vdfv7qot" path="res://assets/fonts/public-pixel-font/PublicPixel-rv0pA.ttf" id="1_idy7g"]
 
@@ -11,6 +11,12 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oaaxm"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8hdwv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8kw1f"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yqg0i"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3d47y"]
 
 [resource]
 default_font = ExtResource("1_idy7g")
@@ -26,4 +32,7 @@ Button/styles/focus = SubResource("StyleBoxEmpty_6lupi")
 Button/styles/hover = SubResource("StyleBoxEmpty_bqeqi")
 Button/styles/normal = SubResource("StyleBoxEmpty_oaaxm")
 Button/styles/pressed = SubResource("StyleBoxEmpty_8hdwv")
+CheckButton/styles/focus = SubResource("StyleBoxEmpty_8kw1f")
+CheckButton/styles/normal = SubResource("StyleBoxTexture_yqg0i")
+CheckButton/styles/pressed = SubResource("StyleBoxTexture_3d47y")
 Label/colors/font_color = Color(0.87451, 0.87451, 0.87451, 1)
