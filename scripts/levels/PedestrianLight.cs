@@ -6,6 +6,7 @@ namespace Crosswalk
 {
     public partial class PedestrianLight : AnimatedSprite2D
     {
+        private int _difficulty = GameManager.Instance._difLvl;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -36,7 +37,7 @@ namespace Crosswalk
                 Play("green");
                 if (realLevel != null)
                 {
-                    await ToSignal(GetTree().CreateTimer(realLevel._pedestrianGreenTimer - realLevel._blinkTimer), "timeout");
+                    await ToSignal(GetTree().CreateTimer(realLevel._pedestrianGreenTimer[_difficulty] - realLevel._blinkTimer[_difficulty]), "timeout");
                 }
                 else if (level != null)
                 {
