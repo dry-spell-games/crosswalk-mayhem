@@ -117,10 +117,6 @@ size = Vector2(132, 8)
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_xijry")
-_carGreenTimer = 5.0
-_pedestrianGreenTimer = 10.0
-_blinkTimer = 5.0
-_lightTransitionTimer = 3.0
 
 [node name="Background" parent="." instance=ExtResource("2_7cjbx")]
 
