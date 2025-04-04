@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cbnmdpuxpaqh5"]
+[gd_scene load_steps=18 format=3 uid="uid://cbnmdpuxpaqh5"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Sportscar.cs" id="1_3lwgf"]
 [ext_resource type="Texture2D" uid="uid://cwp2aey5m6pd0" path="res://assets/sprites/vehicles/sports.png" id="2_wnf5d"]
@@ -12,6 +12,14 @@ height = 98.0
 atlas = ExtResource("2_wnf5d")
 region = Rect2(0, 0, 58, 108)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_mwl1q"]
+atlas = ExtResource("2_wnf5d")
+region = Rect2(0, 0, 58, 108)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ylv3"]
+atlas = ExtResource("2_wnf5d")
+region = Rect2(58, 0, 58, 108)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_74clb"]
 animations = [{
 "frames": [{
@@ -21,6 +29,17 @@ animations = [{
 "loop": true,
 "name": &"drive",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 0.1,
+"texture": SubResource("AtlasTexture_mwl1q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ylv3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qtboq"]
@@ -98,9 +117,10 @@ metadata/_edit_lock_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 z_index = 1
 sprite_frames = SubResource("SpriteFrames_74clb")
-animation = &"drive"
+animation = &"idle"
 autoplay = "drive"
-frame_progress = 0.00717464
+frame = 1
+frame_progress = 0.742972
 metadata/_edit_lock_ = true
 
 [node name="Windshield" type="AnimatedSprite2D" parent="AnimatedSprite2D"]

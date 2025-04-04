@@ -1,10 +1,18 @@
-[gd_scene load_steps=16 format=3 uid="uid://dt1agp831tg2t"]
+[gd_scene load_steps=18 format=3 uid="uid://dt1agp831tg2t"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Sedan1.cs" id="1_6hvc4"]
 [ext_resource type="Texture2D" uid="uid://cmtdj0rqxo74w" path="res://assets/sprites/vehicles/sedan.png" id="2_vtheq"]
 [ext_resource type="Texture2D" uid="uid://c1yxk7r3omqi6" path="res://assets/sprites/vehicles/sedan-windshield.png" id="3_0j1ok"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0t5yb"]
+atlas = ExtResource("2_vtheq")
+region = Rect2(58, 102, 58, 102)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_maj70"]
+atlas = ExtResource("2_vtheq")
+region = Rect2(0, 102, 58, 102)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_di8x0"]
 atlas = ExtResource("2_vtheq")
 region = Rect2(58, 102, 58, 102)
 
@@ -16,6 +24,17 @@ animations = [{
 }],
 "loop": true,
 "name": &"drive",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.6,
+"texture": SubResource("AtlasTexture_maj70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_di8x0")
+}],
+"loop": true,
+"name": &"idle",
 "speed": 5.0
 }]
 
@@ -95,21 +114,21 @@ metadata/_edit_lock_ = true
 z_index = 1
 z_as_relative = false
 sprite_frames = SubResource("SpriteFrames_2k87o")
-animation = &"drive"
-frame_progress = 0.985221
-metadata/_edit_lock_ = true
+animation = &"idle"
+frame_progress = 0.98463
 
 [node name="Windshield" type="AnimatedSprite2D" parent="AnimatedSprite2D"]
 z_as_relative = false
 y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_tngcq")
 animation = &"drive"
-frame_progress = 0.883468
-metadata/_edit_lock_ = true
+frame = 6
+frame_progress = 0.400359
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -1)
 shape = SubResource("RectangleShape2D_kbqg5")
+metadata/_edit_lock_ = true
 
 [node name="RaycastHolder" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
