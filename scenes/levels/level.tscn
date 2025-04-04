@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://4cagwvtlff7r"]
+[gd_scene load_steps=15 format=3 uid="uid://cpek4grygkvcg"]
 
 [ext_resource type="Script" path="res://scripts/levels/Level.cs" id="1_xijry"]
 [ext_resource type="PackedScene" uid="uid://cv4gmabr75y6e" path="res://scenes/level-background/background.tscn" id="2_7cjbx"]
@@ -117,6 +117,10 @@ size = Vector2(132, 8)
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_xijry")
+_carGreenTimer = 5.0
+_pedestrianGreenTimer = 10.0
+_blinkTimer = 5.0
+_lightTransitionTimer = 3.0
 
 [node name="Background" parent="." instance=ExtResource("2_7cjbx")]
 
