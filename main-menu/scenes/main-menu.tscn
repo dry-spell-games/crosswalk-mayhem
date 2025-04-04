@@ -544,7 +544,7 @@ autowrap_mode = 2
 position = Vector2(64, 176)
 sprite_frames = SubResource("SpriteFrames_mel0f")
 autoplay = "default"
-frame_progress = 0.512146
+frame_progress = 0.760796
 
 [node name="Tutorial2" type="Label" parent="TutorialRect/TutorialExit"]
 layout_mode = 0

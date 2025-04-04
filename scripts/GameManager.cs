@@ -4,48 +4,69 @@ using System.Text.Json;
 
 namespace Crosswalk
 {
+    /// <summary>
+    /// GameManager handles global game data, including scores, settings, language,
+    /// volume control, and persistent save/load functionality.
+    /// </summary>
     public partial class GameManager : Node
     {
         public static GameManager Instance { get; private set; }
-        public int _score { get; private set; }
-        public int _highscore { get; private set; }
-        public int _life { get; private set; }
-        public float _masterVolume { get; set; }
-        public float _musicVolume { get; set; }
-        public float _sfxVolume { get; set; }
-        public float _savedMasterVolume;
-        public float _savedMusicVolume;
-        public float _savedSfxVolume;
-        public String _langCode { get; set; }
-        private Label scoreLabel; // Reference to score label
+
+        public int _score { get; private set; } // Current in-game score
+        public int _highscore { get; private set; } // Stored highscore
+        public int _life { get; private set; } // "Player lives"
+
+        public float _masterVolume { get; set; } // Master volume in dB
+        public float _musicVolume { get; set; } // Music volume in dB
+        public float _sfxVolume { get; set; } // SFX volume in dB
+
+        public float _savedMasterVolume; // Last saved master volume
+        public float _savedMusicVolume; // Last saved music volume
+        public float _savedSfxVolume; // Last saved SFX volume
+
+        public string _langCode { get; set; } // Currently selected language code ("en", "fi")
+
+        private Label scoreLabel; // Reference to score label in the UI
+
         public int _difLvl { get; set; } = 3; // Game difficulty level
 
+        /// <summary>
+        /// Called when the node enters the scene tree.
+        /// Initializes the singleton instance.
+        /// </summary>
         public override void _Ready()
         {
             if (Instance == null)
             {
                 Instance = this;
-                GD.Print("GameManager initialized");
             }
             else
             {
-                QueueFree(); // Poistetaan ylimääräinen instanssi
+                QueueFree(); // Prevent duplicate GameManager instances
             }
         }
 
+        /// <summary>
+        /// Links the UI score label to this manager and updates it immediately.
+        /// </summary>
         public void SetScoreLabel(Label label)
         {
             scoreLabel = label;
-            UpdateScoreLabel(); // Päivitä heti alussa
-        }
-
-        public void AddScore(int amount)
-        {
-            _score += amount;
-            GD.Print("Score: " + _score);
             UpdateScoreLabel();
         }
 
+        /// <summary>
+        /// Adds to the current score and updates the UI label.
+        /// </summary>
+        public void AddScore(int amount)
+        {
+            _score += amount;
+            UpdateScoreLabel();
+        }
+
+        /// <summary>
+        /// Updates the UI score label with the current score.
+        /// </summary>
         private void UpdateScoreLabel()
         {
             if (scoreLabel != null)
@@ -54,12 +75,19 @@ namespace Crosswalk
             }
         }
 
+        /// <summary>
+        /// Resets the score to zero and updates the UI.
+        /// </summary>
         public void ResetScore()
         {
             _score = 0;
             UpdateScoreLabel();
         }
 
+        /// <summary>
+        /// Loads default values for volume, highscore, and language.
+        /// Used when no save file is present or data fails to load.
+        /// </summary>
         private void LoadDefaultData()
         {
             _highscore = 0;
@@ -69,6 +97,9 @@ namespace Crosswalk
             _langCode = "en";
         }
 
+        /// <summary>
+        /// Saves highscore, volume levels, and language setting to a JSON file.
+        /// </summary>
         public void SaveData()
         {
             var saveData = new
@@ -87,18 +118,22 @@ namespace Crosswalk
             {
                 using var file = FileAccess.Open(path, FileAccess.ModeFlags.Write);
                 file.StoreString(jsonString);
-                GD.Print("Data saved!");
             }
             catch (System.Exception ex)
             {
                 GD.PrintErr("Failed to save data: " + ex.Message);
             }
 
+            // Store saved values for cancellation fallback
             _savedMasterVolume = _masterVolume;
             _savedMusicVolume = _musicVolume;
             _savedSfxVolume = _sfxVolume;
         }
 
+        /// <summary>
+        /// Loads saved game data from disk.
+        /// If no file exists or loading fails, default values are used.
+        /// </summary>
         public void LoadData()
         {
             string path = "user://save.json";
@@ -121,11 +156,10 @@ namespace Crosswalk
                 _sfxVolume = (float)saveData.GetProperty("sfxVolume").GetDouble();
                 _langCode = saveData.GetProperty("langCode").GetString();
 
+                // Cache loaded values for rollback
                 _savedMasterVolume = _masterVolume;
                 _savedMusicVolume = _musicVolume;
                 _savedSfxVolume = _sfxVolume;
-
-                GD.Print("Data loaded!");
             }
             catch (System.Exception ex)
             {
@@ -134,12 +168,19 @@ namespace Crosswalk
             }
         }
 
+        /// <summary>
+        /// Sets the current game language and updates the translation server.
+        /// </summary>
         public void SetLanguage(string langCode)
         {
             GameManager.Instance._langCode = langCode;
             TranslationServer.SetLocale(langCode);
         }
 
+        /// <summary>
+        /// Sets the volume in decibels for a given audio bus by name.
+        /// </summary>
+        /// <returns>True if the bus exists and volume was set, false otherwise.</returns>
         public bool SetVolume(string busName, float volumeDb)
         {
             int busIndex = AudioServer.GetBusIndex(busName);
@@ -153,6 +194,11 @@ namespace Crosswalk
             return true;
         }
 
+        /// <summary>
+        /// Gets the current volume in decibels for a given audio bus by name.
+        /// </summary>
+        /// <param name="volumeDb">Outputs the current volume of the bus</param>
+        /// <returns>True if successful, false if the bus was not found</returns>
         public bool GetVolume(string busName, out float volumeDb)
         {
             int busIndex = AudioServer.GetBusIndex(busName);
@@ -167,6 +213,9 @@ namespace Crosswalk
             return true;
         }
 
+        /// <summary>
+        /// Updates the stored highscore value.
+        /// </summary>
         public void SetHighscore(int highscore)
         {
             _highscore = highscore;
