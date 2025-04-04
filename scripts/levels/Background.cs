@@ -42,6 +42,11 @@ namespace Crosswalk
                 string fileName = dirAccess.GetNext();
                 while (fileName != "")
                 {
+                    string[] fileNameParts = fileName.Split(".");
+                    if (fileNameParts.Length > 1 && fileNameParts[1] == "tscn");
+                    {
+                        fileName = fileNameParts[0] + "." + fileNameParts[1];
+                    }
                     // Check if file is a scene file
                     if (fileName.EndsWith(".tscn"))
                     {

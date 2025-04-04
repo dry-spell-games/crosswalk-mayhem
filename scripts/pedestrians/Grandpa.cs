@@ -38,14 +38,17 @@ namespace Crosswalk
         }
         private async void StartRandomStop()
         {
-            while (true)
+            while (!isStopped)
             {
                 await ToSignal(GetTree().CreateTimer(random.Next(3, 8)), "timeout"); // Odottaa 3-8 sekuntia ennen pysähtymistä
+                randomStop = true;
                 isStopped = true;
                 GD.Print("Grandpa randomly stopped!");
+                base.PlayAnimation("idle2");
 
-                await ToSignal(GetTree().CreateTimer(random.Next(4, 6)), "timeout"); // Odottaa 2-5 sekuntia pysähdyksissä
+                await ToSignal(GetTree().CreateTimer(random.Next(4, 6)), "timeout"); // Odottaa 4-6 sekuntia pysähdyksissä
                 isStopped = false;
+                randomStop = false;
                 GD.Print("Grandpa started moving again!");
             }
         }

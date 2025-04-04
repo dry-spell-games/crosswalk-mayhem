@@ -44,6 +44,7 @@ namespace Crosswalk
         private AnimatedSprite2D animatedSprite; // Refers to AnimatedSprite2D component
         protected float InitialSpeed; // Saves original speed
         protected bool IsSpeeding = false;
+        protected bool randomStop = false; // Plays different idle animation when true
 
         public override void _Ready()
         {
@@ -87,7 +88,14 @@ namespace Crosswalk
         {
             if (isStopped)
             {
+                // Uses different idle animation for random stops
+                if (randomStop)
+                {
+                    PlayAnimation("idle2");
+                    return;
+                }
                 PlayAnimation("idle");
+
             }
             else if (!isFlying) // If pedestrian is not flying, move pedestrian
             {
@@ -180,42 +188,36 @@ namespace Crosswalk
         /// (useful if the pedestrian has multiple hitboxes).</param>
         private void OnInputEvent(InputEvent @event)
         {
-            // Input for mobile devices works on mouseclick from godot project settings
             if (@event is InputEventScreenTouch touch && touch.Pressed)
             {
-                HandleTouchInput(touch);
+                HandleTouchInput();
             }
         }
 
         // Handles mobile input asynchronously
-        private async void HandleTouchInput(InputEventScreenTouch touch)
+        private async void HandleTouchInput()
         {
             float currentTime = Time.GetTicksMsec() / 1000f;
 
-            // If double tap happens in 0.3 seconds
             if (isWaitingForDoubleTap && (currentTime - lastTapTime) < DoubleTapThreshold)
             {
-                StartSpeedBoost(); // Double tap speeds up
-                isWaitingForDoubleTap = false; // Resets
+                isStopped = false;
+                StartSpeedBoost(); // Double tap sprints pedestrian
+                isWaitingForDoubleTap = false;
             }
             else
             {
                 isWaitingForDoubleTap = true;
                 lastTapTime = currentTime;
 
-                // Waits for possible second tap to activate double tap
+                HandleTapOrStop(); // First tap stops pedestrian
+
                 await ToSignal(GetTree().CreateTimer(DoubleTapThreshold), "timeout");
 
-                // In case of only one tap in given time, stops pedestrian
-                if (isWaitingForDoubleTap)
-                {
-                    HandleTapOrStop();
-                    isWaitingForDoubleTap = false;
-                }
+                isWaitingForDoubleTap = false; // Resets waiting for double tap
             }
         }
 
-        // Stops pedestrian if it's possible
         private async void HandleTapOrStop()
         {
             if (!canBeStopped)
@@ -227,7 +229,7 @@ namespace Crosswalk
             isStopped = true;
             canBeStopped = false;
             PlayAnimation("idle");
-            GD.Print("Pedestrian stopped for " + StopDuration + " seconds.");
+            GD.Print("Pedestrian stopped.");
 
             await ToSignal(GetTree().CreateTimer(StopDuration), "timeout");
 
@@ -235,9 +237,7 @@ namespace Crosswalk
             PlayAnimation("walk");
             GD.Print("Pedestrian resumed!");
 
-            GD.Print($"Cooldown started for {StopCooldown} seconds.");
             await ToSignal(GetTree().CreateTimer(StopCooldown), "timeout");
-
             canBeStopped = true;
             GD.Print("Cooldown finished, pedestrian can be stopped again.");
         }
