@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-// using System.Numerics;
 
 namespace Crosswalk
 {
@@ -14,7 +13,7 @@ namespace Crosswalk
         private bool isBraking = false;
         private bool isAccelerating = false;
         protected float InitialSpeed;
-        private AnimatedSprite2D animatedSprite; // Viittaa AnimatedSprite2D-komponenttiin
+        private AnimatedSprite2D animatedSprite;
         private AnimatedSprite2D windShield;
         private RayCast2D[] raycasts;
         public List<Vector2> StartPositions { get; set; } = new List<Vector2>
@@ -34,10 +33,10 @@ namespace Crosswalk
                 windShield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
                 windShield.Play("drive");
             }
-            AddToGroup("cars"); // Lisätään autot ryhmään, jotta ne voidaan poistaa
+            AddToGroup("cars"); // Adds cars to a group so they can be removed later
             InitialSpeed = Speed;
 
-            // Luodaan taulukko raycasteille
+            // Array for cars' raycasts
             raycasts = new RayCast2D[]
             {
             GetNodeOrNull<RayCast2D>("RaycastHolder/RCLeft"), // Left
@@ -80,17 +79,18 @@ namespace Crosswalk
                 animatedSprite.Play();
                 if (windShield != null)
                 {
-                    windShield.Play();
+                    float custom_scale = Speed / 200; // Scaling speed for windshield animation
+                    windShield.Play("drive", custom_scale);
                 }
             }
 
-            // Käy läpi kaikki Car-luokan lapset ja poista ne, jos ne menevät alueen ulkopuolelle
+            // Goes through every child of Car class and removes those which are out of bounds
             foreach (Area2D car in GetTree().GetNodesInGroup("cars"))
             {
-                if (car.Position.Y > 900) // Tarkista sijainti
+                if (car.Position.Y > 900) // If true car is out of bounds
                 {
                     GD.Print("Poistetaan auto: ", car.Name);
-                    car.QueueFree(); // Poista auto
+                    car.QueueFree(); // Removes car instance
                 }
             }
         }
@@ -98,7 +98,6 @@ namespace Crosswalk
         protected virtual void Move(double delta)
         {
             Position += new Vector2(0, Speed * (float)delta);
-            PlayAnimation("drive");
         }
 
         private bool IsAnyRaycastColliding()
@@ -107,7 +106,7 @@ namespace Crosswalk
             {
                 if (raycast != null)
                 {
-                    raycast.ForceRaycastUpdate(); // Päivittää tiedot välittömästi
+                    raycast.ForceRaycastUpdate(); // Forces raycast check
                     if (raycast.IsColliding())
                     {
                         return true;
@@ -115,20 +114,6 @@ namespace Crosswalk
                 }
             }
             return false;
-        }
-
-        // Yleinen metodi animaation vaihtamiseen
-        protected void PlayAnimation(string animationName)
-        {
-            if (animatedSprite != null && animatedSprite.Animation != animationName)
-            {
-                GD.Print($"Starting animation: {animationName}");
-                animatedSprite.Play(animationName);
-            }
-            if (windShield != null && windShield.Animation != animationName)
-            {
-                windShield.Play(animationName);
-            }
         }
     }
 }
