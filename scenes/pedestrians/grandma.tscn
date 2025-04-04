@@ -272,6 +272,8 @@ size = Vector2(32, 31)
 position = Vector2(0, 20)
 collision_mask = 27
 script = ExtResource("1_s0axq")
+RotationSpeed = 60.0
+RotationSpeed = 60.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-0.5, -20)
