@@ -34,6 +34,10 @@ project/assembly_name="Crosswalk Mayhem"
 
 pointing/emulate_touch_from_mouse=true
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://translations/translations.en.translation", "res://translations/translations.fi.translation")
+
 [layer_names]
 
 2d_physics/layer_1="Pedestrian"
