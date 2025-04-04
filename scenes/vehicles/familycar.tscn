@@ -35,7 +35,8 @@ region = Rect2(384, 0, 64, 96)
 atlas = ExtResource("2_kebft")
 region = Rect2(448, 0, 64, 96)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_bw5r8"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_w4js4"]
+atlas = ExtResource("2_kebft")
 region = Rect2(0, 0, 64, 96)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_mqv1d"]
@@ -71,7 +72,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_bw5r8")
+"texture": SubResource("AtlasTexture_w4js4")
 }],
 "loop": true,
 "name": &"idle",
@@ -87,10 +88,8 @@ script = ExtResource("1_4aoy6")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_mqv1d")
-animation = &"drive"
+animation = &"idle"
 autoplay = "drive"
-frame = 3
-frame_progress = 0.719252
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

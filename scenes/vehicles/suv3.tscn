@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dhoe1evlnqtwm"]
+[gd_scene load_steps=18 format=3 uid="uid://dhoe1evlnqtwm"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Suv3.cs" id="1_mq4u3"]
 [ext_resource type="Texture2D" uid="uid://xwj62sgau52w" path="res://assets/sprites/vehicles/suv.png" id="2_2cym0"]
@@ -8,6 +8,14 @@
 atlas = ExtResource("2_2cym0")
 region = Rect2(0, 0, 64, 122)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_7kshw"]
+atlas = ExtResource("2_2cym0")
+region = Rect2(0, 0, 64, 122)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_innl6"]
+atlas = ExtResource("2_2cym0")
+region = Rect2(64, 0, 64, 122)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_64tx1"]
 animations = [{
 "frames": [{
@@ -16,6 +24,17 @@ animations = [{
 }],
 "loop": true,
 "name": &"drive",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.6,
+"texture": SubResource("AtlasTexture_7kshw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_innl6")
+}],
+"loop": true,
+"name": &"idle",
 "speed": 5.0
 }]
 
@@ -95,7 +114,8 @@ metadata/_edit_lock_ = true
 z_index = 1
 z_as_relative = false
 sprite_frames = SubResource("SpriteFrames_64tx1")
-animation = &"drive"
+animation = &"idle"
+frame_progress = 0.250534
 metadata/_edit_lock_ = true
 
 [node name="Windshield" type="AnimatedSprite2D" parent="AnimatedSprite2D"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b8c3n3a4ot8m2"]
+[gd_scene load_steps=18 format=3 uid="uid://b8c3n3a4ot8m2"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Sedan3.cs" id="1_cmh78"]
 [ext_resource type="Texture2D" uid="uid://cmtdj0rqxo74w" path="res://assets/sprites/vehicles/sedan.png" id="2_bu8c3"]
@@ -8,6 +8,14 @@
 atlas = ExtResource("2_bu8c3")
 region = Rect2(0, 306, 58, 102)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_qt4jf"]
+atlas = ExtResource("2_bu8c3")
+region = Rect2(0, 306, 58, 102)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gyc3o"]
+atlas = ExtResource("2_bu8c3")
+region = Rect2(58, 306, 58, 102)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_mib0s"]
 animations = [{
 "frames": [{
@@ -16,6 +24,17 @@ animations = [{
 }],
 "loop": true,
 "name": &"drive",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.3,
+"texture": SubResource("AtlasTexture_qt4jf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gyc3o")
+}],
+"loop": true,
+"name": &"idle",
 "speed": 5.0
 }]
 
@@ -95,10 +114,8 @@ metadata/_edit_lock_ = true
 z_index = 1
 z_as_relative = false
 sprite_frames = SubResource("SpriteFrames_mib0s")
-animation = &"drive"
+animation = &"idle"
 autoplay = "drive"
-frame_progress = 0.941216
-metadata/_edit_lock_ = true
 
 [node name="Windshield" type="AnimatedSprite2D" parent="AnimatedSprite2D"]
 z_as_relative = false

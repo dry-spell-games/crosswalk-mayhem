@@ -67,7 +67,7 @@ namespace Crosswalk
 
             if (Speed < 1)
             {
-                animatedSprite.Pause();
+                animatedSprite.Play("idle");
                 if (windShield != null)
                 {
                     windShield.Pause();
