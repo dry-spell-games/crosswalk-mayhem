@@ -36,7 +36,7 @@ namespace Crosswalk
         private async void OnPedestrianLightChanged(bool _pedestrianGreen)
         {
             // Double-check we can access Level in case the scene changed
-            Level level = GetNodeOrNull<Level>("root/Level");
+            Level level = GetNodeOrNull<Level>("/root/Level");
 
             if (_pedestrianGreen)
             {
