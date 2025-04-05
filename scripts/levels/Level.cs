@@ -306,8 +306,10 @@ namespace Crosswalk
         /// <summary>
         /// Checks if all pedestrians are gone and triggers difficulty increase.
         /// </summary>
-        private void CheckIfPedestriansLeft()
+        private async void CheckIfPedestriansLeft()
         {
+            await ToSignal(GetTree(), "process_frame");
+
             GD.Print($"[CHECK] Spawning: {_pedestriansToSpawn}, In scene: {GetTree().GetNodesInGroup("pedestrians").Count}, Increasing: {_difficultyIncreasing}");
 
             if (!_difficultyIncreasing &&
