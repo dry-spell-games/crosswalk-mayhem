@@ -124,7 +124,7 @@ script = ExtResource("1_xijry")
 z_index = 6
 position = Vector2(112, 385)
 sprite_frames = SubResource("SpriteFrames_fiqqv")
-animation = &"red"
+animation = &"blink"
 script = ExtResource("4_tgry5")
 
 [node name="PedestrianLightR" type="AnimatedSprite2D" parent="Background"]
