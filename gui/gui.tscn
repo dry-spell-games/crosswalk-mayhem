@@ -1,8 +1,66 @@
-[gd_scene load_steps=2 format=3 uid="uid://b2sa7sxwnh6da"]
+[gd_scene load_steps=19 format=3 uid="uid://b2sa7sxwnh6da"]
 
 [ext_resource type="Script" path="res://gui/GUI.cs" id="1_nstyi"]
+[ext_resource type="Texture2D" uid="uid://e3rc2pvk6kmg" path="res://assets/gui/gui.png" id="2_erutb"]
+[ext_resource type="Theme" uid="uid://b6hfafi3wwvfx" path="res://main-menu/main-menu-theme.tres" id="3_px3at"]
+[ext_resource type="Texture2D" uid="uid://ye0pwwo1n8ye" path="res://assets/gui/pause-menu.png" id="4_c5k3m"]
+[ext_resource type="Texture2D" uid="uid://jifhrnl6xova" path="res://assets/gui/sound-on-button.png" id="5_k0mxl"]
+[ext_resource type="Texture2D" uid="uid://bytj4giuhtjj4" path="res://assets/gui/sound-off-button.png" id="6_drym4"]
+[ext_resource type="Texture2D" uid="uid://dirf368ubv3em" path="res://assets/gui/exit-button.png" id="7_ftbvt"]
+[ext_resource type="Texture2D" uid="uid://c7s1y8j3e6ex8" path="res://assets/gui/reset-button.png" id="7_prxhh"]
+[ext_resource type="Texture2D" uid="uid://ddedjmt7np4q" path="res://assets/gui/exit-button-pressed.png" id="8_br3jp"]
+[ext_resource type="Texture2D" uid="uid://b225fdb3t3low" path="res://assets/gui/reset-button-pressed.png" id="8_wh4xl"]
+[ext_resource type="Texture2D" uid="uid://dlulxiu10qs73" path="res://assets/gui/gui-traffic-lights.png" id="11_g6g8j"]
+[ext_resource type="Script" path="res://gui/GUITrafficLight.cs" id="12_djlcb"]
+[ext_resource type="Texture2D" uid="uid://bemwqcyegik4y" path="res://assets/gui/message-sign.png" id="13_t6s68"]
 
-[node name="UserInterface" type="Control"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_b5vgf"]
+atlas = ExtResource("11_g6g8j")
+region = Rect2(0, 0, 96, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lngl0"]
+atlas = ExtResource("11_g6g8j")
+region = Rect2(192, 0, 96, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jduf1"]
+atlas = ExtResource("11_g6g8j")
+region = Rect2(0, 0, 96, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b182e"]
+atlas = ExtResource("11_g6g8j")
+region = Rect2(96, 0, 96, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_r8lwr"]
+animations = [{
+"frames": [{
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_b5vgf")
+}, {
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_lngl0")
+}],
+"loop": true,
+"name": &"blink",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jduf1")
+}],
+"loop": true,
+"name": &"green",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b182e")
+}],
+"loop": true,
+"name": &"red",
+"speed": 5.0
+}]
+
+[node name="GUI" type="Control" node_paths=PackedStringArray("_sfxPlayer", "_pauseMenu", "_muteButton", "_messageSign", "_messageLabel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,10 +68,128 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_nstyi")
+_sfxPlayer = NodePath("SfxPlayer")
+_pauseMenu = NodePath("GuiRect/PauseMenu")
+_muteButton = NodePath("GuiRect/PauseMenu/MuteButton")
+_messageSign = NodePath("MessageSign")
+_messageLabel = NodePath("MessageSign/Label")
 metadata/_edit_lock_ = true
 
-[node name="ScoreLabel" type="Label" parent="."]
+[node name="GuiRect" type="TextureRect" parent="."]
+z_index = 2
 layout_mode = 0
-offset_right = 105.0
-offset_bottom = 42.0
-text = "Score 0"
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_erutb")
+
+[node name="HighscoreLabel" type="Label" parent="GuiRect"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 16.0
+offset_right = 244.0
+offset_bottom = 48.0
+theme = ExtResource("3_px3at")
+vertical_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="GuiRect"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 48.0
+offset_right = 244.0
+offset_bottom = 80.0
+theme = ExtResource("3_px3at")
+vertical_alignment = 1
+
+[node name="LifeLabel" type="Label" parent="GuiRect"]
+layout_mode = 0
+offset_left = 284.0
+offset_top = 96.0
+offset_right = 324.0
+offset_bottom = 128.0
+theme = ExtResource("3_px3at")
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="TrafficLights" type="AnimatedSprite2D" parent="GuiRect"]
+position = Vector2(52, 160)
+sprite_frames = SubResource("SpriteFrames_r8lwr")
+animation = &"blink"
+script = ExtResource("12_djlcb")
+
+[node name="PauseButton" type="Button" parent="GuiRect"]
+layout_mode = 0
+offset_left = 290.0
+offset_top = 24.0
+offset_right = 338.0
+offset_bottom = 72.0
+theme = ExtResource("3_px3at")
+
+[node name="PauseMenu" type="TextureRect" parent="GuiRect"]
+visible = false
+layout_mode = 0
+offset_left = 204.0
+offset_top = 24.0
+offset_right = 360.0
+offset_bottom = 264.0
+texture = ExtResource("4_c5k3m")
+
+[node name="PlayButton" type="Button" parent="GuiRect/PauseMenu"]
+layout_mode = 0
+offset_left = 86.0
+offset_right = 134.0
+offset_bottom = 48.0
+theme = ExtResource("3_px3at")
+
+[node name="MuteButton" type="TextureButton" parent="GuiRect/PauseMenu"]
+layout_mode = 0
+offset_top = 128.0
+offset_right = 48.0
+offset_bottom = 176.0
+toggle_mode = true
+texture_normal = ExtResource("5_k0mxl")
+texture_pressed = ExtResource("6_drym4")
+
+[node name="ResetButton" type="TextureButton" parent="GuiRect/PauseMenu"]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 128.0
+offset_right = 134.0
+offset_bottom = 176.0
+texture_normal = ExtResource("7_prxhh")
+texture_pressed = ExtResource("8_wh4xl")
+
+[node name="ExitButton" type="TextureButton" parent="GuiRect/PauseMenu"]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 192.0
+offset_right = 134.0
+offset_bottom = 240.0
+texture_normal = ExtResource("7_ftbvt")
+texture_pressed = ExtResource("8_br3jp")
+
+[node name="MessageSign" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 640.0
+offset_right = 324.0
+offset_bottom = 928.0
+texture = ExtResource("13_t6s68")
+
+[node name="Label" type="Label" parent="MessageSign"]
+layout_mode = 0
+offset_right = 288.0
+offset_bottom = 96.0
+theme = ExtResource("3_px3at")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
+volume_db = -20.0
+bus = &"Sfx"
+
+[connection signal="pressed" from="GuiRect/PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="pressed" from="GuiRect/PauseMenu/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="toggled" from="GuiRect/PauseMenu/MuteButton" to="." method="_on_mute_button_toggled"]
+[connection signal="pressed" from="GuiRect/PauseMenu/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="GuiRect/PauseMenu/ExitButton" to="." method="_on_exit_button_pressed"]

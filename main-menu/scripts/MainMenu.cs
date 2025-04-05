@@ -50,7 +50,7 @@ namespace Crosswalk
             _english.Play("wave");
             _finnish.Play("still");
 
-            PlaySfx("res://assets/audio/sfx/button.wav");
+            PlaySfx("res://assets/audio/sfx/menu/button.wav");
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Crosswalk
             _english.Play("still");
             _finnish.Play("wave");
 
-            PlaySfx("res://assets/audio/sfx/button.wav");
+            PlaySfx("res://assets/audio/sfx/menu/button.wav");
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Crosswalk
         /// </summary>
         public async void _on_play_pressed()
         {
-            PlaySfx("res://assets/audio/sfx/button.wav");
+            PlaySfx("res://assets/audio/sfx/menu/button.wav");
             await ToSignal(GetTree().CreateTimer(_sfxDelayTimer), "timeout");
 
             GameManager.Instance.SaveData();
@@ -88,7 +88,7 @@ namespace Crosswalk
             _signsUp = false;
             _settingsUp = true;
 
-            PlaySfx("res://assets/audio/sfx/slide-up-long.wav");
+            PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Crosswalk
         /// </summary>
         public async void _on_quit_pressed()
         {
-            PlaySfx("res://assets/audio/sfx/button.wav");
+            PlaySfx("res://assets/audio/sfx/menu/button.wav");
             await ToSignal(GetTree().CreateTimer(_sfxDelayTimer), "timeout");
 
             GameManager.Instance.SaveData();
@@ -110,7 +110,7 @@ namespace Crosswalk
         /// </summary>
         public void _on_tutorial_pressed()
         {
-            PlaySfx("res://assets/audio/sfx/button.wav");
+            PlaySfx("res://assets/audio/sfx/menu/button.wav");
             _tutorialRect.Visible = true;
         }
 
@@ -120,7 +120,7 @@ namespace Crosswalk
         /// </summary>
         public void _on_tutorial_exit_pressed()
         {
-            PlaySfx("res://assets/audio/sfx/button.wav");
+            PlaySfx("res://assets/audio/sfx/menu/button.wav");
             _tutorialRect.Visible = false;
         }
 
@@ -132,7 +132,7 @@ namespace Crosswalk
         {
             _resetHighscore = toggledOn;
 
-            PlaySfx("res://assets/audio/sfx/button.wav");
+            PlaySfx("res://assets/audio/sfx/menu/button.wav");
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Crosswalk
             _signsUp = true;
             _settingsUp = false;
 
-            PlaySfx("res://assets/audio/sfx/slide-up-long.wav");
+            PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Crosswalk
             _signsUp = true;
             _settingsUp = false;
 
-            PlaySfx("res://assets/audio/sfx/slide-up-long.wav");
+            PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace Crosswalk
                 _sfxAudioControl.Initialize(GameManager.Instance._sfxVolume);
             }
 
-            PlaySfx("res://assets/audio/sfx/slide-up.wav");
+            PlaySfx("res://assets/audio/sfx/menu/slide-up.wav");
             PlayMusic();
         }
 

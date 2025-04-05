@@ -20,13 +20,15 @@ namespace Crosswalk
         public float _musicVolume { get; set; } // Music volume in dB
         public float _sfxVolume { get; set; } // SFX volume in dB
 
-        public float _savedMasterVolume; // Last saved master volume
+        public float _savedMasterVolume { get; set; } // Last saved master volume
         public float _savedMusicVolume; // Last saved music volume
         public float _savedSfxVolume; // Last saved SFX volume
 
         public string _langCode { get; set; } // Currently selected language code ("en", "fi")
 
-        private Label scoreLabel; // Reference to score label in the UI
+        private Label _scoreLabel; // Reference to score label in the GUI
+        private Label _highscoreLabel; // Reference to the highscore label in the GGUI
+        private Label _lifeLabel; // Reference to the life label in the GGUI
 
         public int _difLvl { get; set; } = 3; // Game difficulty level
 
@@ -47,16 +49,16 @@ namespace Crosswalk
         }
 
         /// <summary>
-        /// Links the UI score label to this manager and updates it immediately.
+        /// Links the GGUI score label to this manager and updates it immediately.
         /// </summary>
         public void SetScoreLabel(Label label)
         {
-            scoreLabel = label;
+            _scoreLabel = label;
             UpdateScoreLabel();
         }
 
         /// <summary>
-        /// Adds to the current score and updates the UI label.
+        /// Adds to the current score and updates the GUI label.
         /// </summary>
         public void AddScore(int amount)
         {
@@ -65,23 +67,63 @@ namespace Crosswalk
         }
 
         /// <summary>
-        /// Updates the UI score label with the current score.
+        /// Updates the GUI score label with the current score.
         /// </summary>
         private void UpdateScoreLabel()
         {
-            if (scoreLabel != null)
+            if (_scoreLabel != null)
             {
-                scoreLabel.Text = $"Score: {_score}";
+                _scoreLabel.Text = $"{_score}";
             }
         }
 
         /// <summary>
-        /// Resets the score to zero and updates the UI.
+        /// Resets the score to zero and updates the GUI.
         /// </summary>
         public void ResetScore()
         {
             _score = 0;
             UpdateScoreLabel();
+        }
+
+        /// <summary>
+        /// Links the GGUI highscore label to this manager and updates it immediately.
+        /// </summary>
+        public void SetHighscoreLabel(Label label)
+        {
+            _highscoreLabel = label;
+            UpdateHighscoreLabel();
+        }
+
+        /// <summary>
+        /// Updates the GGUI highscore label with the saved highscore.
+        /// </summary>
+        private void UpdateHighscoreLabel()
+        {
+            if (_highscoreLabel != null)
+            {
+                _highscoreLabel.Text = $"{_highscore}";
+            }
+        }
+
+        /// <summary>
+        /// Links the GGUI life label to this manager and updates it immediately.
+        /// </summary>
+        public void SetLifeLabel(Label label)
+        {
+            _lifeLabel = label;
+            UpdateLifeLabel();
+        }
+
+        /// <summary>
+        /// Updates the GGUI life label with the current lives.
+        /// </summary>
+        private void UpdateLifeLabel()
+        {
+            if (_lifeLabel != null)
+            {
+                _lifeLabel.Text = $"{_life}";
+            }
         }
 
         /// <summary>
