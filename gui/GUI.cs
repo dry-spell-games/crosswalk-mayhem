@@ -59,6 +59,8 @@ namespace Crosswalk
         /// </summary>
         private void _on_mute_button_toggled(bool toggled_on)
         {
+            PlaySfx("res://assets/audio/sfx/menu/button.wav");
+
             if (toggled_on)
             {
                 GameManager.Instance._masterVolume = -80f; // Mute
