@@ -61,6 +61,7 @@ animations = [{
 }]
 
 [node name="GUI" type="Control" node_paths=PackedStringArray("_sfxPlayer", "_pauseMenu", "_muteButton", "_messageSign", "_messageLabel")]
+z_index = 666
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -113,7 +114,8 @@ vertical_alignment = 1
 [node name="TrafficLights" type="AnimatedSprite2D" parent="GuiRect"]
 position = Vector2(52, 160)
 sprite_frames = SubResource("SpriteFrames_r8lwr")
-animation = &"blink"
+animation = &"red"
+autoplay = "red"
 script = ExtResource("12_djlcb")
 
 [node name="PauseButton" type="Button" parent="GuiRect"]

@@ -30,12 +30,13 @@ namespace Crosswalk
         // ArrayList can not be exported
         public List<Vector2> StartPositions { get; set; } = new List<Vector2>
         {
-            new Vector2(-30, 480),
-            new Vector2(-30, 520),
+            new Vector2(-30, 497),
+            new Vector2(-30, 528),
             new Vector2(-30, 560),
-            new Vector2(400, 500),
-            new Vector2(400, 540),
-            new Vector2(400, 580)
+            new Vector2(-30, 592),
+            new Vector2(400, 512),
+            new Vector2(400, 544),
+            new Vector2(400, 576)
         };
 
         protected bool isFlying = false;
@@ -88,47 +89,50 @@ namespace Crosswalk
         {
             if (isStopped)
             {
-                // Uses different idle animation for random stops
-                if (randomStop)
-                {
-                    PlayAnimation("idle2");
-                    return;
-                }
-                PlayAnimation("idle");
-
+                PlayAnimation(randomStop ? "idle2" : "idle");
+                return;
             }
-            else if (!isFlying) // If pedestrian is not flying, move pedestrian
+            else if (!isFlying)
             {
                 Move(delta, IsSpeeding);
             }
 
-            // Goes through every Pedestrian class' child and removes those which are out of bounds
+            // Clean up pedestrians out of bounds
             foreach (Area2D pedestrian in GetTree().GetNodesInGroup("pedestrians").Cast<Area2D>())
             {
-                if (pedestrian.Position.X > 410 || pedestrian.Position.X < -40) // Tarkista sijainti
+                if ((pedestrian.Position.X > 410 || pedestrian.Position.X < -40) && !pedestrian.IsQueuedForDeletion())
                 {
-                    if (!pedestrian.IsQueuedForDeletion()) // Tarkista, onko se jo poistettu
+                    GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
+
+                    // Cast to Pedestrian to access isFlying
+                    if (pedestrian is Pedestrian p)
                     {
-                        GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
-
-                        switch (pedestrian.Name)
+                        if (p.isFlying)
                         {
-                            case "Grandma":
-                            case "Grandpa":
-                                GameManager.Instance.AddScore(50);
-                                break;
-                            case "Girl":
-                            case "Boy":
-                                GameManager.Instance.AddScore(30);
-                                break;
-                            case "Woman":
-                            case "Man":
-                                GameManager.Instance.AddScore(20);
-                                break;
+                            GameManager.Instance.UpdateLife(-1);
+                            GD.Print($"[LIFE -1] {p.Name} was flying when despawned.");
                         }
-
-                        pedestrian.QueueFree(); // Merkitse poistettavaksi
+                        else
+                        {
+                            switch (p.Name)
+                            {
+                                case "Grandma":
+                                case "Grandpa":
+                                    GameManager.Instance.AddScore(50);
+                                    break;
+                                case "Girl":
+                                case "Boy":
+                                    GameManager.Instance.AddScore(30);
+                                    break;
+                                case "Woman":
+                                case "Man":
+                                    GameManager.Instance.AddScore(20);
+                                    break;
+                            }
+                        }
                     }
+
+                    pedestrian.QueueFree();
                 }
             }
         }

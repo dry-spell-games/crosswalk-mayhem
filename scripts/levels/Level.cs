@@ -1,26 +1,42 @@
 using Godot;
 using System;
-using System.Dynamic;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Crosswalk
 {
     public partial class Level : Node2D
     {
-        [Export] private float[] _spawnRate  = {4, 3.5f, 3, 2.5f, 2, 1.5f};
-        [Export] private int[] _carSpawnRate = {7, 6, 5, 4, 3, 2};
-         // How many pedestrians level has
-        [Export] private int[] _pedestrianCount = {20, 30, 50, 75, 100, 2000};
-        // Traffic lights
-        [Export] private float[] _carGreenTimer = {5, 6, 7, 8, 9, 10};
+        // Rate at which pedestrians spawn at each difficulty level
+        [Export] private float[] _spawnRate = { 4f, 3.5f, 3f, 2.5f, 2f, 1f };
+        // Rate at which cars spawn at each difficulty level
+        [Export] private int[] _carSpawnRate = { 7, 6, 5, 4, 3, 1 };
+        // Number of pedestrians per level
+        [Export] private int[] _pedestrianCount = { 5, 5, 5, 5, 5, 999 };
+        // Duration of green light for cars per difficulty level
+        [Export] private float[] _carGreenTimer = { 3, 5, 7, 8, 9, 10 };
+        // Flag for car green light state
         public static bool _carGreen { get; private set; } = true;
-        [Export] public float[] _pedestrianGreenTimer = {8, 7, 10, 5, 4, 3};
+        // Duration of green light for pedestrians per difficulty level
+        [Export] public float[] _pedestrianGreenTimer = { 10f, 7f, 6f, 5f, 4f, 3f };
+        // Flag for pedestrian green light state
         public static bool _pedestrianGreen { get; private set; } = false;
-        [Export] public float[] _blinkTimer = {2, 2, 3, 2, 1, 1};
+        // Duration for blink warning before pedestrian light ends
+        [Export] public float[] _blinkTimer = { 3f, 3f, 3f, 2f, 1f, 1f };
+        // Flag to indicate blinking pedestrian light
         public static bool _blink { get; private set; } = false;
-        [Export] private float[] _lightTransitionTimer = {4, 3, 2, 2, 2, 1};
+        // Transition delay between light changes per difficulty
+        [Export] private float[] _lightTransitionTimer = { 4f, 3f, 2f, 2f, 2f, 1f };
+        // Life bonus granted at each difficulty level
+        [Export] private int[] _lifeBonus = { 5, 4, 3, 2, 1, 0 };
+        // Background music player
+        [Export] private AudioStreamPlayer _musicPlayer;
+        // UI element to block player input
+        [Export] private Control _inputBlocker;
+        // Time duration to show messages (like Game Over, New Record, etc.)
+        [Export] private float _messageTimer = 3f;
+
+        // Packed scenes for pedestrians and vehicles
         private PackedScene GuiScene;
         private PackedScene GrandmaScene;
         private PackedScene GrandpaScene;
@@ -38,102 +54,54 @@ namespace Crosswalk
         private PackedScene SuvScene1;
         private PackedScene SuvScene2;
         private PackedScene SuvScene3;
+
+        // Hitbox for traffic light interaction
         private CollisionShape2D vehicleTrafficLightHitbox;
+
+        // Random number generator
         private Random random = new Random();
-        // Signals for traffic lights
+
+        // Signal declarations
         //[Signal] public delegate void CarLightEventHandler(bool _carGreen);
         [Signal] public delegate void PedestrianLightEventHandler(bool _pedestrianGreen);
         //[Signal] public delegate void BlinkEventHandler(bool _pedestrianGreen);
-        private int _difficulty = GameManager.Instance._difLvl;
 
+        // Current difficulty level
+        private int _difficulty = GameManager.Instance._difficulty;
 
+        // GUI reference
+        private GUI _gui;
 
-        public override void _Ready()
-        {
-                    // @@@@@ TESTI VAIKEUDEN ASETUS@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            _difficulty = 2;
-            GD.Print($"Level {_difficulty} started");
+        // Flag to prevent multiple game over checks
+        private bool _checkLife = false;
 
-            // Loads pedestrian scenes
-            GrandmaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandma.tscn");
-            GrandpaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandpa.tscn");
-            GirlScene = (PackedScene)GD.Load("res://scenes/pedestrians/girl.tscn");
-            BoyScene = (PackedScene)GD.Load("res://scenes/pedestrians/boy.tscn");
-            ManScene = (PackedScene)GD.Load("res://scenes/pedestrians/man.tscn");
-            WomanScene = (PackedScene)GD.Load("res://scenes/pedestrians/woman.tscn");
+        // Flag to prevent triggering difficulty up multiple times
+        private bool _difficultyIncreasing = false;
 
-            // Loads vehicle scenes
-            FamilyCarScene = (PackedScene)GD.Load("res://scenes/vehicles/familycar.tscn");
-            SportsCarScene = (PackedScene)GD.Load("res://scenes/vehicles/sportscar.tscn");
-            SedanScene = (PackedScene)GD.Load("res://scenes/vehicles/sedan.tscn");
-            SedanScene1 = (PackedScene)GD.Load("res://scenes/vehicles/sedan1.tscn");
-            SedanScene2 = (PackedScene)GD.Load("res://scenes/vehicles/sedan2.tscn");
-            SedanScene3 = (PackedScene)GD.Load("res://scenes/vehicles/sedan3.tscn");
-            SuvScene = (PackedScene)GD.Load("res://scenes/vehicles/suv.tscn");
-            SuvScene1 = (PackedScene)GD.Load("res://scenes/vehicles/suv1.tscn");
-            SuvScene2 = (PackedScene)GD.Load("res://scenes/vehicles/suv2.tscn");
-            SuvScene3 = (PackedScene)GD.Load("res://scenes/vehicles/suv3.tscn");
+        // Traffic light state management task and cancellation
+        private Task _trafficLightTask;
+        private CancellationTokenSource _trafficTokenSource;
 
-            // Loads GUI scene
-            GuiScene = (PackedScene)GD.Load("res://gui/gui.tscn");
+        // Pedestrian spawn counter
+        private int _pedestriansToSpawn;
 
-            // Gets trafficlight's hitboxes
-            vehicleTrafficLightHitbox = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
-
-            // Instantiates GUI for level
-            Node guiInstance = GuiScene.Instantiate();
-            AddChild(guiInstance);
-
-            if (GrandmaScene == null)
-            {
-                GD.PrintErr("Failed to load Grandma scene!");
-            }
-            if (GrandpaScene == null)
-            {
-                GD.PrintErr("Failed to load Grandpa scene");
-            }
-            else if (GirlScene == null) {
-                GD.Print("Failed to load Girl scene!");
-            }
-            else if (BoyScene == null) {
-                GD.Print("Failed to load Boy scene!");
-            }
-            else if (ManScene == null) {
-                GD.Print("Failed to load ManScene");
-            }
-            else if (WomanScene == null) {
-                GD.Print("Failed to load WomanScene");
-            }
-            StartSpawningPedestrians();
-            StartSpawningCars();
-            TrafficLights();
-            EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
-        }
-        public override void _Process(Double delta)
-        {
-            if (_carGreen)
-            {
-                vehicleTrafficLightHitbox.Disabled = true;
-            }
-            else
-            {
-                vehicleTrafficLightHitbox.Disabled = false;
-            }
-        }
-
-        // Asynchronous method that spawns pedestrians at set intervals
-        // Spawns pedestrians until PedestrianCount reaches zero.
+        /// <summary>
+        /// Spawns pedestrians at intervals until count reaches zero.
+        /// </summary>
         private async void StartSpawningPedestrians()
         {
-            while (_pedestrianCount[_difficulty] > 0)
+            while (_pedestriansToSpawn > 0)
             {
                 SpawnPedestrian();
                 await ToSignal(GetTree().CreateTimer(_spawnRate[_difficulty]), "timeout");
-                _pedestrianCount[_difficulty]--;
-                GD.Print($"Pedestrians left: {_pedestrianCount[_difficulty]}");
+                _pedestriansToSpawn--;
+                GD.Print($"Pedestrians left to spawn: {_pedestriansToSpawn}");
             }
         }
 
+        /// <summary>
+        /// Continuously spawns cars at fixed intervals.
+        /// </summary>
         private async void StartSpawningCars()
         {
             while (true)
@@ -143,15 +111,16 @@ namespace Crosswalk
             }
         }
 
+        /// <summary>
+        /// Handles the traffic light cycle between cars and pedestrians.
+        /// </summary>
         private async void TrafficLights()
         {
-            while(true)
+            while (true)
             {
                 GD.Print("Green light for cars");
-                //EmitSignal(SignalName.CarLight, _carGreen);
                 await ToSignal(GetTree().CreateTimer(_carGreenTimer[_difficulty]), "timeout");
                 _carGreen = false;
-                //EmitSignal(SignalName.CarLight, _carGreen);
                 GD.Print("Traffic light transition");
                 await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty]), "timeout");
                 _pedestrianGreen = true;
@@ -166,51 +135,39 @@ namespace Crosswalk
             }
         }
 
+        /// <summary>
+        /// Instantiates a random pedestrian based on difficulty.
+        /// </summary>
         private void SpawnPedestrian()
         {
-            // Randomly generated pedestrian type
             int rand;
             Pedestrian pedestrian = null;
-            // Difficulties 0-1 don't include "The Elderly"
-            if (_difficulty < 2)
-            {
-                rand = random.Next(0,4);
-            }
-            else {
-            rand = random.Next(0, 6);  // 0 = Grandma, 1 = Girl, 2 Boy, 3 Man, 4 Woman, 5 Grandpa
-            }
 
+            if (_difficulty < 2)
+                rand = random.Next(0, 4);
+            else
+                rand = random.Next(0, 6);
+
+            // Selects and instantiates the corresponding pedestrian scene
             if (rand == 0 && WomanScene != null)
-            {
                 pedestrian = (Pedestrian)WomanScene.Instantiate();
-            }
             else if (rand == 1 && GirlScene != null)
-            {
                 pedestrian = (Pedestrian)GirlScene.Instantiate();
-            }
             else if (rand == 2 && BoyScene != null)
-            {
                 pedestrian = (Pedestrian)BoyScene.Instantiate();
-            }
             else if (rand == 3 && ManScene != null)
-            {
                 pedestrian = (Pedestrian)ManScene.Instantiate();
-            }
-            else if (rand == 4 && GrandmaScene!= null)
-            {
+            else if (rand == 4 && GrandmaScene != null)
                 pedestrian = (Pedestrian)GrandmaScene.Instantiate();
-            }
             else if (rand == 5 && GrandpaScene != null)
-            {
                 pedestrian = (Pedestrian)GrandpaScene.Instantiate();
-            }
+
             if (pedestrian == null)
             {
                 GD.PrintErr("Failed to instantiate pedestrian!");
                 return;
             }
 
-            // Spawnposition from abstract class Pedestrian
             Vector2 spawnPosition = pedestrian.StartPositions[GD.RandRange(
                 0, pedestrian.StartPositions.Count - 1)];
 
@@ -218,95 +175,216 @@ namespace Crosswalk
             AddChild(pedestrian);
         }
 
+        /// <summary>
+        /// Instantiates a vehicle and spawns it if space is available.
+        /// </summary>
         private void SpawnVehicle()
         {
-             // 0 FamilyCar, 1 SportsCar, 2 Blue Sedan, 3 Blue SUV
-            // 4 Green Sedan, 5 Red Sedan, 6 Yellow Sedan, 7 Yellow SUV, 8 Green SUV, 9 Red SUV
             Car car = null;
-            int rand; // Randomizes vehicle
+            int rand;
+
             if (_difficulty < 2)
-            {
-                rand = random.Next(0, 9); // Levels 0-1 do NOT include sportscar
-            }
+                rand = random.Next(0, 9);
             else
-            {
                 rand = random.Next(0, 10);
-            }
 
-            // Instantiates randomized vehicle
+            // Instantiate a random vehicle scene
             if (rand == 0 && FamilyCarScene != null)
-            {
                 car = (Car)FamilyCarScene.Instantiate();
-            }
             else if (rand == 1 && SedanScene != null)
-            {
                 car = (Car)SedanScene.Instantiate();
-            }
             else if (rand == 2 && SuvScene != null)
-            {
                 car = (Car)SuvScene.Instantiate();
-            }
             else if (rand == 3 && SedanScene1 != null)
-            {
                 car = (Car)SedanScene1.Instantiate();
-            }
             else if (rand == 4 && SedanScene2 != null)
-            {
                 car = (Car)SedanScene2.Instantiate();
-            }
             else if (rand == 5 && SedanScene3 != null)
-            {
                 car = (Car)SedanScene3.Instantiate();
-            }
             else if (rand == 6 && SuvScene1 != null)
-            {
                 car = (Car)SuvScene1.Instantiate();
-            }
             else if (rand == 7 && SuvScene2 != null)
-            {
                 car = (Car)SuvScene2.Instantiate();
-            }
             else if (rand == 8 && SuvScene3 != null)
-            {
                 car = (Car)SuvScene3.Instantiate();
-            }
             else if (rand == 9 && SportsCarScene != null)
-            {
                 car = (Car)SportsCarScene.Instantiate();
-            }
 
-            // Randomizes spawn point for vehicle
             Vector2 spawnPosition = car.StartPositions[GD.RandRange(0, car.StartPositions.Count - 1)];
 
-            // Checks if the spawnpoint already has a vehicle
             if (IsSpawnPointCarOccupied(spawnPosition))
             {
                 GD.Print("Spawnpoint occupied, can not spawn a vehicle");
-                return; // Doesn't spawn a car if car is already near spawn point
+                return;
             }
+
             car.Initialize(spawnPosition);
             AddChild(car);
         }
 
-        // Method checks there isn't any vehicle too close to spawn point already
+        /// <summary>
+        /// Checks if a car is already occupying the spawn position.
+        /// </summary>
         private bool IsSpawnPointCarOccupied(Vector2 spawnPosition)
         {
-            // Minimum distance before vehicle can be instantiated
             float minDistance = 50.0f;
 
             foreach (Node child in GetChildren())
             {
-                // Checks if child is car
                 if (child is Car existingCar)
                 {
-                    // Compares distance from child in vehicles
                     if (existingCar.Position.DistanceTo(spawnPosition) < minDistance)
                     {
-                        return true; // If distance is too short, returns true
+                        return true;
                     }
                 }
             }
-            return false; // No vehicles found too close, returns false to spawn a vehicle
+            return false;
+        }
+
+        /// <summary>
+        /// Handles end-of-game logic, displays messages and saves data.
+        /// </summary>
+        private async void GameOver()
+        {
+            GameManager.Instance._gameOver = true;
+            _inputBlocker.Visible = true;
+            _musicPlayer.Stop();
+            await _gui.ShowMessage(_messageTimer, "GAME_OVER");
+
+            if (GameManager.Instance._score > GameManager.Instance._highscore)
+            {
+                GameManager.Instance.UpdateHighscore();
+                await _gui.ShowMessage(_messageTimer, "NEW_RECORD");
+            }
+
+            GameManager.Instance.SaveData();
+            _inputBlocker.Visible = false;
+            GameManager.Instance.ResetScore();
+            GameManager.Instance.ResetLife();
+            GetTree().ChangeSceneToFile("res://main-menu/scenes/main-menu.tscn");
+        }
+
+        /// <summary>
+        /// Checks if player's life is zero and triggers game over if true.
+        /// </summary>
+        private void CheckLife()
+        {
+            if (GameManager.Instance._life <= 0 && !_checkLife)
+            {
+                _checkLife = true;
+                GameOver();
+            }
+        }
+
+        /// <summary>
+        /// Initializes and starts the game logic for the current level.
+        /// </summary>
+        private async void StartGame()
+        {
+            _difficulty = GameManager.Instance._difficulty;
+            _pedestriansToSpawn = _pedestrianCount[_difficulty];
+
+            GameManager.Instance._gameOver = false;
+            GameManager.Instance.UpdateLife(_lifeBonus[_difficulty]);
+            _inputBlocker.Visible = true;
+
+            _carGreen = true;
+            _pedestrianGreen = false;
+            _blink = false;
+
+            TrafficLights();
+            await _gui.ShowMessage(_messageTimer, "GET_READY");
+
+            _musicPlayer.Play();
+            StartSpawningPedestrians();
+            StartSpawningCars();
+            EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
+            _inputBlocker.Visible = false;
+        }
+
+        /// <summary>
+        /// Checks if all pedestrians are gone and triggers difficulty increase.
+        /// </summary>
+        private void CheckIfPedestriansLeft()
+        {
+            GD.Print($"[CHECK] Spawning: {_pedestriansToSpawn}, In scene: {GetTree().GetNodesInGroup("pedestrians").Count}, Increasing: {_difficultyIncreasing}");
+
+            if (!_difficultyIncreasing &&
+                _pedestriansToSpawn <= 0 &&
+                GetTree().GetNodesInGroup("pedestrians").Count == 0)
+            {
+                GD.Print("[CHECK] Difficulty increasing triggered.");
+                _difficultyIncreasing = true;
+                DifficultyUp();
+            }
+        }
+
+        /// <summary>
+        /// Increases difficulty and reloads the level scene.
+        /// </summary>
+        private async void DifficultyUp()
+        {
+            _inputBlocker.Visible = true;
+            _musicPlayer.Stop();
+            await _gui.ShowMessage(_messageTimer, "DIFFICULTY_UP");
+            GameManager.Instance._difficulty += 1;
+            GetTree().ChangeSceneToFile("res://scenes/levels/level.tscn");
+        }
+
+        /// <summary>
+        /// Called when the node enters the scene tree.
+        /// Loads scenes and starts the game.
+        /// </summary>
+        public override void _Ready()
+        {
+            GD.Print($"Level {_difficulty} started");
+
+            // Load pedestrian scenes
+            GrandmaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandma.tscn");
+            GrandpaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandpa.tscn");
+            GirlScene = (PackedScene)GD.Load("res://scenes/pedestrians/girl.tscn");
+            BoyScene = (PackedScene)GD.Load("res://scenes/pedestrians/boy.tscn");
+            ManScene = (PackedScene)GD.Load("res://scenes/pedestrians/man.tscn");
+            WomanScene = (PackedScene)GD.Load("res://scenes/pedestrians/woman.tscn");
+
+            // Load vehicle scenes
+            FamilyCarScene = (PackedScene)GD.Load("res://scenes/vehicles/familycar.tscn");
+            SportsCarScene = (PackedScene)GD.Load("res://scenes/vehicles/sportscar.tscn");
+            SedanScene = (PackedScene)GD.Load("res://scenes/vehicles/sedan.tscn");
+            SedanScene1 = (PackedScene)GD.Load("res://scenes/vehicles/sedan1.tscn");
+            SedanScene2 = (PackedScene)GD.Load("res://scenes/vehicles/sedan2.tscn");
+            SedanScene3 = (PackedScene)GD.Load("res://scenes/vehicles/sedan3.tscn");
+            SuvScene = (PackedScene)GD.Load("res://scenes/vehicles/suv.tscn");
+            SuvScene1 = (PackedScene)GD.Load("res://scenes/vehicles/suv1.tscn");
+            SuvScene2 = (PackedScene)GD.Load("res://scenes/vehicles/suv2.tscn");
+            SuvScene3 = (PackedScene)GD.Load("res://scenes/vehicles/suv3.tscn");
+
+            // Load GUI
+            _gui = GetNode<GUI>("GUI");
+
+            // Get vehicle traffic light hitbox
+            vehicleTrafficLightHitbox = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
+
+            // Check if scenes loaded properly
+            if (GrandmaScene == null) GD.PrintErr("Failed to load Grandma scene!");
+            if (GrandpaScene == null) GD.PrintErr("Failed to load Grandpa scene");
+            else if (GirlScene == null) GD.Print("Failed to load Girl scene!");
+            else if (BoyScene == null) GD.Print("Failed to load Boy scene!");
+            else if (ManScene == null) GD.Print("Failed to load ManScene");
+            else if (WomanScene == null) GD.Print("Failed to load WomanScene");
+
+            StartGame();
+        }
+
+        /// <summary>
+        /// Runs every frame; handles hitbox toggle and game checks.
+        /// </summary>
+        public override void _Process(Double delta)
+        {
+            vehicleTrafficLightHitbox.Disabled = _carGreen;
+            CheckLife();
+            CheckIfPedestriansLeft();
         }
     }
 }

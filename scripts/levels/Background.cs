@@ -20,7 +20,7 @@ namespace Crosswalk
 		[Export] private string mayhemLevelsPath = "res://scenes/level-background/maps/mayhem-maps";
 
         // Current difficulty setting (can be set dynamically elsewhere in the project)
-        private int _difLvl = GameManager.Instance._difLvl;
+        private int _difficulty = GameManager.Instance._difficulty;
 
         // Reference to the selected map scene
         private PackedScene _mapScene;
@@ -79,28 +79,28 @@ namespace Crosswalk
         /// </summary>
         private void LoadScenes()
         {
-            switch (_difLvl)
+            switch (_difficulty)
             {
-                case 1:
+                case 0:
                     LoadScenesFromFolder(veryEasyLevelsPath);
                     break;
-                case 2:
+                case 1:
                     LoadScenesFromFolder(easyLevelsPath);
                     break;
-                case 3:
+                case 2:
                     LoadScenesFromFolder(normalLevelsPath);
                     break;
-                case 4:
+                case 3:
                     LoadScenesFromFolder(hardLevelsPath);
                     break;
-                case 5:
+                case 4:
                     LoadScenesFromFolder(veryHardLevelsPath);
                     break;
-                case 6:
+                case 5:
                     LoadScenesFromFolder(mayhemLevelsPath);
                     break;
                 default:
-                    GD.PrintErr("Unknown difficulty: " + _difLvl);
+                    GD.PrintErr("Unknown difficulty: " + _difficulty);
                     break;
             }
         }

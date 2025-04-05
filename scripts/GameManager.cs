@@ -14,7 +14,7 @@ namespace Crosswalk
 
         public int _score { get; private set; } // Current in-game score
         public int _highscore { get; private set; } // Stored highscore
-        public int _life { get; private set; } // "Player lives"
+        public int _life { get; private set; } = 0; // "Player lives"
 
         public float _masterVolume { get; set; } // Master volume in dB
         public float _musicVolume { get; set; } // Music volume in dB
@@ -30,7 +30,8 @@ namespace Crosswalk
         private Label _highscoreLabel; // Reference to the highscore label in the GGUI
         private Label _lifeLabel; // Reference to the life label in the GGUI
 
-        public int _difLvl { get; set; } = 3; // Game difficulty level
+        public int _difficulty { get; set; } = 0; // Game difficulty level
+        public bool _gameOver { get; set; } = false; // Flag for checking if the game is over
 
         /// <summary>
         /// Called when the node enters the scene tree.
@@ -62,8 +63,11 @@ namespace Crosswalk
         /// </summary>
         public void AddScore(int amount)
         {
-            _score += amount;
-            UpdateScoreLabel();
+            if (!_gameOver)
+            {
+                _score += amount;
+                UpdateScoreLabel();
+            }
         }
 
         /// <summary>
@@ -86,6 +90,20 @@ namespace Crosswalk
             UpdateScoreLabel();
         }
 
+        public void UpdateLife(int value)
+        {
+            _life += value;
+            UpdateLifeLabel();
+        }
+
+        /// <summary>
+        /// Resets the player life to 0
+        /// </summary>
+        public void ResetLife()
+        {
+            _life = 0;
+        }
+
         /// <summary>
         /// Links the GGUI highscore label to this manager and updates it immediately.
         /// </summary>
@@ -104,6 +122,15 @@ namespace Crosswalk
             {
                 _highscoreLabel.Text = $"{_highscore}";
             }
+        }
+
+        /// <summary>
+        /// Updates the highscore
+        /// </summary>
+        public void UpdateHighscore()
+        {
+            _highscore = _score;
+            UpdateHighscoreLabel();
         }
 
         /// <summary>
