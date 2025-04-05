@@ -4,52 +4,60 @@ using System;
 
 namespace Crosswalk
 {
+    /// <summary>
+    /// PedestrianLight is a visual representation of the pedestrian traffic light.
+    /// It listens for the pedestrian light signal from the Level and changes animation accordingly.
+    /// </summary>
     public partial class PedestrianLight : AnimatedSprite2D
     {
+        // Current difficulty level pulled from GameManager
         private int _difficulty = GameManager.Instance._difLvl;
 
-        // Called when the node enters the scene tree for the first time.
+        /// <summary>
+        /// Called when the node is added to the scene tree.
+        /// Connects to the PedestrianLight signal from the Level node.
+        /// </summary>
         public override void _Ready()
         {
-            // Etsi Level1 instanssi
-            Level1 level = GetNodeOrNull<Level1>("/root/Level1");
-            // realLevel is supposed to be actual playable level
-            Level realLevel = GetNodeOrNull<Level>("/root/Level");
+            // Attempt to get the Level node from the scene tree
+            Level level = GetNodeOrNull<Level>("/root/Level");
 
+            // Connect to the signal if Level is found
             if (level != null)
             {
-                level.PedestrianLight += OnPedestrianLightChanged; // Liitä signaali
-            }
-            else if (realLevel != null)
-            {
-                realLevel.PedestrianLight += OnPedestrianLightChanged;
+                level.PedestrianLight += OnPedestrianLightChanged;
             }
         }
 
+        /// <summary>
+        /// Called when the pedestrian light state changes.
+        /// Animates the traffic light accordingly.
+        /// </summary>
+        /// <param name="_pedestrianGreen">True if pedestrian light is green, false otherwise.</param>
         private async void OnPedestrianLightChanged(bool _pedestrianGreen)
         {
-            Level1 level = GetNodeOrNull<Level1>("/root/Level1");
-            Level realLevel = GetNodeOrNull<Level>("root/Level");
+            // Double-check we can access Level in case the scene changed
+            Level level = GetNodeOrNull<Level>("/root/Level");
 
             if (_pedestrianGreen)
             {
-                GD.Print("Playing GREEN");
+                // Start with green light
                 Play("green");
-                if (realLevel != null)
+
+                // Wait before starting blink animation (based on timing arrays)
+                if (level != null)
                 {
-                    await ToSignal(GetTree().CreateTimer(realLevel._pedestrianGreenTimer[_difficulty] - realLevel._blinkTimer[_difficulty]), "timeout");
-                }
-                else if (level != null)
-                {
-                    await ToSignal(GetTree().CreateTimer(level._pedestrianGreenTimer - level._blinkTimer), "timeout");
+                    await ToSignal(GetTree().CreateTimer(
+                        level._pedestrianGreenTimer[_difficulty] - level._blinkTimer[_difficulty]),
+                        "timeout");
                 }
 
-                GD.Print("Playing BLINK");
+                // Switch to blinking green animation
                 Play("blink");
             }
             else
             {
-                GD.Print("Playing RED");
+                // Show red light
                 Play("red");
             }
         }

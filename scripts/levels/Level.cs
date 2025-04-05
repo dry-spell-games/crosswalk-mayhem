@@ -16,9 +16,9 @@ namespace Crosswalk
         // Traffic lights
         [Export] private float[] _carGreenTimer = {5, 6, 7, 8, 9, 10};
         public static bool _carGreen { get; private set; } = true;
-        [Export] public float[] _pedestrianGreenTimer = {8, 7, 6, 5, 4, 3};
+        [Export] public float[] _pedestrianGreenTimer = {8, 7, 10, 5, 4, 3};
         public static bool _pedestrianGreen { get; private set; } = false;
-        [Export] public float[] _blinkTimer = {2, 2, 2, 2, 1, 1};
+        [Export] public float[] _blinkTimer = {2, 2, 3, 2, 1, 1};
         public static bool _blink { get; private set; } = false;
         [Export] private float[] _lightTransitionTimer = {4, 3, 2, 2, 2, 1};
         private PackedScene GuiScene;
@@ -51,7 +51,7 @@ namespace Crosswalk
         public override void _Ready()
         {
                     // @@@@@ TESTI VAIKEUDEN ASETUS@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            _difficulty = 3;
+            _difficulty = 2;
             GD.Print($"Level {_difficulty} started");
 
             // Loads pedestrian scenes
