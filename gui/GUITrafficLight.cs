@@ -10,7 +10,7 @@ namespace Crosswalk
     public partial class GUITrafficLight : AnimatedSprite2D
     {
         // Current difficulty level pulled from GameManager
-        private int _difficulty = GameManager.Instance._difLvl;
+        private int _difficulty = GameManager.Instance._difficulty;
 
         /// <summary>
         /// Called when the node is added to the scene tree.
@@ -37,6 +37,9 @@ namespace Crosswalk
         {
             // Double-check we can access Level in case the scene changed
             Level level = GetNodeOrNull<Level>("/root/Level");
+
+            // Refresh difficulty every time the light changes
+            _difficulty = GameManager.Instance._difficulty;
 
             if (_pedestrianGreen)
             {

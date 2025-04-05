@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cv4gmabr75y6e"]
+[gd_scene load_steps=10 format=3 uid="uid://cv4gmabr75y6e"]
 
 [ext_resource type="Script" path="res://scripts/levels/Background.cs" id="1_1hpe8"]
 [ext_resource type="Texture2D" uid="uid://c1hs0peolpp83" path="res://assets/sprites/pedestrian-light.png" id="2_6brsr"]
@@ -16,17 +16,9 @@ region = Rect2(128, 0, 32, 64)
 atlas = ExtResource("2_6brsr")
 region = Rect2(32, 0, 32, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_o2vw7"]
-atlas = ExtResource("2_6brsr")
-region = Rect2(0, 0, 32, 64)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_one6r"]
 atlas = ExtResource("2_6brsr")
 region = Rect2(64, 0, 32, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mjqi4"]
-atlas = ExtResource("2_6brsr")
-region = Rect2(96, 0, 32, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_hh7q2"]
 animations = [{
@@ -42,22 +34,16 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
-"duration": 0.2,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_6xt0a")
-}, {
-"duration": 0.2,
-"texture": SubResource("AtlasTexture_o2vw7")
 }],
 "loop": true,
 "name": &"green",
 "speed": 5.0
 }, {
 "frames": [{
-"duration": 0.2,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_one6r")
-}, {
-"duration": 0.2,
-"texture": SubResource("AtlasTexture_mjqi4")
 }],
 "loop": true,
 "name": &"red",
@@ -78,22 +64,16 @@ animations = [{
 "speed": 5.0
 }, {
 "frames": [{
-"duration": 0.2,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_6xt0a")
-}, {
-"duration": 0.2,
-"texture": SubResource("AtlasTexture_o2vw7")
 }],
 "loop": true,
 "name": &"green",
 "speed": 5.0
 }, {
 "frames": [{
-"duration": 0.2,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_one6r")
-}, {
-"duration": 0.2,
-"texture": SubResource("AtlasTexture_mjqi4")
 }],
 "loop": true,
 "name": &"red",
@@ -108,12 +88,14 @@ script = ExtResource("1_1hpe8")
 z_index = 6
 position = Vector2(112, 384)
 sprite_frames = SubResource("SpriteFrames_hh7q2")
-animation = &"blink"
+animation = &"red"
+autoplay = "red"
 script = ExtResource("3_jusns")
 
 [node name="PedestrianLightR" type="AnimatedSprite2D" parent="."]
 z_index = 6
 position = Vector2(318, 384)
 sprite_frames = SubResource("SpriteFrames_di0b1")
-animation = &"blink"
+animation = &"red"
+autoplay = "red"
 script = ExtResource("3_jusns")

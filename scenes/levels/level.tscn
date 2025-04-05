@@ -1,16 +1,22 @@
-[gd_scene load_steps=5 format=3 uid="uid://cpek4grygkvcg"]
+[gd_scene load_steps=6 format=3 uid="uid://cpek4grygkvcg"]
 
 [ext_resource type="Script" path="res://scripts/levels/Level.cs" id="1_xijry"]
 [ext_resource type="PackedScene" uid="uid://cv4gmabr75y6e" path="res://scenes/level-background/background.tscn" id="2_7cjbx"]
+[ext_resource type="PackedScene" uid="uid://b2sa7sxwnh6da" path="res://gui/gui.tscn" id="3_y71qr"]
 [ext_resource type="AudioStream" uid="uid://ci2t81yi1whho" path="res://assets/audio/music/CrosswalkMayhem.WAV" id="5_todxb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6cuqr"]
 size = Vector2(132, 8)
 
-[node name="Level" type="Node2D"]
+[node name="Level" type="Node2D" node_paths=PackedStringArray("_musicPlayer", "_inputBlocker")]
 script = ExtResource("1_xijry")
+_musicPlayer = NodePath("MusicPlayer")
+_inputBlocker = NodePath("InputBlocker")
+_messageTimer = 5.0
 
 [node name="Background" parent="." instance=ExtResource("2_7cjbx")]
+
+[node name="GUI" parent="." instance=ExtResource("3_y71qr")]
 
 [node name="TrafficLightsVehicles" type="Area2D" parent="."]
 collision_layer = 4
@@ -21,7 +27,14 @@ position = Vector2(180, 461)
 shape = SubResource("RectangleShape2D_6cuqr")
 metadata/_edit_lock_ = true
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_todxb")
 volume_db = 6.19
-autoplay = true
+bus = &"Music"
+
+[node name="InputBlocker" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 360.0
+offset_bottom = 640.0

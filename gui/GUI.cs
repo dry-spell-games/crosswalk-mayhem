@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Dynamic;
+using System.Threading.Tasks;
 
 namespace Crosswalk
 {
@@ -33,6 +35,8 @@ namespace Crosswalk
         private int _messageStartYPos = 640;
         // Speed (pixels per second) at which the message sign moves vertically
         private float _messageMoveSpeed = 750f;
+        // Flag to wait for messages
+        public  bool _waitForMessage { get; private set; } = false;
 
         /// <summary>
         /// Called when the pause button is pressed. Pauses the game and shows the pause menu.
@@ -81,10 +85,16 @@ namespace Crosswalk
         /// <summary>
         /// Called when the reset button is pressed. Placeholder for future reset functionality.
         /// </summary>
-        public void _on_reset_button_pressed()
+        public async void _on_reset_button_pressed()
         {
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
-            GD.Print("Implement reset button functionality!");
+            await ToSignal(GetTree().CreateTimer(_sfxDelayTimer), "timeout");
+
+            GameManager.Instance._difficulty = 0;
+            GameManager.Instance.ResetScore();
+            GameManager.Instance.ResetLife();
+            GetTree().Paused = false;
+            GetTree().ChangeSceneToFile("res://scenes/levels/level.tscn");
         }
 
         /// <summary>
@@ -102,15 +112,31 @@ namespace Crosswalk
         /// <summary>
         /// Displays a message sign with text and slides it up, then down after a delay.
         /// </summary>
-        public async void ShowMessage(float messageTimer, string messageText)
+        public async Task ShowMessage(float messageTimer, string messageText, string pathToSound = "")
         {
             _messageLabel.Text = messageText;
             _messageUp = true;
             PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
 
+            // If a path is given, play sound effect
+            // Wait for the message to stay up
+            if (pathToSound != "")
+            {
+                PlaySfx(pathToSound);
+            }
             await ToSignal(GetTree().CreateTimer(messageTimer), "timeout");
 
+            // Start sliding down
             _messageUp = false;
+
+            // Wait until it's fully down
+            while (_messageSign.Position.Y < _messageStartYPos)
+            {
+                await ToSignal(GetTree(), "process_frame");
+            }
+
+            // (Optional) Snap exactly to start position if overshot
+            _messageSign.Position = new Vector2(_messageSign.Position.X, _messageStartYPos);
         }
 
         /// <summary>
