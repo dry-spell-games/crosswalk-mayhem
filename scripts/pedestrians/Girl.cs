@@ -37,8 +37,8 @@ namespace Crosswalk
         }
         protected override void HandleCarCollision(Car car)
         {
-            GD.Print("Girl was hit by a car :[");
             isFlying = true;
+            GD.Print("Girl was hit by a car :[");
             FlyTime = 0;
         }
     }

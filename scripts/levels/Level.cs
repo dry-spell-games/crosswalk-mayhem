@@ -8,25 +8,25 @@ namespace Crosswalk
     public partial class Level : Node2D
     {
         // Rate at which pedestrians spawn at each difficulty level
-        [Export] private float[] _spawnRate = { 4f, 3.5f, 3f, 2.5f, 2f, 1f };
+        [Export] private float[] _spawnRate = { 5f, 4f, 3f, 2f, 1f, 0.2f };
         // Rate at which cars spawn at each difficulty level
         [Export] private int[] _carSpawnRate = { 7, 6, 5, 4, 3, 1 };
         // Number of pedestrians per level
-        [Export] private int[] _pedestrianCount = { 5, 5, 5, 5, 5, 999 };
+        [Export] private int[] _pedestrianCount = { 10, 20, 30, 50, 80, 666 };
         // Duration of green light for cars per difficulty level
         [Export] private float[] _carGreenTimer = { 3, 5, 7, 8, 9, 10 };
         // Flag for car green light state
         public static bool _carGreen { get; private set; } = true;
         // Duration of green light for pedestrians per difficulty level
-        [Export] public float[] _pedestrianGreenTimer = { 10f, 7f, 6f, 5f, 4f, 3f };
+        [Export] public float[] _pedestrianGreenTimer = { 10f, 7f, 6f, 5f, 4f, 0f };
         // Flag for pedestrian green light state
         public static bool _pedestrianGreen { get; private set; } = false;
         // Duration for blink warning before pedestrian light ends
-        [Export] public float[] _blinkTimer = { 3f, 3f, 3f, 2f, 1f, 1f };
+        [Export] public float[] _blinkTimer = { 3f, 3f, 3f, 2f, 1f, 0f };
         // Flag to indicate blinking pedestrian light
         public static bool _blink { get; private set; } = false;
         // Transition delay between light changes per difficulty
-        [Export] private float[] _lightTransitionTimer = { 4f, 3f, 2f, 2f, 2f, 1f };
+        [Export] private float[] _lightTransitionTimer = { 4f, 3f, 2f, 2f, 2f, 0f };
         // Life bonus granted at each difficulty level
         [Export] private int[] _lifeBonus = { 5, 4, 3, 2, 1, 0 };
         // Background music player
@@ -260,6 +260,7 @@ namespace Crosswalk
 
             GameManager.Instance.SaveData();
             _inputBlocker.Visible = false;
+            GameManager.Instance._difficulty = 0;
             GameManager.Instance.ResetScore();
             GameManager.Instance.ResetLife();
             GetTree().ChangeSceneToFile("res://main-menu/scenes/main-menu.tscn");
@@ -306,14 +307,14 @@ namespace Crosswalk
         /// <summary>
         /// Checks if all pedestrians are gone and triggers difficulty increase.
         /// </summary>
-        private async void CheckIfPedestriansLeft()
+        private void CheckIfPedestriansLeft()
         {
-            await ToSignal(GetTree(), "process_frame");
+            if (_difficultyIncreasing || GetTree() == null)
+                return;
 
             GD.Print($"[CHECK] Spawning: {_pedestriansToSpawn}, In scene: {GetTree().GetNodesInGroup("pedestrians").Count}, Increasing: {_difficultyIncreasing}");
 
-            if (!_difficultyIncreasing &&
-                _pedestriansToSpawn <= 0 &&
+            if (_pedestriansToSpawn <= 0 &&
                 GetTree().GetNodesInGroup("pedestrians").Count == 0)
             {
                 GD.Print("[CHECK] Difficulty increasing triggered.");

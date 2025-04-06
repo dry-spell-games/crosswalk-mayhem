@@ -19,6 +19,7 @@ namespace Crosswalk
         [Export] public float SpeedMultiplierFast { get; set; } = 3.0f; // Multiplier for sprinting
         [Export] public float SpeedMultiplierNormal { get; set; } = 1.0f;
         [Export] public virtual float FlightDirection { get; set; } // Direction of flight
+        [Export] private float _maxFlyTime = 5f;
         private bool RedLightsForPedestrians = false;
 
 
@@ -100,7 +101,12 @@ namespace Crosswalk
             // Clean up pedestrians out of bounds
             foreach (Area2D pedestrian in GetTree().GetNodesInGroup("pedestrians").Cast<Area2D>())
             {
-                if ((pedestrian.Position.X > 410 || pedestrian.Position.X < -40) && !pedestrian.IsQueuedForDeletion())
+                Vector2 pos = pedestrian.Position;
+
+                bool outOfBoundsX = pos.X > 410 || pos.X < -40;
+                bool outOfBoundsY = pos.Y > 700 || pos.Y < -100;
+
+                if ((outOfBoundsX || outOfBoundsY) && !pedestrian.IsQueuedForDeletion())
                 {
                     GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
 
@@ -159,19 +165,42 @@ namespace Crosswalk
 
         public void OnAreaEntered(Area2D area)
         {
-            if (area is Car)
+            GD.Print($"[OnAreaEntered] {Name} detected area: {area.Name} (type: {area.GetType().Name})");
+
+            if (area is Car car)
             {
-                GD.Print("Pedestrian detected a Car!");
-                HandleCarCollision(area as Car);
+                GD.Print($"[HIT] {Name} collided with car: {car.Name}");
+
+                HandleCarCollision(car);
+
+                GD.Print($"[DEBUG] After collision: {Name} isFlying = {isFlying}");
+
+                if (!isFlying)
+                {
+                    GD.PrintErr($"[ERROR] {Name} should be flying but isFlying = false!");
+                }
             }
         }
 
         protected void Fly(double delta)
         {
             FlyTime += (float)delta;
-            animatedSprite.Offset = new Vector2(0, 15); // Moves sprite closer to center
+            animatedSprite.Offset = new Vector2(0, 15);
             Position += new Vector2(FlightDirection, -250) * (float)delta;
             RotationDegrees += RotationSpeed * (float)delta;
+
+            if (FlyTime > 2.5f && !IsQueuedForDeletion())
+            {
+                GD.Print($"[AUTO-FREE] {Name} flew too long, auto-cleaning...");
+
+                if (isFlying)
+                {
+                    GameManager.Instance.UpdateLife(-1);
+                    GD.Print($"[LIFE -1] {Name} (auto timeout)");
+                }
+
+                QueueFree();
+            }
         }
 
         protected virtual void HandleCarCollision(Car car)
