@@ -100,7 +100,12 @@ namespace Crosswalk
             // Clean up pedestrians out of bounds
             foreach (Area2D pedestrian in GetTree().GetNodesInGroup("pedestrians").Cast<Area2D>())
             {
-                if ((pedestrian.Position.X > 410 || pedestrian.Position.X < -40) && !pedestrian.IsQueuedForDeletion())
+                Vector2 pos = pedestrian.Position;
+
+                bool outOfBoundsX = pos.X > 410 || pos.X < -40;
+                bool outOfBoundsY = pos.Y > 700 || pos.Y < -100;
+
+                if ((outOfBoundsX || outOfBoundsY) && !pedestrian.IsQueuedForDeletion())
                 {
                     GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
 
