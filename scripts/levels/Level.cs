@@ -8,11 +8,11 @@ namespace Crosswalk
     public partial class Level : Node2D
     {
         // Rate at which pedestrians spawn at each difficulty level
-        [Export] private float[] _spawnRate = { 4f, 3.5f, 3f, 2.5f, 2f, 1f };
+        [Export] private float[] _spawnRate = { 5f, 4f, 3f, 2f, 1f, 0.2f };
         // Rate at which cars spawn at each difficulty level
         [Export] private int[] _carSpawnRate = { 7, 6, 5, 4, 3, 1 };
         // Number of pedestrians per level
-        [Export] private int[] _pedestrianCount = { 1, 1, 1, 1, 1, 999 };
+        [Export] private int[] _pedestrianCount = { 10, 20, 30, 50, 80, 666 };
         // Duration of green light for cars per difficulty level
         [Export] private float[] _carGreenTimer = { 3, 5, 7, 8, 9, 10 };
         // Flag for car green light state
