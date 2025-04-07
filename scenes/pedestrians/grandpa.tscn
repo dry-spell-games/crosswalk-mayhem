@@ -336,7 +336,7 @@ position = Vector2(0, -20)
 sprite_frames = SubResource("SpriteFrames_wgviw")
 animation = &"fly"
 autoplay = "walk"
-frame_progress = 0.80603
+frame_progress = 0.938478
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -188,6 +188,7 @@ namespace Crosswalk
             animatedSprite.Offset = new Vector2(0, 15);
             Position += new Vector2(FlightDirection, -250) * (float)delta;
             RotationDegrees += RotationSpeed * (float)delta;
+            PlayAnimation("fly");
 
             if (FlyTime > 2.5f && !IsQueuedForDeletion())
             {
