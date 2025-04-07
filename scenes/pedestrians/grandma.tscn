@@ -278,7 +278,7 @@ RotationSpeed = 60.0
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-0.5, -20)
 sprite_frames = SubResource("SpriteFrames_slsle")
-animation = &"fly"
+animation = &"idle"
 autoplay = "walk"
 metadata/_edit_lock_ = true
 
@@ -292,6 +292,6 @@ position = Vector2(-0.5, -20)
 metadata/_edit_lock_ = true
 
 [node name="InteractionShape" type="CollisionShape2D" parent="InteractionArea"]
-visible = false
-position = Vector2(0, 0.5)
+position = Vector2(0.5, 6)
 shape = SubResource("RectangleShape2D_vcdgj")
+metadata/_edit_lock_ = true
