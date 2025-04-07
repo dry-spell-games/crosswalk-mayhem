@@ -57,6 +57,7 @@ namespace Crosswalk
         private PackedScene BeetleScene1;
         private PackedScene BeetleScene2;
         private PackedScene BeetleScene3;
+        private PackedScene BusScene;
 
         // Hitbox for traffic light interaction
         private CollisionShape2D vehicleTrafficLightHitbox;
@@ -187,9 +188,9 @@ namespace Crosswalk
             int rand;
 
             if (_difficulty < 2)
-                rand = random.Next(0, 12);
+                rand = random.Next(12, 13);
             else
-                rand = random.Next(0, 13);
+                rand = random.Next(0, 14);
 
             // Instantiate a random vehicle scene
             if (rand == 0 && BeetleScene != null)
@@ -216,7 +217,9 @@ namespace Crosswalk
                 car = (Car)BeetleScene2.Instantiate();
             else if (rand == 11 && BeetleScene3 != null)
                 car = (Car)BeetleScene3.Instantiate();
-            else if (rand == 12 && SportsCarScene != null)
+            else if (rand == 12 && BusScene != null)
+                car = (Car)BusScene.Instantiate();
+            else if (rand == 13 && SportsCarScene != null)
                 car = (Car)SportsCarScene.Instantiate();
 
             Vector2 spawnPosition = car.StartPositions[GD.RandRange(0, car.StartPositions.Count - 1)];
@@ -374,6 +377,7 @@ namespace Crosswalk
             BeetleScene1 = (PackedScene)GD.Load("res://scenes/vehicles/beetle1.tscn");
             BeetleScene2 = (PackedScene)GD.Load("res://scenes/vehicles/beetle2.tscn");
             BeetleScene3 = (PackedScene)GD.Load("res://scenes/vehicles/beetle3.tscn");
+            BusScene = (PackedScene)GD.Load("res://scenes/vehicles/bus.tscn");
 
             // Load GUI
             _gui = GetNode<GUI>("GUI");
