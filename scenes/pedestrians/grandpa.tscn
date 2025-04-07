@@ -434,7 +434,7 @@ animations = [{
 size = Vector2(21, 8.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ltoib"]
-size = Vector2(30, 34)
+size = Vector2(32, 32)
 
 [node name="Grandpa" type="Area2D"]
 position = Vector2(0, 20)
@@ -446,9 +446,10 @@ RotationSpeed = 60.0
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -20)
 sprite_frames = SubResource("SpriteFrames_wgviw")
-animation = &"idle2"
+animation = &"idle"
 autoplay = "walk"
-frame_progress = 0.458049
+frame = 7
+frame_progress = 0.514356
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -461,7 +462,5 @@ position = Vector2(0, -20)
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
-visible = false
-position = Vector2(2, 7)
+position = Vector2(0, 5)
 shape = SubResource("RectangleShape2D_ltoib")
-metadata/_edit_lock_ = true
