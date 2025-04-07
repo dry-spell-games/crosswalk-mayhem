@@ -44,7 +44,6 @@ namespace Crosswalk
         private PackedScene BoyScene;
         private PackedScene ManScene;
         private PackedScene WomanScene;
-        private PackedScene FamilyCarScene;
         private PackedScene SportsCarScene;
         private PackedScene SedanScene;
         private PackedScene SedanScene1;
@@ -54,6 +53,10 @@ namespace Crosswalk
         private PackedScene SuvScene1;
         private PackedScene SuvScene2;
         private PackedScene SuvScene3;
+        private PackedScene BeetleScene;
+        private PackedScene BeetleScene1;
+        private PackedScene BeetleScene2;
+        private PackedScene BeetleScene3;
 
         // Hitbox for traffic light interaction
         private CollisionShape2D vehicleTrafficLightHitbox;
@@ -184,13 +187,13 @@ namespace Crosswalk
             int rand;
 
             if (_difficulty < 2)
-                rand = random.Next(0, 9);
+                rand = random.Next(0, 12);
             else
-                rand = random.Next(0, 10);
+                rand = random.Next(0, 13);
 
             // Instantiate a random vehicle scene
-            if (rand == 0 && FamilyCarScene != null)
-                car = (Car)FamilyCarScene.Instantiate();
+            if (rand == 0 && BeetleScene != null)
+                car = (Car)BeetleScene.Instantiate();
             else if (rand == 1 && SedanScene != null)
                 car = (Car)SedanScene.Instantiate();
             else if (rand == 2 && SuvScene != null)
@@ -207,7 +210,13 @@ namespace Crosswalk
                 car = (Car)SuvScene2.Instantiate();
             else if (rand == 8 && SuvScene3 != null)
                 car = (Car)SuvScene3.Instantiate();
-            else if (rand == 9 && SportsCarScene != null)
+            else if (rand == 9 && BeetleScene1 != null)
+                car = (Car)BeetleScene1.Instantiate();
+            else if (rand == 10 && BeetleScene2 != null)
+                car = (Car)BeetleScene2.Instantiate();
+            else if (rand == 11 && BeetleScene3 != null)
+                car = (Car)BeetleScene3.Instantiate();
+            else if (rand == 12 && SportsCarScene != null)
                 car = (Car)SportsCarScene.Instantiate();
 
             Vector2 spawnPosition = car.StartPositions[GD.RandRange(0, car.StartPositions.Count - 1)];
@@ -312,12 +321,12 @@ namespace Crosswalk
             if (_difficultyIncreasing || GetTree() == null)
                 return;
 
-            GD.Print($"[CHECK] Spawning: {_pedestriansToSpawn}, In scene: {GetTree().GetNodesInGroup("pedestrians").Count}, Increasing: {_difficultyIncreasing}");
+            // GD.Print($"[CHECK] Spawning: {_pedestriansToSpawn}, In scene: {GetTree().GetNodesInGroup("pedestrians").Count}, Increasing: {_difficultyIncreasing}");
 
             if (_pedestriansToSpawn <= 0 &&
                 GetTree().GetNodesInGroup("pedestrians").Count == 0)
             {
-                GD.Print("[CHECK] Difficulty increasing triggered.");
+                // GD.Print("[CHECK] Difficulty increasing triggered.");
                 _difficultyIncreasing = true;
                 DifficultyUp();
             }
@@ -352,7 +361,6 @@ namespace Crosswalk
             WomanScene = (PackedScene)GD.Load("res://scenes/pedestrians/woman.tscn");
 
             // Load vehicle scenes
-            FamilyCarScene = (PackedScene)GD.Load("res://scenes/vehicles/familycar.tscn");
             SportsCarScene = (PackedScene)GD.Load("res://scenes/vehicles/sportscar.tscn");
             SedanScene = (PackedScene)GD.Load("res://scenes/vehicles/sedan.tscn");
             SedanScene1 = (PackedScene)GD.Load("res://scenes/vehicles/sedan1.tscn");
@@ -362,6 +370,10 @@ namespace Crosswalk
             SuvScene1 = (PackedScene)GD.Load("res://scenes/vehicles/suv1.tscn");
             SuvScene2 = (PackedScene)GD.Load("res://scenes/vehicles/suv2.tscn");
             SuvScene3 = (PackedScene)GD.Load("res://scenes/vehicles/suv3.tscn");
+            BeetleScene = (PackedScene)GD.Load("res://scenes/vehicles/beetle.tscn");
+            BeetleScene1 = (PackedScene)GD.Load("res://scenes/vehicles/beetle1.tscn");
+            BeetleScene2 = (PackedScene)GD.Load("res://scenes/vehicles/beetle2.tscn");
+            BeetleScene3 = (PackedScene)GD.Load("res://scenes/vehicles/beetle3.tscn");
 
             // Load GUI
             _gui = GetNode<GUI>("GUI");
