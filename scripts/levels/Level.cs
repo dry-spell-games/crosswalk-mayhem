@@ -312,7 +312,7 @@ namespace Crosswalk
             if (_difficultyIncreasing || GetTree() == null)
                 return;
 
-            GD.Print($"[CHECK] Spawning: {_pedestriansToSpawn}, In scene: {GetTree().GetNodesInGroup("pedestrians").Count}, Increasing: {_difficultyIncreasing}");
+            ///GD.Print($"[CHECK] Spawning: {_pedestriansToSpawn}, In scene: {GetTree().GetNodesInGroup("pedestrians").Count}, Increasing: {_difficultyIncreasing}");
 
             if (_pedestriansToSpawn <= 0 &&
                 GetTree().GetNodesInGroup("pedestrians").Count == 0)
