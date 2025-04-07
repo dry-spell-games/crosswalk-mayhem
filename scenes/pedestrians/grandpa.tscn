@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://blfc75o2okftv"]
+[gd_scene load_steps=63 format=3 uid="uid://blfc75o2okftv"]
 
 [ext_resource type="Script" path="res://scripts/pedestrians/Grandpa.cs" id="1_kf3rc"]
 [ext_resource type="Texture2D" uid="uid://ctu6kirurpk1k" path="res://assets/sprites/pedestrians/grandpa/granpa-spritesheet.png" id="1_m7fco"]
@@ -100,6 +100,70 @@ atlas = ExtResource("1_m7fco")
 region = Rect2(204, 96, 34, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_56wgu"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(238, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6u5kq"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(0, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qr5f0"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(34, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iuywk"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(68, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_maseq"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(102, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y845q"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(136, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a1n72"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(170, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hnian"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(204, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2n3ig"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(238, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jlm2x"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(0, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ylng"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(34, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k3ukl"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(68, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7h1qq"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(102, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bduak"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(136, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ls52n"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(170, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_udsmi"]
+atlas = ExtResource("1_m7fco")
+region = Rect2(204, 96, 34, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_woqp0"]
 atlas = ExtResource("1_m7fco")
 region = Rect2(238, 96, 34, 48)
 
@@ -254,6 +318,54 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_56wgu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6u5kq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qr5f0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iuywk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_maseq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y845q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a1n72")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hnian")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2n3ig")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jlm2x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ylng")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k3ukl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7h1qq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bduak")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ls52n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_udsmi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_woqp0")
 }],
 "loop": true,
 "name": &"idle2",
@@ -334,9 +446,9 @@ RotationSpeed = 60.0
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -20)
 sprite_frames = SubResource("SpriteFrames_wgviw")
-animation = &"fly"
+animation = &"idle2"
 autoplay = "walk"
-frame_progress = 0.938478
+frame_progress = 0.458049
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

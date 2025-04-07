@@ -172,6 +172,8 @@ namespace Crosswalk
                 GD.Print($"[HIT] {Name} collided with car: {car.Name}");
 
                 HandleCarCollision(car);
+                RotationSpeed = car.Speed * 3f;
+                GD.Print($"Collision car speed: {car.Speed}");
 
                 GD.Print($"[DEBUG] After collision: {Name} isFlying = {isFlying}");
 
