@@ -184,7 +184,7 @@ animations = [{
 size = Vector2(21, 8.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5gfeg"]
-size = Vector2(24, 40)
+size = Vector2(26, 40)
 
 [node name="Girl" type="Area2D"]
 position = Vector2(0, 19)
@@ -194,7 +194,7 @@ script = ExtResource("1_n4ap3")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -20)
 sprite_frames = SubResource("SpriteFrames_jdfxq")
-animation = &"fly"
+animation = &"idle"
 autoplay = "walk"
 metadata/_edit_lock_ = true
 
@@ -208,7 +208,6 @@ position = Vector2(0, -19)
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
-visible = false
-position = Vector2(0, 4)
+position = Vector2(-1, 0)
 shape = SubResource("RectangleShape2D_5gfeg")
 metadata/_edit_lock_ = true

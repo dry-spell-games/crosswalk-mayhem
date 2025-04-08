@@ -174,7 +174,9 @@ namespace Crosswalk
 
                     GD.Print($"[HIT] {Name} collided with car: {car.Name}");
 
-                    HandleCarCollision(car);
+                HandleCarCollision(car);
+                RotationSpeed = car.Speed * 3f;
+                GD.Print($"Collision car speed: {car.Speed}");
 
                     GD.Print($"[DEBUG] After collision: {Name} isFlying = {isFlying}");
 
@@ -194,6 +196,7 @@ namespace Crosswalk
             animatedSprite.Offset = new Vector2(0, 15);
             Position += new Vector2(FlightDirection, -250) * (float)delta;
             RotationDegrees += RotationSpeed * (float)delta;
+            PlayAnimation("fly");
 
             if (FlyTime > 5f && !IsQueuedForDeletion())
             {

@@ -56,6 +56,7 @@ namespace Crosswalk
 
         public override void _Process(double delta)
         {
+            ZIndex = (int)Position.Y;
             if (IsAnyRaycastColliding())
             {
                 Speed = Mathf.Max(Speed - BrakingForce * (float)delta, 0);

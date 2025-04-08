@@ -184,7 +184,7 @@ animations = [{
 size = Vector2(22, 8.25)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6coom"]
-size = Vector2(24, 41)
+size = Vector2(26, 41)
 
 [node name="Boy" type="Area2D"]
 position = Vector2(0, 20)
@@ -208,7 +208,5 @@ position = Vector2(0, -20)
 metadata/_edit_lock_ = true
 
 [node name="InteractionShape" type="CollisionShape2D" parent="InteractionArea"]
-visible = false
-position = Vector2(-1, 3.5)
 shape = SubResource("RectangleShape2D_6coom")
 metadata/_edit_lock_ = true
