@@ -56,7 +56,6 @@ namespace Crosswalk
 
         public override void _Process(double delta)
         {
-            ZIndex = (int)Position.Y;
             if (IsAnyRaycastColliding())
             {
                 Speed = Mathf.Max(Speed - BrakingForce * (float)delta, 0);
@@ -88,7 +87,7 @@ namespace Crosswalk
             // Goes through every child of Car class and removes those which are out of bounds
             foreach (Area2D car in GetTree().GetNodesInGroup("cars"))
             {
-                if (car.Position.Y > 900) // If true car is out of bounds
+                if (car.Position.Y > 1500) // If true car is out of bounds
                 {
                     GD.Print("Poistetaan auto: ", car.Name);
                     car.QueueFree(); // Removes car instance
