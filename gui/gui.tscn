@@ -170,6 +170,7 @@ texture_normal = ExtResource("7_ftbvt")
 texture_pressed = ExtResource("8_br3jp")
 
 [node name="MessageSign" type="TextureRect" parent="."]
+z_index = 666
 layout_mode = 0
 offset_left = 36.0
 offset_top = 640.0
