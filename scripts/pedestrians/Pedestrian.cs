@@ -20,6 +20,10 @@ namespace Crosswalk
         [Export] public float SpeedMultiplierNormal { get; set; } = 1.0f;
         [Export] public virtual float FlightDirection { get; set; } // Direction of flight
         [Export] private float _maxFlyTime = 5f;
+        [Export] private AudioStreamPlayer2D _sfxPlayer;
+        [Export] private string _hitSound = "";
+        [Export] private string _screamSound = "";
+        [Export] private string _tapSound = "";
         private bool RedLightsForPedestrians = false;
 
 
@@ -47,6 +51,7 @@ namespace Crosswalk
         protected float InitialSpeed; // Saves original speed
         protected bool IsSpeeding = false;
         protected bool randomStop = false; // Plays different idle animation when true
+        private bool _isHit = false;
 
         public override void _Ready()
         {
@@ -108,37 +113,29 @@ namespace Crosswalk
 
                 if ((outOfBoundsX || outOfBoundsY) && !pedestrian.IsQueuedForDeletion())
                 {
-                    GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
-
                     // Cast to Pedestrian to access isFlying
-                    if (pedestrian is Pedestrian p)
+                    if (pedestrian is Pedestrian p && !p.isFlying)
                     {
-                        if (p.isFlying)
-                        {
-                            GameManager.Instance.UpdateLife(-1);
-                            GD.Print($"[LIFE -1] {p.Name} was flying when despawned.");
-                        }
-                        else
-                        {
-                            switch (p.Name)
-                            {
-                                case "Grandma":
-                                case "Grandpa":
-                                    GameManager.Instance.AddScore(50);
-                                    break;
-                                case "Girl":
-                                case "Boy":
-                                    GameManager.Instance.AddScore(30);
-                                    break;
-                                case "Woman":
-                                case "Man":
-                                    GameManager.Instance.AddScore(20);
-                                    break;
-                            }
-                        }
-                    }
+                        GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
 
-                    pedestrian.QueueFree();
+                        switch (p.Name)
+                        {
+                            case "Grandma":
+                            case "Grandpa":
+                                GameManager.Instance.AddScore(50);
+                                break;
+                            case "Girl":
+                            case "Boy":
+                                GameManager.Instance.AddScore(30);
+                                break;
+                            case "Woman":
+                            case "Man":
+                                GameManager.Instance.AddScore(20);
+                                break;
+                        }
+
+                        pedestrian.QueueFree();
+                    }
                 }
             }
         }
@@ -169,15 +166,24 @@ namespace Crosswalk
 
             if (area is Car car)
             {
-                GD.Print($"[HIT] {Name} collided with car: {car.Name}");
-
-                HandleCarCollision(car);
-
-                GD.Print($"[DEBUG] After collision: {Name} isFlying = {isFlying}");
-
-                if (!isFlying)
+                if (!_isHit)
                 {
-                    GD.PrintErr($"[ERROR] {Name} should be flying but isFlying = false!");
+                    PlaySfx(_hitSound);
+                    GameManager.Instance.UpdateLife(-1);
+                    _isHit = true;
+
+                    GD.Print($"[HIT] {Name} collided with car: {car.Name}");
+
+                    HandleCarCollision(car);
+
+                    GD.Print($"[DEBUG] After collision: {Name} isFlying = {isFlying}");
+
+                    if (!isFlying)
+                    {
+                        GD.PrintErr($"[ERROR] {Name} should be flying but isFlying = false!");
+                    }
+
+                    GetNode<CollisionShape2D>("Man/CollisionShape2D").Disabled = true;
                 }
             }
         }
@@ -189,15 +195,9 @@ namespace Crosswalk
             Position += new Vector2(FlightDirection, -250) * (float)delta;
             RotationDegrees += RotationSpeed * (float)delta;
 
-            if (FlyTime > 2.5f && !IsQueuedForDeletion())
+            if (FlyTime > 5f && !IsQueuedForDeletion())
             {
                 GD.Print($"[AUTO-FREE] {Name} flew too long, auto-cleaning...");
-
-                if (isFlying)
-                {
-                    GameManager.Instance.UpdateLife(-1);
-                    GD.Print($"[LIFE -1] {Name} (auto timeout)");
-                }
 
                 QueueFree();
             }
@@ -295,6 +295,16 @@ namespace Crosswalk
                 GD.Print($"Starting animation: {animationName}");
                 animatedSprite.Play(animationName);
             }
+        }
+
+        public void PlaySfx(string pathToSfx)
+        {
+            if (_sfxPlayer != null && pathToSfx != null)
+            {
+                _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
+                _sfxPlayer.Play();
+            }
+
         }
     }
 }
