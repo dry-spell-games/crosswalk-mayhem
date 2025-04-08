@@ -117,16 +117,18 @@ z_index = 1
 y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_64tx1")
 animation = &"idle"
-frame_progress = 0.823278
+frame = 1
+frame_progress = 0.742097
 metadata/_edit_lock_ = true
 
 [node name="Windshield" type="AnimatedSprite2D" parent="AnimatedSprite2D"]
 z_as_relative = false
 y_sort_enabled = true
+position = Vector2(1, -1)
 sprite_frames = SubResource("SpriteFrames_kc8cw")
 animation = &"drive"
-frame_progress = 0.429288
-metadata/_edit_lock_ = true
+frame = 5
+frame_progress = 0.0421042
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1, 29.375)
