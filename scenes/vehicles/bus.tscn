@@ -123,10 +123,10 @@ metadata/_edit_lock_ = true
 [node name="Windshield" type="AnimatedSprite2D" parent="AnimatedSprite2D"]
 z_as_relative = false
 y_sort_enabled = true
+position = Vector2(2, -1)
 sprite_frames = SubResource("SpriteFrames_kc8cw")
 animation = &"drive"
 frame_progress = 0.429288
-metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1, 29.375)
