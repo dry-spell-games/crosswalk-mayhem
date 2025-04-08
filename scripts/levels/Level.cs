@@ -188,7 +188,7 @@ namespace Crosswalk
             int rand;
 
             if (_difficulty < 2)
-                rand = random.Next(12, 13);
+                rand = random.Next(0, 13);
             else
                 rand = random.Next(0, 14);
 
