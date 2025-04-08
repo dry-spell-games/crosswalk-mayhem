@@ -135,7 +135,7 @@ metadata/_edit_lock_ = true
 position = Vector2(0, 57)
 
 [node name="RCMiddle" type="RayCast2D" parent="RaycastHolder"]
-target_position = Vector2(0, 100)
+target_position = Vector2(0, 80)
 collision_mask = 6
 hit_from_inside = true
 collide_with_areas = true
