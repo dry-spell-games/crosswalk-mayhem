@@ -26,6 +26,7 @@ namespace Crosswalk
         [Export] private string _screamSound = "";
         [Export] private string _tapSound = "";
         [Export] private string _scoreSound = "";
+        [Export] private AnimatedSprite2D _cooldownHourglass;
         private bool RedLightsForPedestrians = false;
 
 
@@ -95,6 +96,15 @@ namespace Crosswalk
 
         public override void _Process(double delta)
         {
+            if (!canBeStopped && !isFlying && !isWaitingForDoubleTap)
+            {
+                _cooldownHourglass.Visible = true;
+            }
+            else
+            {
+                _cooldownHourglass.Visible = false;
+            }
+
             if (isStopped)
             {
                 PlayAnimation(randomStop ? "idle2" : "idle");

@@ -1,7 +1,8 @@
-[gd_scene load_steps=31 format=3 uid="uid://bseud4ih43dd"]
+[gd_scene load_steps=36 format=3 uid="uid://bseud4ih43dd"]
 
 [ext_resource type="Script" path="res://scripts/pedestrians/Man.cs" id="1_x2v4h"]
 [ext_resource type="Texture2D" uid="uid://caoe8pm4v6ha6" path="res://assets/sprites/pedestrians/man/man-spritesheet.png" id="2_nuhfm"]
+[ext_resource type="Texture2D" uid="uid://ddjtqedpvmxjr" path="res://assets/sprites/pedestrians/hourglass-spritesheet.png" id="3_4nmpv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h64kc"]
 atlas = ExtResource("2_nuhfm")
@@ -207,6 +208,38 @@ size = Vector2(32, 10)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5uvih"]
 size = Vector2(32, 47)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_mbgyb"]
+atlas = ExtResource("3_4nmpv")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_66lks"]
+atlas = ExtResource("3_4nmpv")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iyode"]
+atlas = ExtResource("3_4nmpv")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ecodt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mbgyb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66lks")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iyode")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66lks")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Man" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
 position = Vector2(0, 26)
 collision_mask = 27
@@ -241,3 +274,9 @@ metadata/_edit_lock_ = true
 [node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
 max_distance = 500.0
 bus = &"Sfx"
+
+[node name="CooldownHourglass" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(0, -56)
+sprite_frames = SubResource("SpriteFrames_ecodt")
+frame_progress = 0.936402
