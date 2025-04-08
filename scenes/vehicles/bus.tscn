@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://cspkpmcugbqcp"]
+[gd_scene load_steps=19 format=3 uid="uid://cspkpmcugbqcp"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Bus.cs" id="1_se5dv"]
 [ext_resource type="Texture2D" uid="uid://cah2pbxth1a2t" path="res://assets/sprites/vehicles/bus.png" id="2_08ltl"]
 [ext_resource type="Texture2D" uid="uid://x1oxes87jsjf" path="res://assets/sprites/vehicles/bus-windshield.png" id="3_s7avd"]
+[ext_resource type="AudioStream" uid="uid://1468vkaj0y0i" path="res://assets/audio/sfx/vehicles/bus.wav" id="4_6wng4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l6p2m"]
 atlas = ExtResource("2_08ltl")
@@ -105,9 +106,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3u11m"]
 size = Vector2(61, 202.75)
 
-[node name="Bus" type="Area2D"]
+[node name="Bus" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
 collision_layer = 2
 script = ExtResource("1_se5dv")
+_sfxPlayer = NodePath("AudioStreamPlayer2D")
 metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -142,3 +144,8 @@ collision_mask = 6
 hit_from_inside = true
 collide_with_areas = true
 metadata/_edit_lock_ = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_6wng4")
+volume_db = 10.0
+max_distance = 700.0

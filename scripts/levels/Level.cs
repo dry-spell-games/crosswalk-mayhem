@@ -188,7 +188,7 @@ namespace Crosswalk
             int rand;
 
             if (_difficulty < 2)
-                rand = random.Next(0, 13);
+                rand = random.Next(12, 13);
             else
                 rand = random.Next(0, 14);
 
@@ -323,7 +323,7 @@ namespace Crosswalk
         {
             if (_difficultyIncreasing || GetTree() == null)
                 return;
-                
+
             // GD.Print($"[CHECK] Spawning: {_pedestriansToSpawn}, In scene: {GetTree().GetNodesInGroup("pedestrians").Count}, Increasing: {_difficultyIncreasing}");
 
             if (_pedestriansToSpawn <= 0 &&
