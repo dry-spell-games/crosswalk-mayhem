@@ -240,7 +240,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Man" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
+[node name="Man" type="Area2D" node_paths=PackedStringArray("_sfxPlayer", "_cooldownHourglass")]
 position = Vector2(0, 26)
 collision_mask = 27
 script = ExtResource("1_x2v4h")
@@ -249,6 +249,7 @@ _hitSound = "res://assets/audio/sfx/pedestrians/pedestrian-hit.wav"
 _screamSound = "res://assets/audio/sfx/pedestrians/man-scream.wav"
 _tapSound = "res://assets/audio/sfx/pedestrians/pedestrian-tap.wav"
 _scoreSound = "res://assets/audio/sfx/pedestrians/increase-score.wav"
+_cooldownHourglass = NodePath("CooldownHourglass")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -28)
@@ -279,4 +280,5 @@ bus = &"Sfx"
 visible = false
 position = Vector2(0, -56)
 sprite_frames = SubResource("SpriteFrames_ecodt")
-frame_progress = 0.936402
+frame = 1
+frame_progress = 0.626723

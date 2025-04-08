@@ -1,7 +1,8 @@
-[gd_scene load_steps=31 format=3 uid="uid://204nocla72xf"]
+[gd_scene load_steps=36 format=3 uid="uid://204nocla72xf"]
 
 [ext_resource type="Script" path="res://scripts/pedestrians/Woman.cs" id="1_d5h7n"]
 [ext_resource type="Texture2D" uid="uid://b3t2g3n8e4vcs" path="res://assets/sprites/pedestrians/woman/woman-spritesheet.png" id="2_inly4"]
+[ext_resource type="Texture2D" uid="uid://ddjtqedpvmxjr" path="res://assets/sprites/pedestrians/hourglass-spritesheet.png" id="3_djwy8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2v6h3"]
 atlas = ExtResource("2_inly4")
@@ -207,7 +208,39 @@ size = Vector2(20, 8.5)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ueowc"]
 size = Vector2(31, 47)
 
-[node name="Woman" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_mbgyb"]
+atlas = ExtResource("3_djwy8")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_66lks"]
+atlas = ExtResource("3_djwy8")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iyode"]
+atlas = ExtResource("3_djwy8")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gmvws"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mbgyb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66lks")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iyode")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66lks")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Woman" type="Area2D" node_paths=PackedStringArray("_sfxPlayer", "_cooldownHourglass")]
 position = Vector2(0, 28)
 collision_mask = 27
 script = ExtResource("1_d5h7n")
@@ -216,6 +249,7 @@ _hitSound = "res://assets/audio/sfx/pedestrians/pedestrian-hit.wav"
 _screamSound = "res://assets/audio/sfx/pedestrians/woman-scream.wav"
 _tapSound = "res://assets/audio/sfx/pedestrians/pedestrian-tap.wav"
 _scoreSound = "res://assets/audio/sfx/pedestrians/increase-score.wav"
+_cooldownHourglass = NodePath("CooldownHourglass")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -28)
@@ -241,3 +275,8 @@ metadata/_edit_lock_ = true
 [node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
 max_distance = 500.0
 bus = &"Sfx"
+
+[node name="CooldownHourglass" type="AnimatedSprite2D" parent="."]
+visible = false
+position = Vector2(0, -54)
+sprite_frames = SubResource("SpriteFrames_gmvws")

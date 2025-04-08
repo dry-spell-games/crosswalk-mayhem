@@ -96,7 +96,7 @@ namespace Crosswalk
 
         public override void _Process(double delta)
         {
-            if (!canBeStopped && !isFlying && !isWaitingForDoubleTap)
+            if (!canBeStopped && !_isHit)
             {
                 _cooldownHourglass.Visible = true;
             }
@@ -186,6 +186,7 @@ namespace Crosswalk
                 {
                     PlayCollisionSounds();
                     GameManager.Instance.UpdateLife(-1);
+                    _cooldownHourglass.Visible = false;
                     _isHit = true;
 
                     GD.Print($"[HIT] {Name} collided with car: {car.Name}");
@@ -257,7 +258,7 @@ namespace Crosswalk
             if (isWaitingForDoubleTap && (currentTime - lastTapTime) < DoubleTapThreshold)
             {
                 isStopped = false;
-                StartSpeedBoost(); // Double tap sprints pedestrian
+                StartSpeedBoost(); // Double tap: sprint
                 isWaitingForDoubleTap = false;
             }
             else
@@ -265,11 +266,17 @@ namespace Crosswalk
                 isWaitingForDoubleTap = true;
                 lastTapTime = currentTime;
 
-                HandleTapOrStop(); // First tap stops pedestrian
-
                 await ToSignal(GetTree().CreateTimer(DoubleTapThreshold), "timeout");
 
-                isWaitingForDoubleTap = false; // Resets waiting for double tap
+                if (isWaitingForDoubleTap)
+                {
+                    isWaitingForDoubleTap = false;
+
+                    if (canBeStopped && !IsSpeeding)
+                    {
+                        HandleTapOrStop();
+                    }
+                }
             }
         }
 
