@@ -186,10 +186,15 @@ size = Vector2(22, 8.25)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6coom"]
 size = Vector2(26, 41)
 
-[node name="Boy" type="Area2D"]
+[node name="Boy" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
 position = Vector2(0, 20)
 collision_mask = 27
 script = ExtResource("1_avtv0")
+_sfxPlayer = NodePath("SfxPlayer")
+_hitSound = "res://assets/audio/sfx/pedestrians/pedestrian-hit.wav"
+_screamSound = "res://assets/audio/sfx/pedestrians/boy-scream.wav"
+_tapSound = "res://assets/audio/sfx/pedestrians/pedestrian-tap.wav"
+_scoreSound = "res://assets/audio/sfx/pedestrians/increase-score.wav"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -20)
@@ -210,3 +215,7 @@ metadata/_edit_lock_ = true
 [node name="InteractionShape" type="CollisionShape2D" parent="InteractionArea"]
 shape = SubResource("RectangleShape2D_6coom")
 metadata/_edit_lock_ = true
+
+[node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
+max_distance = 500.0
+bus = &"Sfx"
