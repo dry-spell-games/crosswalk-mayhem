@@ -85,7 +85,7 @@ position = Vector2(-28, 0)
 script = ExtResource("1_1hpe8")
 
 [node name="PedestrianLightL" type="AnimatedSprite2D" parent="."]
-z_index = 501
+z_index = 551
 position = Vector2(112, 384)
 sprite_frames = SubResource("SpriteFrames_hh7q2")
 animation = &"red"
@@ -93,7 +93,7 @@ autoplay = "red"
 script = ExtResource("3_jusns")
 
 [node name="PedestrianLightR" type="AnimatedSprite2D" parent="."]
-z_index = 501
+z_index = 551
 position = Vector2(318, 384)
 sprite_frames = SubResource("SpriteFrames_di0b1")
 animation = &"red"

@@ -1,27 +1,27 @@
-[gd_scene load_steps=19 format=3 uid="uid://cspkpmcugbqcp"]
+[gd_scene load_steps=19 format=3 uid="uid://8ugsfhevfhrb"]
 
-[ext_resource type="Script" path="res://scripts/vehicles/Bus.cs" id="1_se5dv"]
-[ext_resource type="Texture2D" uid="uid://cah2pbxth1a2t" path="res://assets/sprites/vehicles/bus.png" id="2_08ltl"]
-[ext_resource type="Texture2D" uid="uid://x1oxes87jsjf" path="res://assets/sprites/vehicles/bus-windshield.png" id="3_s7avd"]
-[ext_resource type="AudioStream" uid="uid://1468vkaj0y0i" path="res://assets/audio/sfx/vehicles/bus.wav" id="4_6wng4"]
+[ext_resource type="Script" path="res://scripts/vehicles/Bus.cs" id="1_17ubl"]
+[ext_resource type="Texture2D" uid="uid://cah2pbxth1a2t" path="res://assets/sprites/vehicles/bus.png" id="2_ysxb7"]
+[ext_resource type="Texture2D" uid="uid://x1oxes87jsjf" path="res://assets/sprites/vehicles/bus-windshield.png" id="3_k4i6a"]
+[ext_resource type="AudioStream" uid="uid://1468vkaj0y0i" path="res://assets/audio/sfx/vehicles/bus.wav" id="4_rpr1p"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_3rb05"]
-atlas = ExtResource("2_08ltl")
-region = Rect2(0, 0, 78, 264)
+[sub_resource type="AtlasTexture" id="AtlasTexture_sir2h"]
+atlas = ExtResource("2_ysxb7")
+region = Rect2(0, 528, 78, 264)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_eb2i6"]
-atlas = ExtResource("2_08ltl")
-region = Rect2(0, 0, 78, 264)
+[sub_resource type="AtlasTexture" id="AtlasTexture_ol3f5"]
+atlas = ExtResource("2_ysxb7")
+region = Rect2(0, 528, 78, 264)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0c6v7"]
-atlas = ExtResource("2_08ltl")
-region = Rect2(82, 0, 78, 264)
+[sub_resource type="AtlasTexture" id="AtlasTexture_f7ub1"]
+atlas = ExtResource("2_ysxb7")
+region = Rect2(82, 528, 78, 264)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_64tx1"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_3rb05")
+"texture": SubResource("AtlasTexture_sir2h")
 }],
 "loop": true,
 "name": &"drive",
@@ -29,10 +29,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_eb2i6")
+"texture": SubResource("AtlasTexture_ol3f5")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0c6v7")
+"texture": SubResource("AtlasTexture_f7ub1")
 }],
 "loop": true,
 "name": &"idle",
@@ -40,35 +40,35 @@ animations = [{
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mm6oi"]
-atlas = ExtResource("3_s7avd")
+atlas = ExtResource("3_k4i6a")
 region = Rect2(0, 0, 82, 264)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bjfmm"]
-atlas = ExtResource("3_s7avd")
+atlas = ExtResource("3_k4i6a")
 region = Rect2(82, 0, 82, 264)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ysr3o"]
-atlas = ExtResource("3_s7avd")
+atlas = ExtResource("3_k4i6a")
 region = Rect2(164, 0, 82, 264)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ehqd3"]
-atlas = ExtResource("3_s7avd")
+atlas = ExtResource("3_k4i6a")
 region = Rect2(246, 0, 82, 264)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aw0lo"]
-atlas = ExtResource("3_s7avd")
+atlas = ExtResource("3_k4i6a")
 region = Rect2(328, 0, 82, 264)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q6dtt"]
-atlas = ExtResource("3_s7avd")
+atlas = ExtResource("3_k4i6a")
 region = Rect2(410, 0, 82, 264)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2lnvd"]
-atlas = ExtResource("3_s7avd")
+atlas = ExtResource("3_k4i6a")
 region = Rect2(492, 0, 82, 264)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0547r"]
-atlas = ExtResource("3_s7avd")
+atlas = ExtResource("3_k4i6a")
 region = Rect2(574, 0, 82, 264)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_kc8cw"]
@@ -106,9 +106,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3u11m"]
 size = Vector2(61, 202.75)
 
-[node name="Bus" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
+[node name="Bus1" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
 collision_layer = 2
-script = ExtResource("1_se5dv")
+script = ExtResource("1_17ubl")
 _sfxPlayer = NodePath("AudioStreamPlayer2D")
 metadata/_edit_lock_ = true
 
@@ -117,7 +117,7 @@ z_index = 1
 y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_64tx1")
 animation = &"idle"
-frame_progress = 0.0297419
+frame_progress = 0.823278
 metadata/_edit_lock_ = true
 
 [node name="Windshield" type="AnimatedSprite2D" parent="AnimatedSprite2D"]
@@ -146,6 +146,6 @@ collide_with_areas = true
 metadata/_edit_lock_ = true
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("4_6wng4")
+stream = ExtResource("4_rpr1p")
 volume_db = 24.0
 max_distance = 700.0

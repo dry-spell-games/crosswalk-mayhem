@@ -72,7 +72,7 @@ namespace Crosswalk
             Position = position;
 
             // Sets ZIndex for rendering Pedestrians, higher value of Y is rendered on top
-            ZIndex = Mathf.RoundToInt(GlobalPosition.Y);
+            ZIndex = Mathf.RoundToInt(GlobalPosition.Y + 100);
 
             // If SpawnPoints X coordinate is over 399, Speed is converted to negative
             if (Position.X > 399)

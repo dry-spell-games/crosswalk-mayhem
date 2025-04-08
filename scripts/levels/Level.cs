@@ -58,6 +58,11 @@ namespace Crosswalk
         private PackedScene BeetleScene2;
         private PackedScene BeetleScene3;
         private PackedScene BusScene;
+        private PackedScene BusScene1;
+        private PackedScene BusScene2;
+        // Array for all bus scenes to instantiate them in order
+        private PackedScene[] busScenes;
+        private int currentBusIndex = 0;
 
         // Hitbox for traffic light interaction
         private CollisionShape2D vehicleTrafficLightHitbox;
@@ -94,10 +99,17 @@ namespace Crosswalk
         /// </summary>
         private async void StartSpawningPedestrians()
         {
-            while (_pedestriansToSpawn > 0)
+            while (_pedestriansToSpawn > 0 )
             {
+                // Waits while game is on a pause
+                while (GetTree().Paused)
+                {
+                    await ToSignal(GetTree(), "process_frame"); // waits for next frame
+                }
                 SpawnPedestrian();
-                await ToSignal(GetTree().CreateTimer(_spawnRate[_difficulty]), "timeout");
+
+                // Timer which doesn't do anything during pause
+                await ToSignal(GetTree().CreateTimer(_spawnRate[_difficulty], true), "timeout");
                 _pedestriansToSpawn--;
                 GD.Print($"Pedestrians left to spawn: {_pedestriansToSpawn}");
             }
@@ -110,34 +122,64 @@ namespace Crosswalk
         {
             while (true)
             {
+                // Odotetaan niin kauan kun peli on pausella
+                while (GetTree().Paused)
+                {
+                    await ToSignal(GetTree(), "process_frame"); // odottaa seuraavaa frameä
+                }
+
                 SpawnVehicle();
-                await ToSignal(GetTree().CreateTimer(_carSpawnRate[_difficulty]), "timeout");
+
+                // Timer joka toimii myös pausella
+                await ToSignal(GetTree().CreateTimer(_carSpawnRate[_difficulty], true), "timeout");
             }
         }
+
 
         /// <summary>
         /// Handles the traffic light cycle between cars and pedestrians.
         /// </summary>
-        private async void TrafficLights()
-        {
-            while (true)
-            {
-                GD.Print("Green light for cars");
-                await ToSignal(GetTree().CreateTimer(_carGreenTimer[_difficulty]), "timeout");
-                _carGreen = false;
-                GD.Print("Traffic light transition");
-                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty]), "timeout");
-                _pedestrianGreen = true;
-                GD.Print("Green ligth for pedestrians");
-                EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
-                await ToSignal(GetTree().CreateTimer(_pedestrianGreenTimer[_difficulty]), "timeout");
-                _pedestrianGreen = false;
-                EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
-                GD.Print("Traffic light transition");
-                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty]), "timeout");
-                _carGreen = true;
-            }
-        }
+private async void TrafficLights()
+{
+    while (true)
+    {
+        // Odota, jos peli on pausella
+        while (GetTree().Paused)
+            await ToSignal(GetTree(), "process_frame");
+
+        GD.Print("Green light for cars");
+        await ToSignal(GetTree().CreateTimer(_carGreenTimer[_difficulty], true), "timeout");
+
+        _carGreen = false;
+
+        while (GetTree().Paused)
+            await ToSignal(GetTree(), "process_frame");
+
+        GD.Print("Traffic light transition");
+        await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty], true), "timeout");
+
+        _pedestrianGreen = true;
+        GD.Print("Green light for pedestrians");
+        EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
+
+        while (GetTree().Paused)
+            await ToSignal(GetTree(), "process_frame");
+
+        await ToSignal(GetTree().CreateTimer(_pedestrianGreenTimer[_difficulty], true), "timeout");
+
+        _pedestrianGreen = false;
+        EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
+
+        while (GetTree().Paused)
+            await ToSignal(GetTree(), "process_frame");
+
+        GD.Print("Traffic light transition");
+        await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty], true), "timeout");
+
+        _carGreen = true;
+    }
+}
+
 
         /// <summary>
         /// Instantiates a random pedestrian based on difficulty.
@@ -172,8 +214,7 @@ namespace Crosswalk
                 return;
             }
 
-            Vector2 spawnPosition = pedestrian.StartPositions[GD.RandRange(
-                0, pedestrian.StartPositions.Count - 1)];
+            Vector2 spawnPosition = pedestrian.StartPositions[GD.RandRange(0, pedestrian.StartPositions.Count - 1)];
 
             pedestrian.Initialize(spawnPosition);
             AddChild(pedestrian);
@@ -217,8 +258,17 @@ namespace Crosswalk
                 car = (Car)BeetleScene2.Instantiate();
             else if (rand == 11 && BeetleScene3 != null)
                 car = (Car)BeetleScene3.Instantiate();
-            else if (rand == 12 && BusScene != null)
-                car = (Car)BusScene.Instantiate();
+            else if (rand == 12 && busScenes.Length > 0)
+            {
+                PackedScene selectedScene = busScenes[currentBusIndex];
+                if (selectedScene != null)
+                {
+                    car = (Car)selectedScene.Instantiate();
+
+                    // Rotates through all the buses
+                    currentBusIndex = (currentBusIndex + 1) % busScenes.Length;
+                }
+            }
             else if (rand == 13 && SportsCarScene != null)
                 car = (Car)SportsCarScene.Instantiate();
 
@@ -378,6 +428,9 @@ namespace Crosswalk
             BeetleScene2 = (PackedScene)GD.Load("res://scenes/vehicles/beetle2.tscn");
             BeetleScene3 = (PackedScene)GD.Load("res://scenes/vehicles/beetle3.tscn");
             BusScene = (PackedScene)GD.Load("res://scenes/vehicles/bus.tscn");
+            BusScene1 = (PackedScene)GD.Load("res://scenes/vehicles/bus1.tscn");
+            BusScene2 = (PackedScene)GD.Load("res://scenes/vehicles/bus2.tscn");
+            busScenes = new PackedScene[] { BusScene, BusScene1, BusScene2 };
 
             // Load GUI
             _gui = GetNode<GUI>("GUI");
