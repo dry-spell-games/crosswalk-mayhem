@@ -92,8 +92,11 @@ namespace Crosswalk
 
         public void UpdateLife(int value)
         {
-            _life += value;
-            UpdateLifeLabel();
+            if ((_life + value) >= 0)
+            {
+                _life += value;
+                UpdateLifeLabel();
+            }
         }
 
         /// <summary>
