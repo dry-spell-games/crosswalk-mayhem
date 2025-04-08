@@ -188,6 +188,8 @@ autowrap_mode = 2
 
 [node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
 volume_db = -20.0
+max_distance = 100000.0
+attenuation = 1e-05
 bus = &"Sfx"
 
 [connection signal="pressed" from="GuiRect/PauseButton" to="." method="_on_pause_button_pressed"]

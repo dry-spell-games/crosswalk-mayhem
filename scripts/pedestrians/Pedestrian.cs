@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic; // Required for arraylist
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Crosswalk
 {
@@ -24,6 +25,7 @@ namespace Crosswalk
         [Export] private string _hitSound = "";
         [Export] private string _screamSound = "";
         [Export] private string _tapSound = "";
+        [Export] private string _scoreSound = "";
         private bool RedLightsForPedestrians = false;
 
 
@@ -118,22 +120,26 @@ namespace Crosswalk
                     {
                         GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
 
-                        switch (p.Name)
+                        if (!GameManager.Instance._gameOver)
                         {
-                            case "Grandma":
-                            case "Grandpa":
-                                GameManager.Instance.AddScore(50);
-                                break;
-                            case "Girl":
-                            case "Boy":
-                                GameManager.Instance.AddScore(30);
-                                break;
-                            case "Woman":
-                            case "Man":
-                                GameManager.Instance.AddScore(20);
-                                break;
-                        }
+                            switch (p.Name)
+                            {
+                                case "Grandma":
+                                case "Grandpa":
+                                    GameManager.Instance.AddScore(50);
+                                    break;
+                                case "Girl":
+                                case "Boy":
+                                    GameManager.Instance.AddScore(30);
+                                    break;
+                                case "Woman":
+                                case "Man":
+                                    GameManager.Instance.AddScore(20);
+                                    break;
+                            }
 
+                            GetNode<GUI>("/root/Level/GUI").PlaySfx(_scoreSound);
+                        }
                         pedestrian.QueueFree();
                     }
                 }
@@ -168,15 +174,15 @@ namespace Crosswalk
             {
                 if (!_isHit)
                 {
-                    PlaySfx(_hitSound);
+                    PlayCollisionSounds();
                     GameManager.Instance.UpdateLife(-1);
                     _isHit = true;
 
                     GD.Print($"[HIT] {Name} collided with car: {car.Name}");
 
-                HandleCarCollision(car);
-                RotationSpeed = car.Speed * 3f;
-                GD.Print($"Collision car speed: {car.Speed}");
+                    HandleCarCollision(car);
+                    RotationSpeed = car.Speed * 3f;
+                    GD.Print($"Collision car speed: {car.Speed}");
 
                     GD.Print($"[DEBUG] After collision: {Name} isFlying = {isFlying}");
 
@@ -184,8 +190,6 @@ namespace Crosswalk
                     {
                         GD.PrintErr($"[ERROR] {Name} should be flying but isFlying = false!");
                     }
-
-                    GetNode<CollisionShape2D>("Man/CollisionShape2D").Disabled = true;
                 }
             }
         }
@@ -227,6 +231,10 @@ namespace Crosswalk
         {
             if (@event is InputEventScreenTouch touch && touch.Pressed)
             {
+                if (!isFlying)
+                {
+                    PlaySfx(_tapSound);
+                }
                 HandleTouchInput();
             }
         }
@@ -300,7 +308,7 @@ namespace Crosswalk
             }
         }
 
-        public void PlaySfx(string pathToSfx)
+        private void PlaySfx(string pathToSfx)
         {
             if (_sfxPlayer != null && pathToSfx != null)
             {
@@ -308,6 +316,18 @@ namespace Crosswalk
                 _sfxPlayer.Play();
             }
 
+        }
+
+        private async void PlayCollisionSounds()
+        {
+            if (_sfxPlayer != null && _hitSound != null && _screamSound != null)
+            {
+                _sfxPlayer.Stream = GD.Load<AudioStream>(_hitSound);
+                _sfxPlayer.Play();
+                await ToSignal(GetTree().CreateTimer(0.25f), "timeout");
+                _sfxPlayer.Stream = GD.Load<AudioStream>(_screamSound);
+                _sfxPlayer.Play();
+            }
         }
     }
 }

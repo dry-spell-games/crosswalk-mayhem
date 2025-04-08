@@ -212,7 +212,10 @@ position = Vector2(0, 28)
 collision_mask = 27
 script = ExtResource("1_d5h7n")
 _sfxPlayer = NodePath("SfxPlayer")
-_hitSound = "res://assets/audio/sfx/pedestrians/test-scream.wav"
+_hitSound = "res://assets/audio/sfx/pedestrians/pedestrian-hit.wav"
+_screamSound = "res://assets/audio/sfx/pedestrians/woman-scream.wav"
+_tapSound = "res://assets/audio/sfx/pedestrians/pedestrian-tap.wav"
+_scoreSound = "res://assets/audio/sfx/pedestrians/increase-score.wav"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -28)
@@ -236,4 +239,5 @@ shape = SubResource("RectangleShape2D_ueowc")
 metadata/_edit_lock_ = true
 
 [node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
-max_distance = 400.0
+max_distance = 500.0
+bus = &"Sfx"
