@@ -38,7 +38,7 @@ namespace Crosswalk
         }
         private async void StartRandomStop()
         {
-            while (!isStopped)
+            while (!GetTree().Paused && !isStopped && !IsSpeeding && !_isHit)
             {
                 await ToSignal(GetTree().CreateTimer(random.Next(3, 8)), "timeout"); // Odottaa 3-8 sekuntia ennen pysähtymistä
                 randomStop = true;
