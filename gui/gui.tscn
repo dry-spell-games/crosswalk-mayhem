@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b2sa7sxwnh6da"]
+[gd_scene load_steps=25 format=3 uid="uid://b2sa7sxwnh6da"]
 
 [ext_resource type="Script" path="res://gui/GUI.cs" id="1_nstyi"]
 [ext_resource type="Texture2D" uid="uid://e3rc2pvk6kmg" path="res://assets/gui/gui.png" id="2_erutb"]
@@ -14,6 +14,11 @@
 [ext_resource type="Script" path="res://gui/GUITrafficLight.cs" id="12_djlcb"]
 [ext_resource type="Texture2D" uid="uid://bemwqcyegik4y" path="res://assets/gui/message-sign.png" id="13_t6s68"]
 [ext_resource type="Texture2D" uid="uid://doi65ee1c1yrv" path="res://assets/gui/incoming-sign.png" id="14_t72o8"]
+[ext_resource type="Texture2D" uid="uid://d1wakiysv758u" path="res://assets/gui/action-sign.png" id="15_gdxdr"]
+[ext_resource type="Texture2D" uid="uid://u0dhmyuolsdw" path="res://assets/gui/action-reset.png" id="16_g4omu"]
+[ext_resource type="Texture2D" uid="uid://5xv7flyv5jon" path="res://assets/gui/action-reset-pressed.png" id="17_gf5j1"]
+[ext_resource type="Texture2D" uid="uid://b6nhmpygbwljp" path="res://assets/gui/action-exit.png" id="18_e2pbe"]
+[ext_resource type="Texture2D" uid="uid://bc6r7gx15ensc" path="res://assets/gui/action-exit-pressed.png" id="19_pcpr8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b5vgf"]
 atlas = ExtResource("11_g6g8j")
@@ -61,7 +66,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="GUI" type="Control" node_paths=PackedStringArray("_sfxPlayer", "_pauseMenu", "_muteButton", "_messageSign", "_messageLabel", "_incomingSign", "_incomingCountLabel", "_incomingLabel")]
+[node name="GUI" type="Control" node_paths=PackedStringArray("_sfxPlayer", "_pauseMenu", "_muteButton", "_messageSign", "_messageLabel", "_incomingSign", "_incomingCountLabel", "_incomingLabel", "_actionSign", "_pauseButton")]
 z_index = 666
 layout_mode = 3
 anchors_preset = 15
@@ -78,6 +83,8 @@ _messageLabel = NodePath("MessageSign/Label")
 _incomingSign = NodePath("MessageSign/IncomingSign")
 _incomingCountLabel = NodePath("MessageSign/IncomingSign/IncomingCountLabel")
 _incomingLabel = NodePath("MessageSign/IncomingSign/IncomingLabel")
+_actionSign = NodePath("MessageSign/ActionSign")
+_pauseButton = NodePath("GuiRect/PauseButton")
 metadata/_edit_lock_ = true
 
 [node name="GuiRect" type="TextureRect" parent="."]
@@ -192,6 +199,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="IncomingSign" type="TextureRect" parent="MessageSign"]
+visible = false
 layout_mode = 0
 offset_top = 95.0
 offset_right = 288.0
@@ -221,6 +229,34 @@ theme_override_font_sizes/font_size = 10
 text = "INCOMING"
 vertical_alignment = 1
 
+[node name="ActionSign" type="TextureRect" parent="MessageSign"]
+visible = false
+layout_mode = 0
+offset_top = 95.0
+offset_right = 288.0
+offset_bottom = 175.0
+texture = ExtResource("15_gdxdr")
+
+[node name="ResetButton" type="TextureButton" parent="MessageSign/ActionSign"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 16.0
+offset_right = 56.0
+offset_bottom = 64.0
+theme = ExtResource("3_px3at")
+texture_normal = ExtResource("16_g4omu")
+texture_pressed = ExtResource("17_gf5j1")
+
+[node name="ExitButton" type="TextureButton" parent="MessageSign/ActionSign"]
+layout_mode = 0
+offset_left = 232.0
+offset_top = 15.0
+offset_right = 280.0
+offset_bottom = 63.0
+theme = ExtResource("3_px3at")
+texture_normal = ExtResource("18_e2pbe")
+texture_pressed = ExtResource("19_pcpr8")
+
 [node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
 volume_db = -20.0
 max_distance = 100000.0
@@ -232,3 +268,5 @@ bus = &"Sfx"
 [connection signal="toggled" from="GuiRect/PauseMenu/MuteButton" to="." method="_on_mute_button_toggled"]
 [connection signal="pressed" from="GuiRect/PauseMenu/ResetButton" to="." method="_on_reset_button_pressed"]
 [connection signal="pressed" from="GuiRect/PauseMenu/ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="MessageSign/ActionSign/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="MessageSign/ActionSign/ExitButton" to="." method="_on_exit_button_pressed"]

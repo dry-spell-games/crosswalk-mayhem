@@ -28,7 +28,7 @@ namespace Crosswalk
         // Transition delay between light changes per difficulty
         [Export] private float[] _lightTransitionTimer = { 4f, 3f, 2f, 2f, 2f, 0f };
         // Life bonus granted at each difficulty level
-        [Export] private int[] _lifeBonus = { 8, 7, 0, 5, 0, 0 };
+        [Export] private int[] _lifeBonus = { 1, 7, 0, 5, 0, 0 };
         // Background music player
         [Export] private AudioStreamPlayer _musicPlayer;
         // UI element to block player input
@@ -299,7 +299,6 @@ namespace Crosswalk
             GameManager.Instance._gameOver = true;
             _inputBlocker.Visible = true;
             _musicPlayer.Stop();
-            await _gui.ShowMessage(_messageTimer, "GAME_OVER");
 
             if (GameManager.Instance._score > GameManager.Instance._highscore)
             {
@@ -307,12 +306,7 @@ namespace Crosswalk
                 await _gui.ShowMessage(_messageTimer, "NEW_RECORD");
             }
 
-            GameManager.Instance.SaveData();
-            _inputBlocker.Visible = false;
-            GameManager.Instance._difficulty = 0;
-            GameManager.Instance.ResetScore();
-            GameManager.Instance.ResetLife();
-            GetTree().ChangeSceneToFile("res://main-menu/scenes/main-menu.tscn");
+            await _gui.ShowGameOver();
         }
 
         /// <summary>
