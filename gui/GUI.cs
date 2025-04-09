@@ -12,6 +12,8 @@ namespace Crosswalk
     /// </summary>
     public partial class GUI : Control
     {
+        // Reference to the main level scene
+        private Node2D _level;
         // Reference to the main GUI container node (can be used for grouping or visibility control)
         [Export] private Node _gui;
         // Audio player for sound effects like button clicks or message slide sounds
@@ -26,6 +28,12 @@ namespace Crosswalk
         [Export] private TextureRect _messageSign;
         // The label inside the message sign that displays the actual text
         [Export] private Label _messageLabel;
+        // The signs that shows the amount of incoming pedestrians per difficulty level
+        [Export] private TextureRect _incomingSign;
+        // The label inside the incoming sign that displays the incoming pedestrian count
+        [Export] private Label _incomingCountLabel;
+        // The label inside the incoming sign that displays the text
+        [Export] private Label _incomingLabel;
 
         // Internal flag to determine if the message sign should currently be moving up
         private bool _messageUp = false;
@@ -105,6 +113,9 @@ namespace Crosswalk
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
             await ToSignal(GetTree().CreateTimer(_sfxDelayTimer), "timeout");
 
+            GameManager.Instance._difficulty = 0;
+            GameManager.Instance.ResetScore();
+            GameManager.Instance.ResetLife();
             GetTree().Paused = false;
             GetTree().ChangeSceneToFile("res://main-menu/scenes/main-menu.tscn");
         }
@@ -112,8 +123,15 @@ namespace Crosswalk
         /// <summary>
         /// Displays a message sign with text and slides it up, then down after a delay.
         /// </summary>
-        public async Task ShowMessage(float messageTimer, string messageText, string pathToSound = "")
+        public async Task ShowMessage(float messageTimer, string messageText,
+            string pathToSound = "", bool showIncoming = false)
         {
+            if (showIncoming)
+            {
+                _incomingSign.Visible = true;
+                _incomingCountLabel.Text = $"{GetNode<Level>("/root/Level/")._pedestriansToSpawn}";
+            }
+
             _messageLabel.Text = messageText;
             _messageUp = true;
             PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
@@ -137,6 +155,7 @@ namespace Crosswalk
 
             // (Optional) Snap exactly to start position if overshot
             _messageSign.Position = new Vector2(_messageSign.Position.X, _messageStartYPos);
+            _incomingSign.Visible = false;
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://b2sa7sxwnh6da"]
+[gd_scene load_steps=20 format=3 uid="uid://b2sa7sxwnh6da"]
 
 [ext_resource type="Script" path="res://gui/GUI.cs" id="1_nstyi"]
 [ext_resource type="Texture2D" uid="uid://e3rc2pvk6kmg" path="res://assets/gui/gui.png" id="2_erutb"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://dlulxiu10qs73" path="res://assets/gui/gui-traffic-lights.png" id="11_g6g8j"]
 [ext_resource type="Script" path="res://gui/GUITrafficLight.cs" id="12_djlcb"]
 [ext_resource type="Texture2D" uid="uid://bemwqcyegik4y" path="res://assets/gui/message-sign.png" id="13_t6s68"]
+[ext_resource type="Texture2D" uid="uid://doi65ee1c1yrv" path="res://assets/gui/incoming-sign.png" id="14_t72o8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b5vgf"]
 atlas = ExtResource("11_g6g8j")
@@ -60,7 +61,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="GUI" type="Control" node_paths=PackedStringArray("_sfxPlayer", "_pauseMenu", "_muteButton", "_messageSign", "_messageLabel")]
+[node name="GUI" type="Control" node_paths=PackedStringArray("_sfxPlayer", "_pauseMenu", "_muteButton", "_messageSign", "_messageLabel", "_incomingSign", "_incomingCountLabel", "_incomingLabel")]
 z_index = 666
 layout_mode = 3
 anchors_preset = 15
@@ -74,6 +75,9 @@ _pauseMenu = NodePath("GuiRect/PauseMenu")
 _muteButton = NodePath("GuiRect/PauseMenu/MuteButton")
 _messageSign = NodePath("MessageSign")
 _messageLabel = NodePath("MessageSign/Label")
+_incomingSign = NodePath("MessageSign/IncomingSign")
+_incomingCountLabel = NodePath("MessageSign/IncomingSign/IncomingCountLabel")
+_incomingLabel = NodePath("MessageSign/IncomingSign/IncomingLabel")
 metadata/_edit_lock_ = true
 
 [node name="GuiRect" type="TextureRect" parent="."]
@@ -186,6 +190,36 @@ theme = ExtResource("3_px3at")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+
+[node name="IncomingSign" type="TextureRect" parent="MessageSign"]
+layout_mode = 0
+offset_top = 95.0
+offset_right = 288.0
+offset_bottom = 175.0
+theme = ExtResource("3_px3at")
+texture = ExtResource("14_t72o8")
+
+[node name="IncomingCountLabel" type="Label" parent="MessageSign/IncomingSign"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 20.0
+offset_right = 56.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(0.0627451, 0.0705882, 0.109804, 1)
+theme_override_font_sizes/font_size = 10
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IncomingLabel" type="Label" parent="MessageSign/IncomingSign"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 20.0
+offset_right = 284.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(0.0627451, 0.0705882, 0.109804, 1)
+theme_override_font_sizes/font_size = 10
+text = "INCOMING"
+vertical_alignment = 1
 
 [node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
 volume_db = -20.0

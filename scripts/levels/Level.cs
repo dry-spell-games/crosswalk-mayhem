@@ -8,11 +8,11 @@ namespace Crosswalk
     public partial class Level : Node2D
     {
         // Rate at which pedestrians spawn at each difficulty level
-        [Export] private float[] _spawnRate = { 2f, 4f, 3f, 2f, 1f, 0.2f };
+        [Export] private float[] _spawnRate = { 4f, 3f, 2f, 1f, 0.5f, 0.2f };
         // Rate at which cars spawn at each difficulty level
-        [Export] private int[] _carSpawnRate = { 7, 6, 5, 4, 3, 1 };
+        [Export] private int[] _carSpawnRate = { 6, 5, 4, 3, 2, 1 };
         // Number of pedestrians per level
-        [Export] private int[] _pedestrianCount = { 666, 20, 30, 50, 80, 666 };
+        [Export] private int[] _pedestrianCount = { 10, 20, 30, 50, 80, 666 };
         // Duration of green light for cars per difficulty level
         [Export] private float[] _carGreenTimer = { 3, 5, 7, 8, 9, 10 };
         // Flag for car green light state
@@ -28,7 +28,7 @@ namespace Crosswalk
         // Transition delay between light changes per difficulty
         [Export] private float[] _lightTransitionTimer = { 4f, 3f, 2f, 2f, 2f, 0f };
         // Life bonus granted at each difficulty level
-        [Export] private int[] _lifeBonus = { 5, 4, 3, 2, 1, 0 };
+        [Export] private int[] _lifeBonus = { 8, 7, 0, 5, 0, 0 };
         // Background music player
         [Export] private AudioStreamPlayer _musicPlayer;
         // UI element to block player input
@@ -92,7 +92,7 @@ namespace Crosswalk
         private CancellationTokenSource _trafficTokenSource;
 
         // Pedestrian spawn counter
-        private int _pedestriansToSpawn;
+        public int _pedestriansToSpawn { get; private set; }
 
         /// <summary>
         /// Spawns pedestrians at intervals until count reaches zero.
@@ -177,7 +177,7 @@ namespace Crosswalk
             Pedestrian pedestrian = null;
 
             if (_difficulty < 2)
-                rand = random.Next(0, 6);
+                rand = random.Next(2, 6);
             else
                 rand = random.Next(0, 6);
 
@@ -344,7 +344,7 @@ namespace Crosswalk
             _blink = false;
 
             TrafficLights();
-            await _gui.ShowMessage(_messageTimer, "GET_READY");
+            await _gui.ShowMessage(_messageTimer, "GET_READY", "", true);
 
             _musicPlayer.Play();
             StartSpawningPedestrians();
