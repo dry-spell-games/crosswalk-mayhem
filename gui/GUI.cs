@@ -132,19 +132,28 @@ namespace Crosswalk
             if (showIncoming)
             {
                 _incomingSign.Visible = true;
-                _incomingCountLabel.Text = $"{GetNode<Level>("/root/Level/")._pedestriansToSpawn}";
+
+                // Safely access /root/Level and its _pedestriansToSpawn
+                if (HasNode("/root/Level"))
+                {
+                    _incomingCountLabel.Text = $"{GetNode<Level>("/root/Level")._pedestriansToSpawn}";
+                }
+                else
+                {
+                    GD.PushWarning("ShowMessage: Could not find /root/Level to display incoming count.");
+                    _incomingCountLabel.Text = "?";
+                }
             }
 
             _messageLabel.Text = messageText;
             _messageUp = true;
             PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
 
-            // If a path is given, play sound effect
-            // Wait for the message to stay up
             if (pathToSound != "")
             {
                 PlaySfx(pathToSound);
             }
+
             await ToSignal(GetTree().CreateTimer(messageTimer), "timeout");
 
             // Start sliding down
@@ -156,7 +165,7 @@ namespace Crosswalk
                 await ToSignal(GetTree(), "process_frame");
             }
 
-            // (Optional) Snap exactly to start position if overshot
+            // Snap to exact position
             _messageSign.Position = new Vector2(_messageSign.Position.X, _messageStartYPos);
             _incomingSign.Visible = false;
         }
@@ -168,21 +177,27 @@ namespace Crosswalk
         {
             _pauseButton.Visible = false;
             _actionSign.Visible = true;
-            GetTree().Root.GetNode("Level").MoveChild(GetTree().Root.GetNode("Level/GUI"), GetTree().Root.GetNode("Level").GetChildCount() - 1);
+
+            // Safe access to Level and GUI inside it
+            if (GetTree().Root.HasNode("Level") && GetTree().Root.GetNode("Level").HasNode("GUI"))
+            {
+                var level = GetTree().Root.GetNode("Level");
+                level.MoveChild(level.GetNode("GUI"), level.GetChildCount() - 1);
+            }
+            else
+            {
+                GD.PushWarning("ShowGameOver: Could not find Level or GUI node for z-order change.");
+            }
 
             _messageLabel.Text = "GAME_OVER";
             _messageUp = true;
             PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
 
-            // If a path is given, play sound effect
-            // Wait for the message to stay up
             if (pathToSound != "")
             {
                 PlaySfx(pathToSound);
             }
-            ;
 
-            // Wait until it's fully down
             while (_messageSign.Position.Y < _messageStartYPos)
             {
                 await ToSignal(GetTree(), "process_frame");
@@ -247,9 +262,12 @@ namespace Crosswalk
         /// <summary>
         /// Called when the node enters the scene tree. Initializes UI labels and sets up mute state.
         /// </summary>
-        public override void _Ready()
+        public override async void _Ready()
         {
             SetProcessMode(ProcessModeEnum.Always); // GUI should always process even when game is paused
+
+            // Wait a frame to make sure node is fully in tree
+            await ToSignal(GetTree(), "process_frame");
 
             // Sync mute button state with actual audio bus volume
             if (AudioServer.GetBusVolumeDb(AudioServer.GetBusIndex("Master")) <= -80f)
