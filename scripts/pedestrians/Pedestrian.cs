@@ -2,7 +2,6 @@ using Godot;
 using System;
 using System.Collections.Generic; // Required for arraylist
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Crosswalk
 {
@@ -26,7 +25,6 @@ namespace Crosswalk
         [Export] private string _screamSound = "";
         [Export] private string _tapSound = "";
         [Export] private string _scoreSound = "";
-        [Export] private AnimatedSprite2D _cooldownHourglass;
         private bool RedLightsForPedestrians = false;
 
 
@@ -96,15 +94,6 @@ namespace Crosswalk
 
         public override void _Process(double delta)
         {
-            if (!canBeStopped && !_isHit)
-            {
-                _cooldownHourglass.Visible = true;
-            }
-            else
-            {
-                _cooldownHourglass.Visible = false;
-            }
-
             if (isStopped)
             {
                 PlayAnimation(randomStop ? "idle2" : "idle");
@@ -186,7 +175,6 @@ namespace Crosswalk
                 {
                     PlayCollisionSounds();
                     GameManager.Instance.UpdateLife(-1);
-                    _cooldownHourglass.Visible = false;
                     _isHit = true;
 
                     GD.Print($"[HIT] {Name} collided with car: {car.Name}");
@@ -255,28 +243,27 @@ namespace Crosswalk
         {
             float currentTime = Time.GetTicksMsec() / 1000f;
 
-            if (isWaitingForDoubleTap && (currentTime - lastTapTime) < DoubleTapThreshold)
+            if ((currentTime - lastTapTime) < DoubleTapThreshold)
             {
+                // Double tap → run immediately, even if already stopped
                 isStopped = false;
-                StartSpeedBoost(); // Double tap: sprint
+                StartSpeedBoost();
                 isWaitingForDoubleTap = false;
             }
             else
             {
-                isWaitingForDoubleTap = true;
                 lastTapTime = currentTime;
+                isWaitingForDoubleTap = true;
 
-                await ToSignal(GetTree().CreateTimer(DoubleTapThreshold), "timeout");
-
-                if (isWaitingForDoubleTap)
+                // Single tap → stop immediately (if allowed)
+                if (canBeStopped && !IsSpeeding)
                 {
-                    isWaitingForDoubleTap = false;
-
-                    if (canBeStopped && !IsSpeeding)
-                    {
-                        HandleTapOrStop();
-                    }
+                    HandleTapOrStop();
                 }
+
+                // Give player time to double tap (to override stop with run)
+                await ToSignal(GetTree().CreateTimer(DoubleTapThreshold), "timeout");
+                isWaitingForDoubleTap = false;
             }
         }
 
@@ -310,9 +297,13 @@ namespace Crosswalk
         {
             GD.Print("Pedestrian speeding for " + SpeedTimer + " seconds.");
             IsSpeeding = true;
+            canBeStopped = false; // Prevent stopping while speeding
+
             await ToSignal(GetTree().CreateTimer(SpeedTimer), "timeout");
+
             IsSpeeding = false;
-            GD.Print("Pedestrian back to normal speed.");
+            canBeStopped = true; // <<< Add this line
+            GD.Print("Pedestrian back to normal speed, can be stopped again.");
         }
 
         // Method gets animation name string as parameter and plays given animation
@@ -327,12 +318,15 @@ namespace Crosswalk
 
         private void PlaySfx(string pathToSfx)
         {
-            if (_sfxPlayer != null && pathToSfx != null)
+            if (_sfxPlayer != null && !string.IsNullOrEmpty(pathToSfx))
             {
-                _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
-                _sfxPlayer.Play();
+                var stream = GD.Load<AudioStream>(pathToSfx);
+                if (stream != null)
+                {
+                    _sfxPlayer.Stream = stream;
+                    _sfxPlayer.Play();
+                }
             }
-
         }
 
         private async void PlayCollisionSounds()
