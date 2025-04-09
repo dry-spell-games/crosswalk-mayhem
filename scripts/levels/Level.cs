@@ -28,7 +28,7 @@ namespace Crosswalk
         // Transition delay between light changes per difficulty
         [Export] private float[] _lightTransitionTimer = { 4f, 3f, 2f, 2f, 2f, 0f };
         // Life bonus granted at each difficulty level
-        [Export] private int[] _lifeBonus = { 1, 7, 0, 5, 0, 0 };
+        [Export] private int[] _lifeBonus = { 8, 7, 0, 5, 0, 0 };
         // Background music player
         [Export] private AudioStreamPlayer _musicPlayer;
         // UI element to block player input
@@ -177,7 +177,7 @@ namespace Crosswalk
             Pedestrian pedestrian = null;
 
             if (_difficulty < 2)
-                rand = random.Next(2, 6);
+                rand = random.Next(0, 4);
             else
                 rand = random.Next(0, 6);
 
