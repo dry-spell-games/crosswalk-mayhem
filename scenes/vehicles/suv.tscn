@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://dopbj8wsm6go5"]
+[gd_scene load_steps=19 format=3 uid="uid://dopbj8wsm6go5"]
 
 [ext_resource type="Texture2D" uid="uid://xwj62sgau52w" path="res://assets/sprites/vehicles/suv.png" id="1_fhgui"]
 [ext_resource type="Script" path="res://scripts/vehicles/Suv.cs" id="1_rmi1k"]
 [ext_resource type="Texture2D" uid="uid://c6dd6bgwx47q8" path="res://assets/sprites/vehicles/suv-windshield.png" id="2_snwff"]
+[ext_resource type="AudioStream" uid="uid://b3euss2jp0cn6" path="res://assets/audio/sfx/vehicles/suv-engine.wav" id="4_pgjtf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1uvlx"]
 atlas = ExtResource("1_fhgui")
@@ -105,9 +106,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3u11m"]
 size = Vector2(53, 110)
 
-[node name="Suv" type="Area2D"]
+[node name="Suv" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
 collision_layer = 2
 script = ExtResource("1_rmi1k")
+_sfxPlayer = NodePath("AudioStreamPlayer2D")
 metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -141,3 +143,8 @@ collision_mask = 6
 hit_from_inside = true
 collide_with_areas = true
 metadata/_edit_lock_ = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_pgjtf")
+volume_db = 8.0
+max_distance = 700.0

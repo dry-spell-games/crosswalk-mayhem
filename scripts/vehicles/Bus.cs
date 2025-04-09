@@ -28,8 +28,8 @@ namespace Crosswalk {
             windShield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
             base._Ready();
 
-            _initialSpeed = Speed; // tallennetaan alkuperäinen nopeus
-            PlayLoopingSfx("res://assets/audio/sfx/vehicles/bus.wav");
+            _initialSpeed = Speed; // Saves car's original speed
+            PlayLoopingSfx("res://assets/audio/sfx/vehicles/bus-engine.wav");
 
             ZAsRelative = false;
             ZIndex = 500 - BusCounter;
@@ -40,8 +40,9 @@ namespace Crosswalk {
         {
             base._Process(delta);
 
-            // Käytetään todellista nopeutta. Oletetaan että Velocity on käytettävissä (peritty Car-luokasta)
-            float pitch = Mathf.Clamp(Speed / _initialSpeed, 0.4f, 10.0f);
+            // Scales motor's SFX tempo. Compares current speed to original speed
+            // Last 2 values are min and max tempo
+            float pitch = Mathf.Clamp(Speed / _initialSpeed, 0.5f, 2.0f);
             _sfxPlayer.PitchScale = pitch;
         }
     }

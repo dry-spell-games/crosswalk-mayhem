@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/vehicles/Bus.cs" id="1_17ubl"]
 [ext_resource type="Texture2D" uid="uid://cah2pbxth1a2t" path="res://assets/sprites/vehicles/bus.png" id="2_ysxb7"]
 [ext_resource type="Texture2D" uid="uid://x1oxes87jsjf" path="res://assets/sprites/vehicles/bus-windshield.png" id="3_k4i6a"]
-[ext_resource type="AudioStream" uid="uid://1468vkaj0y0i" path="res://assets/audio/sfx/vehicles/bus.wav" id="4_rpr1p"]
+[ext_resource type="AudioStream" uid="uid://bu30uwg2leaal" path="res://assets/audio/sfx/vehicles/bus-engine.wav" id="4_msh0r"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sir2h"]
 atlas = ExtResource("2_ysxb7")
@@ -148,6 +148,6 @@ collide_with_areas = true
 metadata/_edit_lock_ = true
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("4_rpr1p")
-volume_db = 24.0
+stream = ExtResource("4_msh0r")
+volume_db = 8.0
 max_distance = 700.0
