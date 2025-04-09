@@ -149,3 +149,4 @@ metadata/_edit_lock_ = true
 stream = ExtResource("4_8g2jt")
 volume_db = 8.914
 max_distance = 700.0
+bus = &"Sfx"
