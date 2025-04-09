@@ -31,13 +31,13 @@ metadata/_edit_lock_ = true
 stream = ExtResource("4_2xbfc")
 bus = &"Music"
 
+[node name="AudioListener2D" type="AudioListener2D" parent="."]
+position = Vector2(180, 544)
+current = true
+
 [node name="InputBlocker" type="Control" parent="."]
 visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 360.0
 offset_bottom = 640.0
-
-[node name="AudioListener2D" type="AudioListener2D" parent="."]
-position = Vector2(180, 544)
-current = true
