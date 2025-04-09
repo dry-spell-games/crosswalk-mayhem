@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/levels/Level.cs" id="1_xijry"]
 [ext_resource type="PackedScene" uid="uid://cv4gmabr75y6e" path="res://scenes/level-background/background.tscn" id="2_7cjbx"]
 [ext_resource type="PackedScene" uid="uid://b2sa7sxwnh6da" path="res://gui/gui.tscn" id="3_y71qr"]
-[ext_resource type="AudioStream" uid="uid://ci2t81yi1whho" path="res://assets/audio/music/CrosswalkMayhem.WAV" id="5_todxb"]
+[ext_resource type="AudioStream" uid="uid://bu258iglg0rxt" path="res://assets/audio/music/theme.wav" id="4_2xbfc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6cuqr"]
 size = Vector2(132, 8)
@@ -28,8 +28,7 @@ shape = SubResource("RectangleShape2D_6cuqr")
 metadata/_edit_lock_ = true
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_todxb")
-volume_db = 6.19
+stream = ExtResource("4_2xbfc")
 bus = &"Music"
 
 [node name="InputBlocker" type="Control" parent="."]
@@ -40,5 +39,5 @@ offset_right = 360.0
 offset_bottom = 640.0
 
 [node name="AudioListener2D" type="AudioListener2D" parent="."]
-position = Vector2(180, 540)
+position = Vector2(180, 544)
 current = true
