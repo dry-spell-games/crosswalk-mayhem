@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Dynamic;
 using System.Threading.Tasks;
 
 namespace Crosswalk
@@ -14,8 +13,6 @@ namespace Crosswalk
     {
         // Reference to the main level scene
         private Node2D _level;
-        // Reference to the main GUI container node (can be used for grouping or visibility control)
-        [Export] private Node _gui;
         // Audio player for sound effects like button clicks or message slide sounds
         [Export] private AudioStreamPlayer2D _sfxPlayer;
         // The pause menu UI that becomes visible when the game is paused
@@ -34,6 +31,10 @@ namespace Crosswalk
         [Export] private Label _incomingCountLabel;
         // The label inside the incoming sign that displays the text
         [Export] private Label _incomingLabel;
+        // Signs that allow player to reset or exit the game
+        [Export] private TextureRect _actionSign;
+        // Reference to the pause button
+        [Export] private Button _pauseButton;
 
         // Internal flag to determine if the message sign should currently be moving up
         private bool _messageUp = false;
@@ -98,6 +99,7 @@ namespace Crosswalk
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
             await ToSignal(GetTree().CreateTimer(_sfxDelayTimer), "timeout");
 
+            GameManager.Instance.SaveData();
             GameManager.Instance._difficulty = 0;
             GameManager.Instance.ResetScore();
             GameManager.Instance.ResetLife();
@@ -113,6 +115,7 @@ namespace Crosswalk
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
             await ToSignal(GetTree().CreateTimer(_sfxDelayTimer), "timeout");
 
+            GameManager.Instance.SaveData();
             GameManager.Instance._difficulty = 0;
             GameManager.Instance.ResetScore();
             GameManager.Instance.ResetLife();
@@ -159,6 +162,33 @@ namespace Crosswalk
         }
 
         /// <summary>
+        /// Displays a message sign with text and slides it up, then down after a delay.
+        /// </summary>
+        public async Task ShowGameOver(string pathToSound = "")
+        {
+            _pauseButton.Visible = false;
+            _actionSign.Visible = true;
+            GetTree().Root.GetNode("Level").MoveChild(GetTree().Root.GetNode("Level/GUI"), GetTree().Root.GetNode("Level").GetChildCount() - 1);
+
+            _messageLabel.Text = "GAME_OVER";
+            _messageUp = true;
+            PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
+
+            // If a path is given, play sound effect
+            // Wait for the message to stay up
+            if (pathToSound != "")
+            {
+                PlaySfx(pathToSound);
+            };
+
+            // Wait until it's fully down
+            while (_messageSign.Position.Y < _messageStartYPos)
+            {
+                await ToSignal(GetTree(), "process_frame");
+            }
+        }
+
+        /// <summary>
         /// Moves the message sign up toward a target Y position at a fixed speed.
         /// </summary>
         private void MessageUp(double delta)
@@ -195,8 +225,11 @@ namespace Crosswalk
         /// </summary>
         public void PlaySfx(string pathToSfx)
         {
-            _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
-            _sfxPlayer.Play();
+            if (_sfxPlayer != null && pathToSfx != null)
+            {
+                _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
+                _sfxPlayer.Play();
+            }
         }
 
         /// <summary>
