@@ -12,7 +12,7 @@ OK;OK;OK
 CANCEL;CANCEL;PERUUTA
 HOW_TO_PLAY;HOW TO PLAY:;KUINKA PELATA:
 TUTORIAL_1;Help the pedestrians cross the road.;Auta jalankulkijoita ylittämään suojatie.
-TUTORIAL_2;Tap a pedestrian to make them stop briefly - but keep in mind, they’re impatient and won’t stop again for a while.;Napauta jalankulkijaa saadaksesi hänet pysähtymään hetkeksi - mutta muista, että he ovat kärsimättömiä, eivätkä pysähdy hetkeen uudestaan.
+TUTORIAL_2;Tap a pedestrian to make them stop briefly.;Napauta jalankulkijaa saadaksesi hänet pysähtymään hetkeksi.
 TUTORIAL_3;Double-tap a pedestrian to make them sprint.;Kaksoisnapautus saa jalankulkijan spurttaamaan.
 TUTORIAL_4;The game ends if too many pedestrians get hit by a car.;Peli päättyy, jos liian moni jalankulkija jää auton alle.
 DRY_SPELL_GAMES;DRY SPELL GAMES:;DRY SPELL GAMES:
