@@ -1,6 +1,4 @@
-using Crosswalk;
 using Godot;
-using System;
 
 namespace Crosswalk
 {
@@ -36,31 +34,28 @@ namespace Crosswalk
         /// <param name="_pedestrianGreen">True if pedestrian light is green, false otherwise.</param>
         private async void OnPedestrianLightChanged(bool _pedestrianGreen)
         {
-            // Double-check we can access Level in case the scene changed
-            Level level = GetNodeOrNull<Level>("/root/Level");
+            if (GetTree().Paused) return;
 
-            // Refresh difficulty every time the light changes
+            Level level = GetNodeOrNull<Level>("/root/Level");
             _difficulty = GameManager.Instance._difficulty;
 
             if (_pedestrianGreen)
             {
-                // Start with green light
                 Play("green");
 
-                // Wait before starting blink animation (based on timing arrays)
                 if (level != null)
                 {
                     await ToSignal(GetTree().CreateTimer(
-                        level._pedestrianGreenTimer[_difficulty] - level._blinkTimer[_difficulty]),
-                        "timeout");
+                        level._pedestrianGreenTimer[_difficulty] - level._blinkTimer[_difficulty],
+                        false,
+                        true
+                    ), "timeout");
                 }
 
-                // Switch to blinking green animation
                 Play("blink");
             }
             else
             {
-                // Show red light
                 Play("red");
             }
         }
