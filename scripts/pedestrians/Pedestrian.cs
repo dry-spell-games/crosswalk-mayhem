@@ -54,7 +54,7 @@ namespace Crosswalk
         protected float InitialSpeed; // Saves original speed
         protected bool IsSpeeding = false;
         protected bool randomStop = false; // Plays different idle animation when true
-        private bool _isHit = false;
+        protected bool _isHit = false;
 
         public override void _Ready()
         {
