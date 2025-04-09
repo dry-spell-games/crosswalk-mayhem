@@ -99,7 +99,7 @@ namespace Crosswalk
         /// </summary>
         private async void StartSpawningPedestrians()
         {
-            while (_pedestriansToSpawn > 0 )
+            while (_pedestriansToSpawn > 0)
             {
                 // Waits while game is on a pause
                 while (GetTree().Paused)
@@ -139,46 +139,33 @@ namespace Crosswalk
         /// <summary>
         /// Handles the traffic light cycle between cars and pedestrians.
         /// </summary>
-private async void TrafficLights()
-{
-    while (true)
-    {
-        // Odota, jos peli on pausella
-        while (GetTree().Paused)
-            await ToSignal(GetTree(), "process_frame");
+        private async void TrafficLights()
+        {
+            while (true)
+            {
+                GD.Print("Green light for cars");
+                await ToSignal(GetTree().CreateTimer(_carGreenTimer[_difficulty], false, true), "timeout");
 
-        GD.Print("Green light for cars");
-        await ToSignal(GetTree().CreateTimer(_carGreenTimer[_difficulty], true), "timeout");
+                _carGreen = false;
 
-        _carGreen = false;
+                GD.Print("Traffic light transition");
+                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty], false, true), "timeout");
 
-        while (GetTree().Paused)
-            await ToSignal(GetTree(), "process_frame");
+                _pedestrianGreen = true;
+                GD.Print("Green light for pedestrians");
+                EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
 
-        GD.Print("Traffic light transition");
-        await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty], true), "timeout");
+                await ToSignal(GetTree().CreateTimer(_pedestrianGreenTimer[_difficulty], false, true), "timeout");
 
-        _pedestrianGreen = true;
-        GD.Print("Green light for pedestrians");
-        EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
+                _pedestrianGreen = false;
+                EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
 
-        while (GetTree().Paused)
-            await ToSignal(GetTree(), "process_frame");
+                GD.Print("Traffic light transition");
+                await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty], false, true), "timeout");
 
-        await ToSignal(GetTree().CreateTimer(_pedestrianGreenTimer[_difficulty], true), "timeout");
-
-        _pedestrianGreen = false;
-        EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
-
-        while (GetTree().Paused)
-            await ToSignal(GetTree(), "process_frame");
-
-        GD.Print("Traffic light transition");
-        await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty], true), "timeout");
-
-        _carGreen = true;
-    }
-}
+                _carGreen = true;
+            }
+        }
 
 
         /// <summary>
