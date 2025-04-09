@@ -45,7 +45,7 @@ namespace Crosswalk
         // Speed (pixels per second) at which the message sign moves vertically
         private float _messageMoveSpeed = 750f;
         // Flag to wait for messages
-        public  bool _waitForMessage { get; private set; } = false;
+        public bool _waitForMessage { get; private set; } = false;
 
         /// <summary>
         /// Called when the pause button is pressed. Pauses the game and shows the pause menu.
@@ -179,7 +179,8 @@ namespace Crosswalk
             if (pathToSound != "")
             {
                 PlaySfx(pathToSound);
-            };
+            }
+            ;
 
             // Wait until it's fully down
             while (_messageSign.Position.Y < _messageStartYPos)
@@ -225,10 +226,21 @@ namespace Crosswalk
         /// </summary>
         public void PlaySfx(string pathToSfx)
         {
-            if (_sfxPlayer != null && pathToSfx != null)
+            if (_sfxPlayer == null || string.IsNullOrEmpty(pathToSfx))
             {
-                _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
+                GD.PushWarning("PlaySfx: No valid SFX path provided.");
+                return;
+            }
+
+            var stream = GD.Load<AudioStream>(pathToSfx);
+            if (stream != null)
+            {
+                _sfxPlayer.Stream = stream;
                 _sfxPlayer.Play();
+            }
+            else
+            {
+                GD.PushError($"PlaySfx: Failed to load AudioStream from path: {pathToSfx}");
             }
         }
 
