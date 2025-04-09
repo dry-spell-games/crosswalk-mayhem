@@ -12,7 +12,6 @@ size = Vector2(132, 8)
 script = ExtResource("1_xijry")
 _musicPlayer = NodePath("MusicPlayer")
 _inputBlocker = NodePath("InputBlocker")
-_messageTimer = 5.0
 
 [node name="Background" parent="." instance=ExtResource("2_7cjbx")]
 
