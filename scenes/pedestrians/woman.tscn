@@ -269,6 +269,7 @@ metadata/_edit_lock_ = true
 
 [node name="InteractionShape" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(-0.5, 5.5)
+scale = Vector2(1.25, 1.25)
 shape = SubResource("RectangleShape2D_ueowc")
 metadata/_edit_lock_ = true
 
