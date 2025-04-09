@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://cbnmdpuxpaqh5"]
+[gd_scene load_steps=19 format=3 uid="uid://cbnmdpuxpaqh5"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Sportscar.cs" id="1_3lwgf"]
 [ext_resource type="Texture2D" uid="uid://cwp2aey5m6pd0" path="res://assets/sprites/vehicles/sports.png" id="2_wnf5d"]
 [ext_resource type="Texture2D" uid="uid://bpd7c4lo5e5j1" path="res://assets/sprites/vehicles/sports-windshield.png" id="3_ali8v"]
+[ext_resource type="AudioStream" uid="uid://cs6cr2o52llsv" path="res://assets/audio/sfx/vehicles/sports-engine.wav" id="4_2yxe6"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cwhhw"]
 radius = 23.0
@@ -106,9 +107,10 @@ animations = [{
 "speed": 15.0
 }]
 
-[node name="Sportscar" type="Area2D"]
+[node name="Sportscar" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
 collision_layer = 2
 script = ExtResource("1_3lwgf")
+_sfxPlayer = NodePath("AudioStreamPlayer2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_cwhhw")
@@ -138,3 +140,8 @@ target_position = Vector2(0, 100)
 collision_mask = 2
 hit_from_inside = true
 collide_with_areas = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_2yxe6")
+volume_db = 8.914
+max_distance = 700.0

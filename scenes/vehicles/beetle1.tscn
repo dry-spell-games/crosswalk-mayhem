@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://dteiti5u8yfd"]
+[gd_scene load_steps=19 format=3 uid="uid://dteiti5u8yfd"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Beetle1.cs" id="1_yvi0x"]
 [ext_resource type="Texture2D" uid="uid://cids2nh36kxl" path="res://assets/sprites/vehicles/beetle.png" id="2_waqcr"]
 [ext_resource type="Texture2D" uid="uid://bi7o5ig824xsf" path="res://assets/sprites/vehicles/beetle-windshield.png" id="3_cuews"]
+[ext_resource type="AudioStream" uid="uid://ityu3lwx7cid" path="res://assets/audio/sfx/vehicles/beetle-engine.wav" id="4_p047x"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0usdg"]
 atlas = ExtResource("2_waqcr")
@@ -106,9 +107,10 @@ animations = [{
 radius = 24.5
 height = 97.0
 
-[node name="Beetle1" type="Area2D"]
+[node name="Beetle1" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
 collision_layer = 2
 script = ExtResource("1_yvi0x")
+_sfxPlayer = NodePath("AudioStreamPlayer2D")
 metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -142,3 +144,8 @@ collision_mask = 6
 hit_from_inside = true
 collide_with_areas = true
 metadata/_edit_lock_ = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_p047x")
+volume_db = 8.914
+max_distance = 700.0

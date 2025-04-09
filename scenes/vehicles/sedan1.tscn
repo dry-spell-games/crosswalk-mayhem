@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://dt1agp831tg2t"]
+[gd_scene load_steps=19 format=3 uid="uid://dt1agp831tg2t"]
 
 [ext_resource type="Script" path="res://scripts/vehicles/Sedan1.cs" id="1_6hvc4"]
 [ext_resource type="Texture2D" uid="uid://cmtdj0rqxo74w" path="res://assets/sprites/vehicles/sedan.png" id="2_vtheq"]
 [ext_resource type="Texture2D" uid="uid://c1yxk7r3omqi6" path="res://assets/sprites/vehicles/sedan-windshield.png" id="3_0j1ok"]
+[ext_resource type="AudioStream" uid="uid://c0uhfns1iand0" path="res://assets/audio/sfx/vehicles/sedan-engine.wav" id="4_g0tts"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0t5yb"]
 atlas = ExtResource("2_vtheq")
@@ -105,9 +106,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kbqg5"]
 size = Vector2(48, 94)
 
-[node name="Sedan1" type="Area2D"]
+[node name="Sedan1" type="Area2D" node_paths=PackedStringArray("_sfxPlayer")]
 collision_layer = 2
 script = ExtResource("1_6hvc4")
+_sfxPlayer = NodePath("AudioStreamPlayer2D")
 metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -139,3 +141,8 @@ collision_mask = 6
 hit_from_inside = true
 collide_with_areas = true
 metadata/_edit_lock_ = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_g0tts")
+volume_db = 8.914
+max_distance = 700.0
