@@ -389,8 +389,11 @@ namespace Crosswalk
         /// Called when the node enters the scene tree.
         /// Loads scenes and starts the game.
         /// </summary>
-        public override void _Ready()
+        public override async void _Ready()
         {
+            // Wait one frame to ensure the node is fully in the scene tree
+            await ToSignal(GetTree(), "process_frame");
+
             GD.Print($"Level {_difficulty} started");
 
             // Load pedestrian scenes

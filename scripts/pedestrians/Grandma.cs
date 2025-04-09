@@ -47,6 +47,10 @@ namespace Crosswalk
                 if (GetTree().Paused || isStopped || IsSpeeding || _isHit)
                     continue;
 
+                // Don't stop if near the edges
+                if (Position.X < 30 || Position.X > 390)
+                    continue;
+
                 isStopped = true;
                 randomStop = true;
                 GD.Print("Grandma stopped!");
