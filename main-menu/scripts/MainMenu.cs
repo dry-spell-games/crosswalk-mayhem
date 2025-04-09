@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Runtime;
 
 namespace Crosswalk
 {
@@ -37,7 +36,8 @@ namespace Crosswalk
         [Export] private float _sfxDelayTimer = 0.1f; // Delay before sound effects play after input
 
         // --- Tutorial and Settings ---
-        [Export] private TextureRect _tutorialRect; // Panel displaying tutorial instructions
+        [Export] private TextureRect _tutorialRect1; // Panel displaying tutorial instructions
+        [Export] private TextureRect _tutorialRect2; // Panel displaying info about the game
         private bool _resetHighscore = false; // Flag indicating whether to reset highscore on OK
 
         /// <summary>
@@ -111,17 +111,28 @@ namespace Crosswalk
         public void _on_tutorial_pressed()
         {
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
-            _tutorialRect.Visible = true;
+            _tutorialRect2.Visible = true;
+            _tutorialRect1.Visible = true;
         }
 
         /// <summary>
-        /// Called when the Exit Tutorial button is pressed.
+        /// Called when the Exit Tutorial button 1 is pressed.
         /// Hides the tutorial instructions panel.
         /// </summary>
-        public void _on_tutorial_exit_pressed()
+        public void _on_tutorial1_exit_pressed()
         {
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
-            _tutorialRect.Visible = false;
+            _tutorialRect1.Visible = false;
+        }
+
+        /// <summary>
+        /// Called when the Exit Tutorial button 2 is pressed.
+        /// Hides the about the game panel.
+        /// </summary>
+        public void _on_tutorial2_exit_pressed()
+        {
+            PlaySfx("res://assets/audio/sfx/menu/button.wav");
+            _tutorialRect2.Visible = false;
         }
 
         /// <summary>

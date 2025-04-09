@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7ao07noy21me"
-path="res://.godot/imported/HugoJokaVahingossaSnorttasiKakkaa.png-30b19d281e89287cf6071f6f9c96eba4.ctex"
+uid="uid://bx3p0d6gdiwsq"
+path="res://.godot/imported/boy.png-2e15c7e439056131bde69868c1a4221a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/menu/HugoJokaVahingossaSnorttasiKakkaa.png"
-dest_files=["res://.godot/imported/HugoJokaVahingossaSnorttasiKakkaa.png-30b19d281e89287cf6071f6f9c96eba4.ctex"]
+source_file="res://assets/menu/boy.png"
+dest_files=["res://.godot/imported/boy.png-2e15c7e439056131bde69868c1a4221a.ctex"]
 
 [params]
 
