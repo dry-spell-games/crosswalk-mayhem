@@ -10,10 +10,10 @@
 [ext_resource type="Texture2D" uid="uid://df0p6jg6q3swa" path="res://assets/menu/en-flag.png" id="7_gs283"]
 [ext_resource type="Texture2D" uid="uid://co3mnguoeia7w" path="res://assets/menu/settings.png" id="8_vlsjk"]
 [ext_resource type="Script" path="res://main-menu/scripts/AudioControl.cs" id="9_7edu2"]
-[ext_resource type="AudioStream" uid="uid://cmse5nfti8t3o" path="res://assets/audio/music/crosswalk-mayhem-genny.wav" id="10_d5x38"]
 [ext_resource type="Texture2D" uid="uid://btqt8mqt51l23" path="res://assets/menu/tutorial-rect.png" id="11_mebcy"]
 [ext_resource type="Texture2D" uid="uid://kmsk40oo10pf" path="res://assets/menu/girl.png" id="12_jypur"]
 [ext_resource type="Texture2D" uid="uid://8u7aigsh4o2i" path="res://assets/menu/man.png" id="13_njfsx"]
+[ext_resource type="AudioStream" uid="uid://bu258iglg0rxt" path="res://assets/audio/music/theme.wav" id="14_agjbw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ompdg"]
 atlas = ExtResource("3_ok075")
@@ -644,7 +644,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="MusicPlayer" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("10_d5x38")
+stream = ExtResource("14_agjbw")
 bus = &"Music"
 
 [node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
@@ -658,7 +658,7 @@ bus = &"Sfx"
 [connection signal="pressed" from="Finnish" to="." method="_on_finnish_pressed"]
 [connection signal="pressed" from="English" to="." method="_on_english_pressed"]
 [connection signal="pressed" from="Settings/Ok" to="." method="_on_ok_pressed"]
-[connection signal="pressed" from="Settings/Cancel" to="." method="_on_calcel_pressed"]
 [connection signal="pressed" from="Settings/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Settings/Cancel" to="." method="_on_calcel_pressed"]
 [connection signal="toggled" from="Settings/ResetHighscore" to="." method="_on_reset_highscore_toggled"]
 [connection signal="pressed" from="TutorialRect/TutorialExit" to="." method="_on_tutorial_exit_pressed"]

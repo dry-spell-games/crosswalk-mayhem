@@ -1,8 +1,11 @@
-[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://c0jadyl4atuup"]
+[gd_resource type="AudioBusLayout" load_steps=3 format=3 uid="uid://c0jadyl4atuup"]
 
 [sub_resource type="AudioEffectHighPassFilter" id="AudioEffectHighPassFilter_lf4bv"]
 resource_name = "HighPassFilter"
 cutoff_hz = 80.0
+
+[sub_resource type="AudioEffectLimiter" id="AudioEffectLimiter_cp7gy"]
+resource_name = "Limiter"
 
 [resource]
 bus/0/volume_db = 0.464998
@@ -20,3 +23,5 @@ bus/2/mute = false
 bus/2/bypass_fx = false
 bus/2/volume_db = 0.0
 bus/2/send = &"Master"
+bus/2/effect/0/effect = SubResource("AudioEffectLimiter_cp7gy")
+bus/2/effect/0/enabled = true
