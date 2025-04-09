@@ -145,3 +145,4 @@ collide_with_areas = true
 stream = ExtResource("4_2yxe6")
 volume_db = 8.914
 max_distance = 700.0
+bus = &"Sfx"

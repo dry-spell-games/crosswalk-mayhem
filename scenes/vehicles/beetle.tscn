@@ -147,5 +147,5 @@ metadata/_edit_lock_ = true
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_8mpfa")
 volume_db = 11.886
-stream_paused = true
 max_distance = 1000.0
+bus = &"Sfx"
