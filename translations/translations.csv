@@ -1,5 +1,5 @@
 keys;en;fi
-PLAY;PLAY ;PELAA 
+PLAY;PLAY ;PELAA
 SETTINGS;  SETTINGS;  ASETUKSET
 QUIT;QUIT;POISTU
 TUTORIAL;?;?
@@ -21,7 +21,7 @@ CREDITS_2;Minttu Miettinen;Minttu Miettinen
 CREDITS_3;Joni Virolainen;Joni Virolainen
 CREDITS_4;Ilkka Wahala;Ilkka Wahala
 ABOUT;ABOUT THE GAME:;TIETOA PELISTÄ:
-TUTORIAL_5;Crosswalk Mayhem was developed as part of the YHTÄ – Smart City Together project.;Crosswalk Mayhem -peli on toteutettu osana YHTÄ – Yhteisesti älykäs kaupunki -hanketta.
+TUTORIAL_5;Crosswalk Mayhem was developed as part of the YHTÄ – Yhteisesti älykäs kaupunki project.;Crosswalk Mayhem -peli on toteutettu osana YHTÄ – Yhteisesti älykäs kaupunki -hanketta.
 TUTORIAL_6;Data sources from the YHTÄ-Playbook were utilized in the game's design.;Pelin suunnittelussa on hyödynnetty YHTÄ-Playbookista haettuja datalähteitä.
 MORE;LEARN MORE AT:;LISÄTIETOJA:
 GET_READY;GET READY!;VALMISTAUDU!
