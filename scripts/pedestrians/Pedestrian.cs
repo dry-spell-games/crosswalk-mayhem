@@ -122,20 +122,17 @@ namespace Crosswalk
 
                         if (!GameManager.Instance._gameOver)
                         {
-                            switch (p.Name)
+                            if (p is Grandma || p is Grandpa)
                             {
-                                case "Grandma":
-                                case "Grandpa":
-                                    GameManager.Instance.AddScore(50 * (_scoreMultiplier + 1));
-                                    break;
-                                case "Girl":
-                                case "Boy":
-                                    GameManager.Instance.AddScore(30 * (_scoreMultiplier + 1));
-                                    break;
-                                case "Woman":
-                                case "Man":
-                                    GameManager.Instance.AddScore(20 * (_scoreMultiplier + 1));
-                                    break;
+                                GameManager.Instance.AddScore(50 * (_scoreMultiplier + 1));
+                            }
+                            else if (p is Girl || p is Boy)
+                            {
+                                GameManager.Instance.AddScore(30 * (_scoreMultiplier + 1));
+                            }
+                            else if (p is Woman || p is Man)
+                            {
+                                GameManager.Instance.AddScore(20 * (_scoreMultiplier + 1));
                             }
 
                             GetNode<GUI>("/root/Level/GUI").PlaySfx(_scoreSound);
