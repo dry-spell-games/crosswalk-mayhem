@@ -104,6 +104,7 @@ namespace Crosswalk
             GameManager.Instance.ResetScore();
             GameManager.Instance.ResetLife();
             GetTree().Paused = false;
+            await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
             GetTree().ChangeSceneToFile("res://scenes/levels/level.tscn");
         }
 
@@ -120,6 +121,7 @@ namespace Crosswalk
             GameManager.Instance.ResetScore();
             GameManager.Instance.ResetLife();
             GetTree().Paused = false;
+            await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
             GetTree().ChangeSceneToFile("res://main-menu/scenes/main-menu.tscn");
         }
 
