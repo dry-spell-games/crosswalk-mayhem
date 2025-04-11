@@ -26,6 +26,7 @@ namespace Crosswalk
         [Export] private string _tapSound = "";
         [Export] private string _scoreSound = "";
         private bool RedLightsForPedestrians = false;
+        private int _scoreMultiplier = GameManager.Instance._difficulty;
 
 
         // Attributes for mobile control
@@ -125,15 +126,15 @@ namespace Crosswalk
                             {
                                 case "Grandma":
                                 case "Grandpa":
-                                    GameManager.Instance.AddScore(50);
+                                    GameManager.Instance.AddScore(50 * (_scoreMultiplier + 1));
                                     break;
                                 case "Girl":
                                 case "Boy":
-                                    GameManager.Instance.AddScore(30);
+                                    GameManager.Instance.AddScore(30 * (_scoreMultiplier + 1));
                                     break;
                                 case "Woman":
                                 case "Man":
-                                    GameManager.Instance.AddScore(20);
+                                    GameManager.Instance.AddScore(20 * (_scoreMultiplier + 1));
                                     break;
                             }
 
