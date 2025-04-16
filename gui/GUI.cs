@@ -175,7 +175,7 @@ namespace Crosswalk
         /// <summary>
         /// Displays a message sign with text and slides it up, then down after a delay.
         /// </summary>
-        public async Task ShowGameOver(string pathToSound = "")
+        public void ShowGameOver(string pathToSound = "")
         {
             _pauseButton.Visible = false;
             _actionSign.Visible = true;
@@ -206,11 +206,6 @@ namespace Crosswalk
             if (pathToSound != "")
             {
                 PlaySfx(pathToSound);
-            }
-
-            while (_messageSign.Position.Y < _messageStartYPos)
-            {
-                await ToSignal(GetTree(), "process_frame");
             }
         }
 
