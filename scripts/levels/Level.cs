@@ -217,8 +217,10 @@ namespace Crosswalk
 
             if (_difficulty < 2)
                 rand = random.Next(0, 13);
-            else
+            else if (_difficulty > 1 && _difficulty < 5)
                 rand = random.Next(0, 14);
+            else
+             rand = 13;
 
             // Instantiate a random vehicle scene
             if (rand == 0 && BeetleScene != null)

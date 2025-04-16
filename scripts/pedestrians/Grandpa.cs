@@ -8,7 +8,6 @@ namespace Crosswalk
         [Export] public override float Speed { get; set; } = 20.0f;
         [Export] public override float RotationSpeed { get; set; } = 30000;
         [Export] public override float StopDuration { get; set; } = 5.0f;
-        [Export] public override float StopCooldown { get; set; } = 10.0f;
         [Export] public override float SpeedTimer { get; set; } = 2.0f;
         [Export] public override float FlightDirection { get; set; }
         private Random random = new Random();
@@ -60,6 +59,7 @@ namespace Crosswalk
 
                 isStopped = false;
                 randomStop = false;
+                canBeStopped = true;
                 GD.Print("Grandma started moving again!");
             }
         }
