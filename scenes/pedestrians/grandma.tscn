@@ -1,7 +1,8 @@
-[gd_scene load_steps=39 format=3 uid="uid://bvggy5wyo6v8g"]
+[gd_scene load_steps=40 format=3 uid="uid://bvggy5wyo6v8g"]
 
 [ext_resource type="Script" path="res://scripts/pedestrians/Grandma.cs" id="1_s0axq"]
 [ext_resource type="Texture2D" uid="uid://hinkq0cjgojq" path="res://assets/sprites/pedestrians/grandma/granny-spritesheet.png" id="2_x3fdq"]
+[ext_resource type="AudioStream" uid="uid://c16kkgrocv3uv" path="res://assets/audio/sfx/pedestrians/pedestrian-hit.wav" id="3_q7swv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kcol4"]
 atlas = ExtResource("2_x3fdq")
@@ -307,5 +308,6 @@ shape = SubResource("RectangleShape2D_vcdgj")
 metadata/_edit_lock_ = true
 
 [node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_q7swv")
 max_distance = 500.0
 bus = &"Sfx"
