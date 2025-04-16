@@ -191,7 +191,15 @@ namespace Crosswalk
                 GD.PushWarning("ShowGameOver: Could not find Level or GUI node for z-order change.");
             }
 
-            _messageLabel.Text = "GAME_OVER";
+            if (GameManager.Instance._life > 0 && GameManager.Instance._difficulty == 5)
+            {
+                _messageLabel.Text = "WELL_DONE";
+            }
+            else
+            {
+                _messageLabel.Text = "GAME_OVER";
+            }
+
             _messageUp = true;
             PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
 
