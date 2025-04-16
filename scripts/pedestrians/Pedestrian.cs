@@ -25,6 +25,8 @@ namespace Crosswalk
         [Export] private string _screamSound = "";
         [Export] private string _tapSound = "";
         [Export] private string _scoreSound = "";
+        [Export] private float _scaleSpeed = 0.5f;
+        [Export] private float _maxScale = 2f;
         private bool RedLightsForPedestrians = false;
         private int _scoreMultiplier = GameManager.Instance._difficulty;
 
@@ -33,6 +35,7 @@ namespace Crosswalk
         private const float DoubleTapThreshold = 0.3f; // Max time for double tap
         private float lastTapTime = 0f;
         private bool isWaitingForDoubleTap = false;
+        private bool isScalingUp = true;
 
         // ArrayList can not be exported
         public List<Vector2> StartPositions { get; set; } = new List<Vector2>
@@ -193,6 +196,31 @@ namespace Crosswalk
 
         protected void Fly(double delta)
         {
+            // Scaling logic
+            _scaleSpeed = 0.5f * (float)delta;
+            Vector2 currentScale = animatedSprite.Scale;
+
+            if (isScalingUp)
+            {
+                currentScale += new Vector2(_scaleSpeed, _scaleSpeed);
+                if (currentScale.X >= _maxScale)
+                {
+                    currentScale = new Vector2(_maxScale, _maxScale);
+                    isScalingUp = false;
+                }
+            }
+            else
+            {
+                currentScale -= new Vector2(_scaleSpeed, _scaleSpeed);
+                if (currentScale.X <= 1f)
+                {
+                    currentScale = new Vector2(1f, 1f);
+                }
+            }
+
+            animatedSprite.Scale = currentScale;
+
+            // Flight behavior
             FlyTime += (float)delta;
             animatedSprite.Offset = new Vector2(0, 15);
             Position += new Vector2(FlightDirection, -250) * (float)delta;
