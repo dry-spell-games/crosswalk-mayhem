@@ -60,6 +60,7 @@ namespace Crosswalk
 
                 isStopped = false;
                 randomStop = false;
+                canBeStopped = true;
                 GD.Print("Grandma started moving again!");
             }
         }
