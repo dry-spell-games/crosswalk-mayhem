@@ -308,7 +308,7 @@ namespace Crosswalk
                 await _gui.ShowMessage(_messageTimer, "NEW_RECORD");
             }
 
-            await _gui.ShowGameOver();
+            _gui.ShowGameOver();
         }
 
         /// <summary>
