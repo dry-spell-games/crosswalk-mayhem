@@ -258,7 +258,7 @@ namespace Crosswalk
             {
                 if (!isFlying)
                 {
-                    PlaySfx(_tapSound);
+                    GetNode<GUI>("/root/Level/GUI").PlaySfx(_tapSound);
                 }
                 HandleTouchInput();
             }
@@ -357,9 +357,8 @@ namespace Crosswalk
 
         private async void PlayCollisionSounds()
         {
-            if (_sfxPlayer != null && _hitSound != null && _screamSound != null)
+            if (_sfxPlayer != null && _screamSound != null)
             {
-                _sfxPlayer.Stream = GD.Load<AudioStream>(_hitSound);
                 _sfxPlayer.Play();
                 await ToSignal(GetTree().CreateTimer(0.25f), "timeout");
                 _sfxPlayer.Stream = GD.Load<AudioStream>(_screamSound);

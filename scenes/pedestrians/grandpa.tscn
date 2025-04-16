@@ -1,7 +1,8 @@
-[gd_scene load_steps=63 format=3 uid="uid://blfc75o2okftv"]
+[gd_scene load_steps=64 format=3 uid="uid://blfc75o2okftv"]
 
 [ext_resource type="Script" path="res://scripts/pedestrians/Grandpa.cs" id="1_kf3rc"]
 [ext_resource type="Texture2D" uid="uid://ctu6kirurpk1k" path="res://assets/sprites/pedestrians/grandpa/granpa-spritesheet.png" id="1_m7fco"]
+[ext_resource type="AudioStream" uid="uid://c16kkgrocv3uv" path="res://assets/audio/sfx/pedestrians/pedestrian-hit.wav" id="3_4s1w7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_crn0c"]
 atlas = ExtResource("1_m7fco")
@@ -442,7 +443,6 @@ collision_mask = 3
 script = ExtResource("1_kf3rc")
 RotationSpeed = 60.0
 StopDuration = 8.0
-StopCooldown = 0.0
 RotationSpeed = 60.0
 StopDuration = 8.0
 StopCooldown = 0.0
@@ -476,5 +476,6 @@ scale = Vector2(1.25, 1.25)
 shape = SubResource("RectangleShape2D_ltoib")
 
 [node name="SfxPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_4s1w7")
 max_distance = 500.0
 bus = &"Sfx"
