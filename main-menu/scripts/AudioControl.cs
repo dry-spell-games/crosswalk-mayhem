@@ -1,6 +1,4 @@
 using Godot;
-using System;
-using System.Threading;
 
 namespace Crosswalk
 {
@@ -10,43 +8,21 @@ namespace Crosswalk
     /// </summary>
     public partial class AudioControl : Control
     {
-        [Export] private HSlider _volumeSlider = null; // UI slider controlling the volume
-        [Export] public string _busName; // The name of the audio bus this slider controls (e.g. "Master", "Music", "Sfx")
+        #region Public Properties
 
-        /// <summary>
-        /// Called when the slider value is changed by the user.
-        /// Triggers volume update for the associated audio bus.
-        /// </summary>
-        /// <param name="value">The new linear value from the slider (0.0 to 1.0)</param>
-        private void OnVolumeSliderValueChanged(float value)
-        {
-            UpdateVolume();
-        }
+        // The name of the audio bus this slider controls (e.g. "Master", "Music", "Sfx")
+        [Export] public string _busName;
 
-        /// <summary>
-        /// Converts the current slider value to decibels and updates the audio bus.
-        /// Also stores the value in GameManager for saving.
-        /// </summary>
-        private void UpdateVolume()
-        {
-            float linearVolume = (float)_volumeSlider.Value;
-            float decibelVolume = Mathf.LinearToDb(linearVolume);
-            GameManager.Instance.SetVolume(_busName, decibelVolume);
+        #endregion
 
-            // Store the current decibel volume in GameManager based on bus name
-            switch (_busName)
-            {
-                case "Master":
-                    GameManager.Instance._masterVolume = Mathf.Max(decibelVolume, -80.0f);
-                    break;
-                case "Music":
-                    GameManager.Instance._musicVolume = Mathf.Max(decibelVolume, -80.0f);
-                    break;
-                case "Sfx":
-                    GameManager.Instance._sfxVolume = Mathf.Max(decibelVolume, -80.0f);
-                    break;
-            }
-        }
+        #region Private Properties
+
+        // UI slider controlling the volume
+        [Export] private HSlider _volumeSlider = null;
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Initializes the slider's value based on a decibel input.
@@ -86,6 +62,10 @@ namespace Crosswalk
             UpdateVolume();
         }
 
+        #endregion
+
+        #region Godot Built-in Methods
+
         /// <summary>
         /// Called when the node is added to the scene.
         /// Connects the slider's ValueChanged signal to handle live volume updates.
@@ -97,5 +77,46 @@ namespace Crosswalk
             _volumeSlider.Connect(Slider.SignalName.ValueChanged,
                 new Callable(this, nameof(OnVolumeSliderValueChanged)));
         }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Called when the slider value is changed by the user.
+        /// Triggers volume update for the associated audio bus.
+        /// </summary>
+        /// <param name="value">The new linear value from the slider (0.0 to 1.0)</param>
+        private void OnVolumeSliderValueChanged(float value)
+        {
+            UpdateVolume();
+        }
+
+        /// <summary>
+        /// Converts the current slider value to decibels and updates the audio bus.
+        /// Also stores the value in GameManager for saving.
+        /// </summary>
+        private void UpdateVolume()
+        {
+            float linearVolume = (float)_volumeSlider.Value;
+            float decibelVolume = Mathf.LinearToDb(linearVolume);
+            GameManager.Instance.SetVolume(_busName, decibelVolume);
+
+            // Store the current decibel volume in GameManager based on bus name
+            switch (_busName)
+            {
+                case "Master":
+                    GameManager.Instance._masterVolume = Mathf.Max(decibelVolume, -80.0f);
+                    break;
+                case "Music":
+                    GameManager.Instance._musicVolume = Mathf.Max(decibelVolume, -80.0f);
+                    break;
+                case "Sfx":
+                    GameManager.Instance._sfxVolume = Mathf.Max(decibelVolume, -80.0f);
+                    break;
+            }
+        }
+
+        #endregion
     }
 }
