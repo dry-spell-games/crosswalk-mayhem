@@ -3,13 +3,19 @@ using Godot;
 namespace Crosswalk
 {
     /// <summary>
-    /// PedestrianLight is a visual representation of the pedestrian traffic light.
+    /// PedestrianLight is a visual representation of the pedestrian traffic light in the level map.
     /// It listens for the pedestrian light signal from the Level and changes animation accordingly.
     /// </summary>
     public partial class PedestrianLight : AnimatedSprite2D
     {
+        #region Private Fields
+
         // Current difficulty level pulled from GameManager
         private int _difficulty = GameManager.Instance._difficulty;
+
+        #endregion
+
+        #region Godot Built-in Methods
 
         /// <summary>
         /// Called when the node is added to the scene tree.
@@ -27,6 +33,10 @@ namespace Crosswalk
             }
         }
 
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// Called when the pedestrian light state changes.
         /// Animates the traffic light accordingly.
@@ -34,7 +44,8 @@ namespace Crosswalk
         /// <param name="_pedestrianGreen">True if pedestrian light is green, false otherwise.</param>
         private async void OnPedestrianLightChanged(bool _pedestrianGreen)
         {
-            if (GetTree().Paused) return;
+            if (GetTree().Paused)
+                return;
 
             Level level = GetNodeOrNull<Level>("/root/Level");
             _difficulty = GameManager.Instance._difficulty;
@@ -59,5 +70,7 @@ namespace Crosswalk
                 Play("red");
             }
         }
+
+        #endregion
     }
 }

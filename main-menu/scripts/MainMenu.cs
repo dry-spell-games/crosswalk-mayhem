@@ -1,44 +1,75 @@
 using Godot;
-using System;
 
 namespace Crosswalk
 {
     /// <summary>
     /// MainMenu handles the game's main menu UI, including language selection,
-    /// scene transition, and animated intro sign movement.
+    /// scene transition, and animated sign movement.
     /// </summary>
     public partial class MainMenu : Control
     {
-        // --- UI Elements and Animation Control ---
-        [Export] private TextureRect _signs = null; // Main menu signs (e.g. Play/Quit) that animate into view
-        [Export] private int _signsTargetYPos = 352; // Target Y position for the signs when fully visible
-        [Export] private int _signsStartYPos = 640; // Starting Y position for the signs (off-screen position)
-        private float _signsMoveSpeed = 750f; // Speed at which the signs move up/down
-        private bool _signsUp = true; // Whether the signs are currently in the "up" (visible) position
+        #region UI Elements and Animation Control
 
-        [Export] private TextureRect _settings = null; // Settings panel that slides into view
-        [Export] private int _settingsTargetYPos = 320; // Target Y position for the settings panel
-        [Export] private int _settingsStartYPos = 640; // Starting Y position for the settings panel (off-screen)
-        private bool _settingsUp = false; // Whether the settings panel is currently visible
+        // Main menu signs (e.g. Play/Quit) that animate into view
+        [Export] private TextureRect _signs = null;
+        // Target Y position for the signs when fully visible
+        [Export] private int _signsTargetYPos = 352;
+        // Starting Y position for the signs (off-screen position)
+        [Export] private int _signsStartYPos = 640;
+        // Speed at which the signs move up/down
+        private float _signsMoveSpeed = 750f;
+        // Whether the signs are currently in the "up" (visible) position
+        private bool _signsUp = true;
 
-        [Export] private AnimatedSprite2D _english = null; // English language flag with animation
-        [Export] private AnimatedSprite2D _finnish = null; // Finnish language flag with animation
+        // Settings panel that slides into view
+        [Export] private TextureRect _settings = null;
+        // Target Y position for the settings panel
+        [Export] private int _settingsTargetYPos = 320;
+        // Starting Y position for the settings panel (off-screen)
+        [Export] private int _settingsStartYPos = 640;
+        // Whether the settings panel is currently visible
+        private bool _settingsUp = false;
 
-        // --- Audio Controls and Players ---
-        [Export] private AudioControl _masterAudioControl = null; // Slider control for master volume
-        [Export] private AudioControl _musicAudioControl = null; // Slider control for music volume
-        [Export] private AudioControl _sfxAudioControl = null; // Slider control for sound effects volume
+        // English language flag with animation
+        [Export] private AnimatedSprite2D _english = null;
+        // Finnish language flag with animation
+        [Export] private AnimatedSprite2D _finnish = null;
 
-        [Export] private AudioStreamPlayer2D _musicPlayer; // Audio player node for background music
-        [Export] private AudioStreamPlayer2D _sfxPlayer; // Audio player node for UI sound effects
+        #endregion
 
-        [Export] private float _musicDelayTimer = 1.0f; // Delay before background music starts playing
-        [Export] private float _sfxDelayTimer = 0.1f; // Delay before sound effects play after input
+        #region Audio Controls and Players
 
-        // --- Tutorial and Settings ---
-        [Export] private TextureRect _tutorialRect1; // Panel displaying tutorial instructions
-        [Export] private TextureRect _tutorialRect2; // Panel displaying info about the game
-        private bool _resetHighscore = false; // Flag indicating whether to reset highscore on OK
+        // Slider control for master volume
+        [Export] private AudioControl _masterAudioControl = null;
+        // Slider control for music volume
+        [Export] private AudioControl _musicAudioControl = null;
+        // Slider control for sound effects volume
+        [Export] private AudioControl _sfxAudioControl = null;
+
+        // Audio player node for background music
+        [Export] private AudioStreamPlayer2D _musicPlayer;
+        // Audio player node for UI sound effects
+        [Export] private AudioStreamPlayer2D _sfxPlayer;
+
+        // Delay before background music starts playing
+        [Export] private float _musicDelayTimer = 1.0f;
+        // Delay before input process after sound effects play
+        [Export] private float _sfxDelayTimer = 0.1f;
+
+        #endregion
+
+        #region Tutorial and Settings
+
+        // Panel displaying tutorial instructions
+        [Export] private TextureRect _tutorialRect1;
+        // Panel displaying info about the game
+        [Export] private TextureRect _tutorialRect2;
+        // Flag indicating whether to reset highscore on OK
+        private bool _resetHighscore = false;
+
+        #endregion
+
+        #region Public Methods (UI Signal Handlers)
 
         /// <summary>
         /// Called when the English button is pressed.
@@ -49,7 +80,6 @@ namespace Crosswalk
             GameManager.Instance.SetLanguage("en");
             _english.Play("wave");
             _finnish.Play("still");
-
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
         }
 
@@ -62,7 +92,6 @@ namespace Crosswalk
             GameManager.Instance.SetLanguage("fi");
             _english.Play("still");
             _finnish.Play("wave");
-
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
         }
 
@@ -87,7 +116,6 @@ namespace Crosswalk
         {
             _signsUp = false;
             _settingsUp = true;
-
             PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
         }
 
@@ -142,7 +170,6 @@ namespace Crosswalk
         public void _on_reset_highscore_toggled(bool toggledOn)
         {
             _resetHighscore = toggledOn;
-
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
         }
 
@@ -171,7 +198,7 @@ namespace Crosswalk
         /// Called when the Cancel button is pressed in the settings menu.
         /// Reverts audio settings and resets the highscore toggle.
         /// </summary>
-        public void _on_calcel_pressed()
+        public void _on_cancel_pressed()
         {
             _masterAudioControl.SetVolumeSlider(GameManager.Instance._savedMasterVolume);
             _musicAudioControl.SetVolumeSlider(GameManager.Instance._savedMusicVolume);
@@ -190,62 +217,9 @@ namespace Crosswalk
             PlaySfx("res://assets/audio/sfx/menu/slide-up-long.wav");
         }
 
-        /// <summary>
-        /// Moves a TextureRect up toward a target Y position at a fixed speed.
-        /// </summary>
-        private void MoveUp(double delta, int target, TextureRect toBeMoved)
-        {
-            if (toBeMoved.Position.Y > target)  // Move up if current Y position is above the target
-            {
-                toBeMoved.Position += Vector2.Up * (float)(_signsMoveSpeed * delta);
+        #endregion
 
-                // If it reaches or passes the target Y position, snap it to the target
-                if (toBeMoved.Position.Y <= target)
-                {
-                    toBeMoved.Position = new Vector2(toBeMoved.Position.X, target);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Moves a TextureRect down toward a target Y position at a fixed speed.
-        /// </summary>
-        private void MoveDown(double delta, int target, TextureRect toBeMoved)
-        {
-            if (toBeMoved.Position.Y < target)  // Move down if current Y position is below the target
-            {
-                toBeMoved.Position += Vector2.Down * (float)(_signsMoveSpeed * delta);
-
-                // If it reaches or passes the target Y position, snap it to the target
-                if (toBeMoved.Position.Y >= target)
-                {
-                    toBeMoved.Position = new Vector2(toBeMoved.Position.X, target);
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Plays the background music after a short delay.
-        /// </summary>
-        public async void PlayMusic()
-        {
-            await ToSignal(GetTree().CreateTimer(_musicDelayTimer), "timeout");
-
-            if (_musicPlayer != null)
-            {
-                _musicPlayer.Play();
-            }
-        }
-
-        /// <summary>
-        /// Plays a sound effect from a given file path.
-        /// </summary>
-        public void PlaySfx(string pathToSfx)
-        {
-            _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
-            _sfxPlayer.Play();
-        }
+        #region Godot Built-in Methods
 
         /// <summary>
         /// Called when the scene is ready.
@@ -267,17 +241,14 @@ namespace Crosswalk
 
             if (_masterAudioControl != null)
             {
-                //_masterAudioControl._originalVolume = GameManager.Instance._masterVolume;
                 _masterAudioControl.Initialize(GameManager.Instance._masterVolume);
             }
             if (_musicAudioControl != null)
             {
-                //_musicAudioControl._originalVolume = GameManager.Instance._musicVolume;
                 _musicAudioControl.Initialize(GameManager.Instance._musicVolume);
             }
             if (_sfxAudioControl != null)
             {
-                //_sfxAudioControl._originalVolume = GameManager.Instance._sfxVolume;
                 _sfxAudioControl.Initialize(GameManager.Instance._sfxVolume);
             }
 
@@ -289,7 +260,7 @@ namespace Crosswalk
         /// Called every frame.
         /// Handles sign movement if it hasn’t yet reached its target position.
         /// </summary>
-        public override void _Process(Double delta)
+        public override void _Process(double delta)
         {
             if (_signs != null && _settings != null && _signsUp && !_settingsUp)
             {
@@ -302,5 +273,70 @@ namespace Crosswalk
                 MoveUp(delta, _settingsTargetYPos, _settings);
             }
         }
+
+        #endregion
+
+        #region Private Methods (Helpers)
+
+        /// <summary>
+        /// Moves a TextureRect up toward a target Y position at a fixed speed.
+        /// </summary>
+        private void MoveUp(double delta, int target, TextureRect toBeMoved)
+        {
+            if (toBeMoved.Position.Y > target) // Move up if current Y position is above the target
+            {
+                toBeMoved.Position += Vector2.Up * (float)(_signsMoveSpeed * delta);
+
+                // If it reaches or passes the target Y position, snap it to the target
+                if (toBeMoved.Position.Y <= target)
+                {
+                    toBeMoved.Position = new Vector2(toBeMoved.Position.X, target);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Moves a TextureRect down toward a target Y position at a fixed speed.
+        /// </summary>
+        private void MoveDown(double delta, int target, TextureRect toBeMoved)
+        {
+            if (toBeMoved.Position.Y < target) // Move down if current Y position is below the target
+            {
+                toBeMoved.Position += Vector2.Down * (float)(_signsMoveSpeed * delta);
+
+                // If it reaches or passes the target Y position, snap it to the target
+                if (toBeMoved.Position.Y >= target)
+                {
+                    toBeMoved.Position = new Vector2(toBeMoved.Position.X, target);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Plays the background music after a short delay.
+        /// </summary>
+        public async void PlayMusic()
+        {
+            await ToSignal(GetTree().CreateTimer(_musicDelayTimer), "timeout");
+
+            if (_musicPlayer != null)
+            {
+                _musicPlayer.Play();
+            }
+        }
+
+        /// <summary>
+        /// Plays a sound effect from a given file path.
+        /// </summary>
+        public void PlaySfx(string pathToSfx)
+        {
+            if (_sfxPlayer != null && pathToSfx != null)
+            {
+                _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
+                _sfxPlayer.Play();
+            }
+        }
+
+        #endregion
     }
 }

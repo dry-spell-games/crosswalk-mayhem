@@ -1,44 +1,57 @@
 using Godot;
 using System;
-using System.Collections.Generic; // Required for arraylist
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Crosswalk
 {
+    /// <summary>
+    /// Base class for all pedestrian characters.
+    /// Handles movement, touch input, collision, and scoring behavior.
+    /// </summary>
     public abstract partial class Pedestrian : Area2D
     {
+        #region Public Fields
+
+        // Base walking speed of the pedestrian
         [Export] public virtual float Speed { get; set; }
+        // Rotation speed when flying after a collision
         [Export] public virtual float RotationSpeed { get; set; }
-        // Flight time, default value
+        // Current flight time after getting hit
         [Export] public virtual float FlyTime { get; set; }
-        // How long pedestrian stays stopped, default value
+        // Duration the pedestrian stays stopped after tapping
         [Export] public virtual float StopDuration { get; set; } = 2.0f;
-        // Cooldown for stop action, default value
+        // Cooldown before the pedestrian can be stopped again
         [Export] public virtual float StopCooldown { get; set; } = 3.0f;
-        [Export] public virtual float SpeedTimer { get; set; } // Timer for faster speed
-        [Export] public float SpeedMultiplierFast { get; set; } = 3.0f; // Multiplier for sprinting
+        // Duration the pedestrian runs after a double tap
+        [Export] public virtual float SpeedTimer { get; set; }
+        // Speed multiplier when sprinting
+        [Export] public float SpeedMultiplierFast { get; set; } = 3.0f;
+        // Default speed multiplier when walking
         [Export] public float SpeedMultiplierNormal { get; set; } = 1.0f;
-        [Export] public virtual float FlightDirection { get; set; } // Direction of flight
+        // Horizontal flight direction after a collision
+        [Export] public virtual float FlightDirection { get; set; }
+        // Maximum allowed flying time before auto-clean
         [Export] private float _maxFlyTime = 5f;
+        // Audio player for pedestrian sound effects
         [Export] private AudioStreamPlayer2D _sfxPlayer;
+
+        // Path to hit sound effect
         [Export] private string _hitSound = "";
+        // Path to scream sound effect
         [Export] private string _screamSound = "";
+        // Path to tap sound effect
         [Export] private string _tapSound = "";
+        // Path to score sound effect
         [Export] private string _scoreSound = "";
+
+        // Speed of scaling effect while flying
         [Export] private float _scaleSpeed = 0.5f;
+        // Maximum scale during flying animation
         [Export] private float _maxScale = 2f;
-        private bool RedLightsForPedestrians = false;
-        private int _scoreMultiplier = GameManager.Instance._difficulty;
 
-
-        // Attributes for mobile control
-        private const float DoubleTapThreshold = 0.3f; // Max time for double tap
-        private float lastTapTime = 0f;
-        private bool isWaitingForDoubleTap = false;
-        private bool isScalingUp = true;
-
-        // ArrayList can not be exported
-        public List<Vector2> StartPositions { get; set; } = new List<Vector2>
+        // Predefined starting spawn positions for pedestrians
+        public List<Vector2> StartPositions { get; set; } = new()
         {
             new Vector2(-30, 497),
             new Vector2(-30, 528),
@@ -49,53 +62,63 @@ namespace Crosswalk
             new Vector2(400, 576)
         };
 
-        protected bool isFlying = false;
-        protected bool isStopped = false; // if true pedestrian is moving
-        protected bool canBeStopped = true; // False if pedestrian was stopped recently
-        private AnimatedSprite2D animatedSprite; // Refers to AnimatedSprite2D component
-        protected float InitialSpeed; // Saves original speed
-        protected bool IsSpeeding = false;
-        protected bool randomStop = false; // Plays different idle animation when true
-        protected bool _isHit = false;
+        #endregion
 
+        #region Private Fields
+
+        // Flag indicating if pedestrians have red light
+        private bool RedLightsForPedestrians = false;
+        // Score multiplier based on current difficulty
+        private int _scoreMultiplier = GameManager.Instance._difficulty;
+        // Max time (seconds) between taps to trigger a double tap
+        private const float DoubleTapThreshold = 0.3f;
+        // Time of last tap input
+        private float lastTapTime = 0f;
+        // Waiting state for a second tap
+        private bool isWaitingForDoubleTap = false;
+        // True if currently scaling up during flying animation
+        private bool isScalingUp = true;
+        // Reference to pedestrian's AnimatedSprite2D
+        private AnimatedSprite2D animatedSprite;
+        // True if pedestrian is flying after collision
+        protected bool isFlying = false;
+        // True if pedestrian is currently stopped
+        protected bool isStopped = false;
+        // True if pedestrian can be stopped again (cooldown ready)
+        protected bool canBeStopped = true;
+        // True if pedestrian is sprinting
+        protected bool IsSpeeding = false;
+        // True if playing random idle animation
+        protected bool randomStop = false;
+        // True if pedestrian has been hit by a car
+        protected bool _isHit = false;
+        // Saved initial walking speed
+        protected float InitialSpeed;
+
+        #endregion
+
+        #region Godot Built-in Methods
+
+        /// <summary>
+        /// Called when the node is added to the scene tree.
+        /// Initializes signals and references.
+        /// </summary>
         public override void _Ready()
         {
-            InitialSpeed = Speed; // Saves original speed
-            AddToGroup("pedestrians"); // Adds pedestrians to group so they can be removed later
+            InitialSpeed = Speed;
+            AddToGroup("pedestrians");
 
-            // Signal for area_entered
             Connect("area_entered", new Callable(this, nameof(OnAreaEntered)));
 
-            // Gets InteractionArea node and connects signal to it
             var interactionArea = GetNode<Area2D>("InteractionArea");
-            if (interactionArea != null)
-            {
-                interactionArea.Connect("input_event", Callable.From((Node viewport,
-                InputEvent @event, int shapeIdx) => OnInputEvent(@event)));
-            }
-            // Gets AnimatedSprite2d for pedestrians
+            interactionArea?.Connect("input_event", Callable.From((Node viewport, InputEvent @event, int shapeIdx) => OnInputEvent(@event)));
+
             animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         }
 
-        public void Initialize(Vector2 position)
-        {
-            Position = position;
-
-            // Sets ZIndex for rendering Pedestrians, higher value of Y is rendered on top
-            ZIndex = Mathf.RoundToInt(GlobalPosition.Y + 100);
-
-            // If SpawnPoints X coordinate is over 399, Speed is converted to negative
-            if (Position.X > 399)
-            {
-                Speed = -MathF.Abs(Speed); // Converts to negative speed
-            }
-            else
-            {
-                Speed = MathF.Abs(Speed); // Else speed is positive
-            }
-            GD.Print($"{this} spawned at {Position} with speed {Speed}");
-        }
-
+        /// <summary>
+        /// Called every frame. Handles movement and boundary cleanup.
+        /// </summary>
         public override void _Process(double delta)
         {
             if (isStopped)
@@ -108,95 +131,47 @@ namespace Crosswalk
                 Move(delta, IsSpeeding);
             }
 
-            // Clean up pedestrians out of bounds
-            foreach (Area2D pedestrian in GetTree().GetNodesInGroup("pedestrians").Cast<Area2D>())
-            {
-                Vector2 pos = pedestrian.Position;
-
-                bool outOfBoundsX = pos.X > 410 || pos.X < -40;
-                bool outOfBoundsY = pos.Y > 700 || pos.Y < -100;
-
-                if ((outOfBoundsX || outOfBoundsY) && !pedestrian.IsQueuedForDeletion())
-                {
-                    // Cast to Pedestrian to access isFlying
-                    if (pedestrian is Pedestrian p && !p.isFlying)
-                    {
-                        GD.Print("Poistetaan jalankulkija: ", pedestrian.Name);
-
-                        if (!GameManager.Instance._gameOver)
-                        {
-                            if (p is Grandma || p is Grandpa)
-                            {
-                                GameManager.Instance.AddScore(50 * (_scoreMultiplier + 1));
-                            }
-                            else if (p is Girl || p is Boy)
-                            {
-                                GameManager.Instance.AddScore(30 * (_scoreMultiplier + 1));
-                            }
-                            else if (p is Woman || p is Man)
-                            {
-                                GameManager.Instance.AddScore(20 * (_scoreMultiplier + 1));
-                            }
-
-                            GetNode<GUI>("/root/Level/GUI").PlaySfx(_scoreSound);
-                        }
-                        pedestrian.QueueFree();
-                    }
-                }
-            }
+            CleanupOutOfBoundsPedestrians();
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Initializes pedestrian starting position and speed direction.
+        /// </summary>
+        public void Initialize(Vector2 position)
+        {
+            Position = position;
+            ZIndex = Mathf.RoundToInt(GlobalPosition.Y + 100);
+
+            Speed = (Position.X > 399) ? -MathF.Abs(Speed) : MathF.Abs(Speed);
+
+            GD.Print($"{this} spawned at {Position} with speed {Speed}");
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Handles normal movement logic including walking and running.
+        /// </summary>
         protected virtual void Move(double delta, bool IsSpeeding)
         {
-            // Flip the animation based on direction
-            animatedSprite.FlipH = Speed < 0; // Flips the character if moving left (negative speed)
+            animatedSprite.FlipH = Speed < 0;
+            float speedMultiplier = IsSpeeding ? SpeedMultiplierFast : SpeedMultiplierNormal;
+            Position += new Vector2(Speed * speedMultiplier * (float)delta, 0);
 
-            // Adjust movement speed based on whether speeding is enabled
-            float SpeedMultiplier = IsSpeeding ? SpeedMultiplierFast : SpeedMultiplierNormal;
-            Position += new Vector2(Speed * SpeedMultiplier * (float)delta, 0); // Apply movement
-
-            // Play the appropriate animation based on movement speed
-            if (!IsSpeeding)
-            {
-                PlayAnimation("walk");
-            }
-            else
-            {
-                PlayAnimation("run");
-            }
+            PlayAnimation(IsSpeeding ? "run" : "walk");
         }
 
-        public void OnAreaEntered(Area2D area)
-        {
-            GD.Print($"[OnAreaEntered] {Name} detected area: {area.Name} (type: {area.GetType().Name})");
-
-            if (area is Car car)
-            {
-                if (!_isHit)
-                {
-                    PlayCollisionSounds();
-                    GameManager.Instance.UpdateLife(-1);
-                    _isHit = true;
-
-                    GD.Print($"[HIT] {Name} collided with car: {car.Name}");
-
-                    HandleCarCollision(car);
-                    RotationSpeed = car.Speed * 3f;
-                    GD.Print($"Collision car speed: {car.Speed}");
-
-                    GD.Print($"[DEBUG] After collision: {Name} isFlying = {isFlying}");
-
-                    if (!isFlying)
-                    {
-                        GD.PrintErr($"[ERROR] {Name} should be flying but isFlying = false!");
-                    }
-                }
-            }
-        }
-
+        /// <summary>
+        /// Handles flying behavior after collision.
+        /// </summary>
         protected void Fly(double delta)
         {
-            // Scaling logic
             _scaleSpeed = 0.5f * (float)delta;
             Vector2 currentScale = animatedSprite.Scale;
 
@@ -220,38 +195,56 @@ namespace Crosswalk
 
             animatedSprite.Scale = currentScale;
 
-            // Flight behavior
             FlyTime += (float)delta;
             animatedSprite.Offset = new Vector2(0, 15);
             Position += new Vector2(FlightDirection, -250) * (float)delta;
             RotationDegrees += RotationSpeed * (float)delta;
+
             PlayAnimation("fly");
 
-            if (FlyTime > 5f && !IsQueuedForDeletion())
+            if (FlyTime > _maxFlyTime && !IsQueuedForDeletion())
             {
                 GD.Print($"[AUTO-FREE] {Name} flew too long, auto-cleaning...");
-
                 QueueFree();
             }
         }
 
+        /// <summary>
+        /// Hook for handling car collision. Override in derived classes.
+        /// </summary>
         protected virtual void HandleCarCollision(Car car)
         {
             GD.Print("Handling collision with a Car...");
         }
 
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
-        /// Handles pedestrian click events, including a cooldown mechanism.
-        /// This function is triggered when the user clicks on the pedestrian with the mouse.
-        /// It stops the character for a specified duration and prevents reactivation during cooldown.
-        /// Uses an async method to handle timing asynchronously in the background.
+        /// Handles entering collision with areas (cars).
         /// </summary>
-        /// <param name="viewport">The viewport where the event occurred (not used in this method,
-        /// but required by Godot for the method signature).</param>
-        /// <param name="event">The event containing information about the user's input.
-        /// @event is used because "event" is a reserved keyword in C#.</param>
-        /// <param name="shapeIdx">The index of the clicked CollisionShape2D element
-        /// (useful if the pedestrian has multiple hitboxes).</param>
+        private void OnAreaEntered(Area2D area)
+        {
+            if (area is Car car && !_isHit)
+            {
+                PlayCollisionSounds();
+                GameManager.Instance.UpdateLife(-1);
+                _isHit = true;
+
+                HandleCarCollision(car);
+                RotationSpeed = car.Speed * 3f;
+
+                if (!isFlying)
+                {
+                    GD.PrintErr($"[ERROR] {Name} should be flying but isFlying = false!");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles player input events like tapping pedestrians.
+        /// </summary>
         private void OnInputEvent(InputEvent @event)
         {
             if (@event is InputEventScreenTouch touch && touch.Pressed)
@@ -264,14 +257,15 @@ namespace Crosswalk
             }
         }
 
-        // Handles mobile input asynchronously
+        /// <summary>
+        /// Handles touch input for single or double taps asynchronously.
+        /// </summary>
         private async void HandleTouchInput()
         {
             float currentTime = Time.GetTicksMsec() / 1000f;
 
             if ((currentTime - lastTapTime) < DoubleTapThreshold)
             {
-                // Double tap → run immediately, even if already stopped
                 isStopped = false;
                 StartSpeedBoost();
                 isWaitingForDoubleTap = false;
@@ -281,67 +275,64 @@ namespace Crosswalk
                 lastTapTime = currentTime;
                 isWaitingForDoubleTap = true;
 
-                // Single tap → stop immediately (if allowed)
                 if (canBeStopped && !IsSpeeding)
                 {
                     HandleTapOrStop();
                 }
 
-                // Give player time to double tap (to override stop with run)
                 await ToSignal(GetTree().CreateTimer(DoubleTapThreshold), "timeout");
                 isWaitingForDoubleTap = false;
             }
         }
 
+        /// <summary>
+        /// Stops pedestrian on tap, then resumes after a cooldown.
+        /// </summary>
         private async void HandleTapOrStop()
         {
-            if (!canBeStopped)
-            {
-                GD.Print("Pedestrian cannot be stopped yet! Cooldown active.");
-                return;
-            }
+            if (!canBeStopped) return;
 
             isStopped = true;
             canBeStopped = false;
             PlayAnimation("idle");
-            GD.Print("Pedestrian stopped.");
 
             await ToSignal(GetTree().CreateTimer(StopDuration), "timeout");
 
             isStopped = false;
             PlayAnimation("walk");
-            GD.Print("Pedestrian resumed!");
 
             await ToSignal(GetTree().CreateTimer(StopCooldown), "timeout");
             canBeStopped = true;
-            GD.Print("Cooldown finished, pedestrian can be stopped again.");
         }
 
-        // Sets IsSpeeding to true while timer is running.
-        // IsSpeeding is checked at Move method
+        /// <summary>
+        /// Temporarily boosts pedestrian speed.
+        /// </summary>
         private async void StartSpeedBoost()
         {
-            GD.Print("Pedestrian speeding for " + SpeedTimer + " seconds.");
             IsSpeeding = true;
-            canBeStopped = false; // Prevent stopping while speeding
+            canBeStopped = false;
 
             await ToSignal(GetTree().CreateTimer(SpeedTimer), "timeout");
 
             IsSpeeding = false;
-            canBeStopped = true; // <<< Add this line
-            GD.Print("Pedestrian back to normal speed, can be stopped again.");
+            canBeStopped = true;
         }
 
-        // Method gets animation name string as parameter and plays given animation
+        /// <summary>
+        /// Plays animation by name if not already playing.
+        /// </summary>
         protected void PlayAnimation(string animationName)
         {
             if (animatedSprite != null && animatedSprite.Animation != animationName)
             {
-                GD.Print($"Starting animation: {animationName}");
                 animatedSprite.Play(animationName);
             }
         }
 
+        /// <summary>
+        /// Plays a sound effect given a resource path.
+        /// </summary>
         private void PlaySfx(string pathToSfx)
         {
             if (_sfxPlayer != null && !string.IsNullOrEmpty(pathToSfx))
@@ -355,6 +346,9 @@ namespace Crosswalk
             }
         }
 
+        /// <summary>
+        /// Plays collision sounds sequentially.
+        /// </summary>
         private async void PlayCollisionSounds()
         {
             if (_sfxPlayer != null && _screamSound != null)
@@ -365,5 +359,36 @@ namespace Crosswalk
                 _sfxPlayer.Play();
             }
         }
+
+        /// <summary>
+        /// Deletes pedestrians that move outside the screen boundaries.
+        /// </summary>
+        private void CleanupOutOfBoundsPedestrians()
+        {
+            foreach (Area2D pedestrian in GetTree().GetNodesInGroup("pedestrians").Cast<Area2D>())
+            {
+                Vector2 pos = pedestrian.Position;
+                if ((pos.X > 410 || pos.X < -40 || pos.Y > 700 || pos.Y < -100) && !pedestrian.IsQueuedForDeletion())
+                {
+                    if (pedestrian is Pedestrian p && !p.isFlying)
+                    {
+                        if (!GameManager.Instance._gameOver)
+                        {
+                            if (p is Grandma || p is Grandpa)
+                                GameManager.Instance.AddScore(50 * (_scoreMultiplier + 1));
+                            else if (p is Girl || p is Boy)
+                                GameManager.Instance.AddScore(30 * (_scoreMultiplier + 1));
+                            else if (p is Woman || p is Man)
+                                GameManager.Instance.AddScore(20 * (_scoreMultiplier + 1));
+
+                            GetNode<GUI>("/root/Level/GUI").PlaySfx(_scoreSound);
+                        }
+                        pedestrian.QueueFree();
+                    }
+                }
+            }
+        }
+
+        #endregion
     }
 }

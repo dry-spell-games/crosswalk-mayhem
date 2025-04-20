@@ -1,12 +1,43 @@
 using Godot;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Crosswalk
 {
+    /// <summary>
+    /// Manages level andgameplay: spawning pedestrians/vehicles,
+    /// traffic lights, difficulty and game over.
+    /// </summary>
     public partial class Level : Node2D
     {
+        #region Public Properties
+
+        // Flag for car green light state
+        public static bool _carGreen { get; private set; } = true;
+        // Flag for pedestrian green light state
+        public static bool _pedestrianGreen { get; private set; } = false;
+        // Flag to indicate blinking pedestrian light
+        public static bool _blink { get; private set; } = false;
+        // Pedestrian spawn counter
+        public int _pedestriansToSpawn { get; private set; }
+
+        // Duration of green light for pedestrians per difficulty level
+        [Export] public float[] _pedestrianGreenTimer = { 10f, 7f, 6f, 5f, 4f, 0f };
+        // Duration for blink warning before pedestrian light ends per difficulty level
+        [Export] public float[] _blinkTimer = { 3f, 3f, 3f, 2f, 1f, 0f };
+
+        #endregion
+
+        #region Private Fields
+
+        // Current difficulty level
+        private int _difficulty = GameManager.Instance._difficulty;
+        // GUI reference
+        private GUI _gui;
+        // Flag to prevent multiple game over checks
+        private bool _checkLife = false;
+        // Flag to prevent triggering difficulty up multiple times
+        private bool _difficultyIncreasing = false;
+
         // Rate at which pedestrians spawn at each difficulty level
         [Export] private float[] _spawnRate = { 4f, 3f, 2f, 1f, 0.5f, 0.2f };
         // Rate at which cars spawn at each difficulty level
@@ -15,16 +46,6 @@ namespace Crosswalk
         [Export] private int[] _pedestrianCount = { 10, 20, 30, 50, 80, 666 };
         // Duration of green light for cars per difficulty level
         [Export] private float[] _carGreenTimer = { 3, 5, 7, 8, 9, 10 };
-        // Flag for car green light state
-        public static bool _carGreen { get; private set; } = true;
-        // Duration of green light for pedestrians per difficulty level
-        [Export] public float[] _pedestrianGreenTimer = { 10f, 7f, 6f, 5f, 4f, 0f };
-        // Flag for pedestrian green light state
-        public static bool _pedestrianGreen { get; private set; } = false;
-        // Duration for blink warning before pedestrian light ends
-        [Export] public float[] _blinkTimer = { 3f, 3f, 3f, 2f, 1f, 0f };
-        // Flag to indicate blinking pedestrian light
-        public static bool _blink { get; private set; } = false;
         // Transition delay between light changes per difficulty
         [Export] private float[] _lightTransitionTimer = { 4f, 3f, 2f, 2f, 2f, 0f };
         // Life bonus granted at each difficulty level
@@ -60,6 +81,7 @@ namespace Crosswalk
         private PackedScene BusScene;
         private PackedScene BusScene1;
         private PackedScene BusScene2;
+
         // Array for all bus scenes to instantiate them in order
         private PackedScene[] busScenes;
         private int currentBusIndex = 0;
@@ -70,29 +92,87 @@ namespace Crosswalk
         // Random number generator
         private Random random = new Random();
 
+        #endregion
+
+        #region Public Signal Methods
+
         // Signal declarations
         //[Signal] public delegate void CarLightEventHandler(bool _carGreen);
         [Signal] public delegate void PedestrianLightEventHandler(bool _pedestrianGreen);
         //[Signal] public delegate void BlinkEventHandler(bool _pedestrianGreen);
 
-        // Current difficulty level
-        private int _difficulty = GameManager.Instance._difficulty;
+        #endregion
 
-        // GUI reference
-        private GUI _gui;
+        #region Godot Built-in Methods
 
-        // Flag to prevent multiple game over checks
-        private bool _checkLife = false;
+        /// <summary>
+        /// Called when the node enters the scene tree.
+        /// Loads scenes and starts the game.
+        /// </summary>
+        public override async void _Ready()
+        {
+            // Wait one frame to ensure the node is fully in the scene tree
+            await ToSignal(GetTree(), "process_frame");
 
-        // Flag to prevent triggering difficulty up multiple times
-        private bool _difficultyIncreasing = false;
+            GD.Print($"Level {_difficulty} started");
 
-        // Traffic light state management task and cancellation
-        private Task _trafficLightTask;
-        private CancellationTokenSource _trafficTokenSource;
+            // Load pedestrian scenes
+            GrandmaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandma.tscn");
+            GrandpaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandpa.tscn");
+            GirlScene = (PackedScene)GD.Load("res://scenes/pedestrians/girl.tscn");
+            BoyScene = (PackedScene)GD.Load("res://scenes/pedestrians/boy.tscn");
+            ManScene = (PackedScene)GD.Load("res://scenes/pedestrians/man.tscn");
+            WomanScene = (PackedScene)GD.Load("res://scenes/pedestrians/woman.tscn");
 
-        // Pedestrian spawn counter
-        public int _pedestriansToSpawn { get; private set; }
+            // Load vehicle scenes
+            SportsCarScene = (PackedScene)GD.Load("res://scenes/vehicles/sportscar.tscn");
+            SedanScene = (PackedScene)GD.Load("res://scenes/vehicles/sedan.tscn");
+            SedanScene1 = (PackedScene)GD.Load("res://scenes/vehicles/sedan1.tscn");
+            SedanScene2 = (PackedScene)GD.Load("res://scenes/vehicles/sedan2.tscn");
+            SedanScene3 = (PackedScene)GD.Load("res://scenes/vehicles/sedan3.tscn");
+            SuvScene = (PackedScene)GD.Load("res://scenes/vehicles/suv.tscn");
+            SuvScene1 = (PackedScene)GD.Load("res://scenes/vehicles/suv1.tscn");
+            SuvScene2 = (PackedScene)GD.Load("res://scenes/vehicles/suv2.tscn");
+            SuvScene3 = (PackedScene)GD.Load("res://scenes/vehicles/suv3.tscn");
+            BeetleScene = (PackedScene)GD.Load("res://scenes/vehicles/beetle.tscn");
+            BeetleScene1 = (PackedScene)GD.Load("res://scenes/vehicles/beetle1.tscn");
+            BeetleScene2 = (PackedScene)GD.Load("res://scenes/vehicles/beetle2.tscn");
+            BeetleScene3 = (PackedScene)GD.Load("res://scenes/vehicles/beetle3.tscn");
+            BusScene = (PackedScene)GD.Load("res://scenes/vehicles/bus.tscn");
+            BusScene1 = (PackedScene)GD.Load("res://scenes/vehicles/bus1.tscn");
+            BusScene2 = (PackedScene)GD.Load("res://scenes/vehicles/bus2.tscn");
+            busScenes = new PackedScene[] { BusScene, BusScene1, BusScene2 };
+
+            // Load GUI
+            _gui = GetNode<GUI>("GUI");
+
+            // Get vehicle traffic light hitbox
+            vehicleTrafficLightHitbox = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
+
+            // Check if scenes loaded properly
+            if (GrandmaScene == null) GD.PrintErr("Failed to load Grandma scene!");
+            if (GrandpaScene == null) GD.PrintErr("Failed to load Grandpa scene");
+            else if (GirlScene == null) GD.Print("Failed to load Girl scene!");
+            else if (BoyScene == null) GD.Print("Failed to load Boy scene!");
+            else if (ManScene == null) GD.Print("Failed to load ManScene");
+            else if (WomanScene == null) GD.Print("Failed to load WomanScene");
+
+            StartGame();
+        }
+
+        /// <summary>
+        /// Runs every frame; handles hitbox toggle and game checks.
+        /// </summary>
+        public override void _Process(Double delta)
+        {
+            vehicleTrafficLightHitbox.Disabled = _carGreen;
+            CheckLife();
+            CheckIfPedestriansLeft();
+        }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Spawns pedestrians at intervals until count reaches zero.
@@ -122,19 +202,18 @@ namespace Crosswalk
         {
             while (true)
             {
-                // Odotetaan niin kauan kun peli on pausella
+                // Waits while game is on a pause
                 while (GetTree().Paused)
                 {
-                    await ToSignal(GetTree(), "process_frame"); // odottaa seuraavaa frameä
+                    await ToSignal(GetTree(), "process_frame"); // waits for next frame
                 }
 
                 SpawnVehicle();
 
-                // Timer joka toimii myös pausella
+                // Timer that also works during pause
                 await ToSignal(GetTree().CreateTimer(_carSpawnRate[_difficulty], true), "timeout");
             }
         }
-
 
         /// <summary>
         /// Handles the traffic light cycle between cars and pedestrians.
@@ -166,7 +245,6 @@ namespace Crosswalk
                 _carGreen = true;
             }
         }
-
 
         /// <summary>
         /// Instantiates a random pedestrian based on difficulty.
@@ -220,7 +298,7 @@ namespace Crosswalk
             else if (_difficulty > 1 && _difficulty < 5)
                 rand = random.Next(0, 14);
             else
-             rand = 13;
+                rand = 13;
 
             // Instantiate a random vehicle scene
             if (rand == 0 && BeetleScene != null)
@@ -387,69 +465,6 @@ namespace Crosswalk
             GetTree().ChangeSceneToFile("res://scenes/levels/level.tscn");
         }
 
-        /// <summary>
-        /// Called when the node enters the scene tree.
-        /// Loads scenes and starts the game.
-        /// </summary>
-        public override async void _Ready()
-        {
-            // Wait one frame to ensure the node is fully in the scene tree
-            await ToSignal(GetTree(), "process_frame");
-
-            GD.Print($"Level {_difficulty} started");
-
-            // Load pedestrian scenes
-            GrandmaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandma.tscn");
-            GrandpaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandpa.tscn");
-            GirlScene = (PackedScene)GD.Load("res://scenes/pedestrians/girl.tscn");
-            BoyScene = (PackedScene)GD.Load("res://scenes/pedestrians/boy.tscn");
-            ManScene = (PackedScene)GD.Load("res://scenes/pedestrians/man.tscn");
-            WomanScene = (PackedScene)GD.Load("res://scenes/pedestrians/woman.tscn");
-
-            // Load vehicle scenes
-            SportsCarScene = (PackedScene)GD.Load("res://scenes/vehicles/sportscar.tscn");
-            SedanScene = (PackedScene)GD.Load("res://scenes/vehicles/sedan.tscn");
-            SedanScene1 = (PackedScene)GD.Load("res://scenes/vehicles/sedan1.tscn");
-            SedanScene2 = (PackedScene)GD.Load("res://scenes/vehicles/sedan2.tscn");
-            SedanScene3 = (PackedScene)GD.Load("res://scenes/vehicles/sedan3.tscn");
-            SuvScene = (PackedScene)GD.Load("res://scenes/vehicles/suv.tscn");
-            SuvScene1 = (PackedScene)GD.Load("res://scenes/vehicles/suv1.tscn");
-            SuvScene2 = (PackedScene)GD.Load("res://scenes/vehicles/suv2.tscn");
-            SuvScene3 = (PackedScene)GD.Load("res://scenes/vehicles/suv3.tscn");
-            BeetleScene = (PackedScene)GD.Load("res://scenes/vehicles/beetle.tscn");
-            BeetleScene1 = (PackedScene)GD.Load("res://scenes/vehicles/beetle1.tscn");
-            BeetleScene2 = (PackedScene)GD.Load("res://scenes/vehicles/beetle2.tscn");
-            BeetleScene3 = (PackedScene)GD.Load("res://scenes/vehicles/beetle3.tscn");
-            BusScene = (PackedScene)GD.Load("res://scenes/vehicles/bus.tscn");
-            BusScene1 = (PackedScene)GD.Load("res://scenes/vehicles/bus1.tscn");
-            BusScene2 = (PackedScene)GD.Load("res://scenes/vehicles/bus2.tscn");
-            busScenes = new PackedScene[] { BusScene, BusScene1, BusScene2 };
-
-            // Load GUI
-            _gui = GetNode<GUI>("GUI");
-
-            // Get vehicle traffic light hitbox
-            vehicleTrafficLightHitbox = GetNode<CollisionShape2D>("TrafficLightsVehicles/Hitbox");
-
-            // Check if scenes loaded properly
-            if (GrandmaScene == null) GD.PrintErr("Failed to load Grandma scene!");
-            if (GrandpaScene == null) GD.PrintErr("Failed to load Grandpa scene");
-            else if (GirlScene == null) GD.Print("Failed to load Girl scene!");
-            else if (BoyScene == null) GD.Print("Failed to load Boy scene!");
-            else if (ManScene == null) GD.Print("Failed to load ManScene");
-            else if (WomanScene == null) GD.Print("Failed to load WomanScene");
-
-            StartGame();
-        }
-
-        /// <summary>
-        /// Runs every frame; handles hitbox toggle and game checks.
-        /// </summary>
-        public override void _Process(Double delta)
-        {
-            vehicleTrafficLightHitbox.Disabled = _carGreen;
-            CheckLife();
-            CheckIfPedestriansLeft();
-        }
+        #endregion
     }
 }

@@ -10,14 +10,20 @@ namespace Crosswalk
     /// Different difficulty levels pull maps from different folders, allowing for visual variation.
     /// </summary>
     public partial class Background : Node
-	{
-		// Exported folder paths for each difficulty level
-		[Export] private string veryEasyLevelsPath = "res://scenes/level-background/maps/very-easy-maps";
-		[Export] private string easyLevelsPath = "res://scenes/level-background/maps/easy-maps";
-		[Export] private string normalLevelsPath = "res://scenes/level-background/maps/normal-maps";
-		[Export] private string hardLevelsPath = "res://scenes/level-background/maps/hard-maps";
-		[Export] private string veryHardLevelsPath = "res://scenes/level-background/maps/very-hard-maps";
-		[Export] private string mayhemLevelsPath = "res://scenes/level-background/maps/mayhem-maps";
+    {
+        #region Exported Folder Paths
+
+        // Exported folder paths for each difficulty level
+        [Export] private string veryEasyLevelsPath = "res://scenes/level-background/maps/very-easy-maps";
+        [Export] private string easyLevelsPath = "res://scenes/level-background/maps/easy-maps";
+        [Export] private string normalLevelsPath = "res://scenes/level-background/maps/normal-maps";
+        [Export] private string hardLevelsPath = "res://scenes/level-background/maps/hard-maps";
+        [Export] private string veryHardLevelsPath = "res://scenes/level-background/maps/very-hard-maps";
+        [Export] private string mayhemLevelsPath = "res://scenes/level-background/maps/mayhem-maps";
+
+        #endregion
+
+        #region Private Fields
 
         // Current difficulty setting (can be set dynamically elsewhere in the project)
         private int _difficulty = GameManager.Instance._difficulty;
@@ -27,6 +33,23 @@ namespace Crosswalk
 
         // List of all available map scenes loaded from the folder
         private List<PackedScene> _mapScenes = new List<PackedScene>();
+
+        #endregion
+
+        #region Godot Built-in Methods
+
+        /// <summary>
+        /// Called automatically by Godot when the node enters the scene tree.
+        /// Triggers the background map instantiation process.
+        /// </summary>
+        public override void _Ready()
+        {
+            InstantiateMap();
+        }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Loads all .tscn scenes from a given folder and adds them to the _mapScenes list.
@@ -43,10 +66,12 @@ namespace Crosswalk
                 while (fileName != "")
                 {
                     string[] fileNameParts = fileName.Split(".");
-                    if (fileNameParts.Length > 1 && fileNameParts[1] == "tscn");
+
+                    if (fileNameParts.Length > 1 && fileNameParts[1] == "tscn")
                     {
                         fileName = fileNameParts[0] + "." + fileNameParts[1];
                     }
+
                     // Check if file is a scene file
                     if (fileName.EndsWith(".tscn"))
                     {
@@ -138,13 +163,6 @@ namespace Crosswalk
             return random.Next(0, _mapScenes.Count);
         }
 
-        /// <summary>
-        /// Called automatically by Godot when the node enters the scene tree.
-        /// Triggers the background map instantiation process.
-        /// </summary>
-        public override void _Ready()
-        {
-            InstantiateMap();
-        }
+        #endregion
     }
 }
