@@ -1,12 +1,24 @@
 using Godot;
 using System;
 
-namespace Crosswalk {
+namespace Crosswalk
+{
+    /// <summary>
+    /// Bus is a specific implementation of the Car class, simulating a larger vehicle
+    /// with unique acceleration, braking, and sound behavior. It also staggers its rendering order with Z-indexing.
+    /// </summary>
     public partial class Bus : Car
     {
+        #region Public Properties
+
         [Export] public override float Speed { get; set; } = 300.0f;
         [Export] public override float BrakingForce { get; set; } = 700.0f;
         [Export] public override float AccelerationForce { get; set; } = 150.0f;
+
+        #endregion
+
+        #region Private Properties
+
         [Export] private AudioStreamPlayer2D _sfxPlayer;
 
         private AnimatedSprite2D animatedSprite;
@@ -15,20 +27,20 @@ namespace Crosswalk {
 
         private float _initialSpeed;
 
-        public void PlayLoopingSfx(string pathToSfx)
-        {
-            _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
-            _sfxPlayer.PitchScale = 1.0f;
-            _sfxPlayer.Play();
-        }
+        #endregion
 
+        #region Godot Built-In Methods
+
+        /// <summary>
+        /// Called when the node enters the scene tree. Initializes sprite nodes, sound, and Z-index.
+        /// </summary>
         public override void _Ready()
         {
             animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
             windShield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
             base._Ready();
 
-            _initialSpeed = Speed; // Saves car's original speed
+            _initialSpeed = Speed;
             PlayLoopingSfx("res://assets/audio/sfx/vehicles/bus-engine.wav");
 
             ZAsRelative = false;
@@ -36,14 +48,38 @@ namespace Crosswalk {
             BusCounter++;
         }
 
+        /// <summary>
+        /// Called every frame. Adjusts the engine sound's pitch based on the current speed.
+        /// </summary>
+        /// <param name="delta">Time since the last frame in seconds.</param>
         public override void _Process(double delta)
         {
             base._Process(delta);
 
             // Scales motor's SFX tempo. Compares current speed to original speed
-            // Last 2 values are min and max tempo
             float pitch = Mathf.Clamp(Speed / _initialSpeed, 0.5f, 2.0f);
             _sfxPlayer.PitchScale = pitch;
         }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Loads and plays a looping SFX from the given path.
+        /// </summary>
+        /// <param name="pathToSfx">Path to the sound effect resource.</param>
+        public void PlayLoopingSfx(string pathToSfx)
+        {
+            _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
+            _sfxPlayer.PitchScale = 1.0f;
+            _sfxPlayer.Play();
+        }
+
+        #endregion
+
+        #region Private Methods
+        // No private methods currently
+        #endregion
     }
 }

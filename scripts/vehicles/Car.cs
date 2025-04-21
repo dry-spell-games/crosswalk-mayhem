@@ -4,25 +4,45 @@ using System.Collections.Generic;
 
 namespace Crosswalk
 {
-    public abstract partial class Car : Area2D {
+    /// <summary>
+    /// Abstract class Car for base methods and attributes for cars. Does following actions
+    /// for cars: move, initialize, remove, plays animations, and checks raycast
+    /// </summary>
+    public abstract partial class Car : Area2D
+    {
+        #region Public Properties
+
         public virtual float Speed { get; set; }
         public virtual Vector2 Velocity { get; set; }
         public virtual float BrakingForce { get; set; }
         public virtual float AccelerationForce { get; set; }
-        private bool isStopped = false;
-        private bool isBraking = false;
-        private bool isAccelerating = false;
-        protected float InitialSpeed;
-        private AnimatedSprite2D animatedSprite;
-        private AnimatedSprite2D windShield;
-        private RayCast2D[] raycasts;
-        public List<Vector2> StartPositions { get; set; } = new List<Vector2>
 
+        // Two different spawnpositions for cars
+        public List<Vector2> StartPositions { get; set; } = new List<Vector2>
         {
             new Vector2(140, -400),
             new Vector2(220, -400)
         };
 
+        #endregion
+
+        #region Private Properties
+
+        private bool isStopped = false;
+        private bool isBraking = false;
+        private bool isAccelerating = false;
+        protected float InitialSpeed;
+        private AnimatedSprite2D animatedSprite; // Sprite for the car itself
+        private AnimatedSprite2D windShield; // Sprite for separated windshield
+        private RayCast2D[] raycasts; // Array for multiple raycasts
+
+        #endregion
+
+        #region Godot Built-In Methods
+
+        /// <summary>
+        /// Called when the node is added to the scene tree. Initializes sprites, raycasts, and speed.
+        /// </summary>
         public override void _Ready()
         {
             animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
@@ -39,21 +59,17 @@ namespace Crosswalk
             // Array for cars' raycasts
             raycasts = new RayCast2D[]
             {
-            GetNodeOrNull<RayCast2D>("RaycastHolder/RCLeft"), // Left
-            GetNodeOrNull<RayCast2D>("RaycastHolder/RCMLeft"), // Middle Left
-            GetNodeOrNull<RayCast2D>("RaycastHolder/RCMiddle"), // Middle
-            GetNodeOrNull<RayCast2D>("RaycastHolder/RCMRight"), // Middle Right
-            GetNodeOrNull<RayCast2D>("RaycastHolder/RCRight") // Right
+                GetNodeOrNull<RayCast2D>("RaycastHolder/RCLeft"), // Left
+                GetNodeOrNull<RayCast2D>("RaycastHolder/RCMLeft"), // Middle Left
+                GetNodeOrNull<RayCast2D>("RaycastHolder/RCMiddle"), // Middle
+                GetNodeOrNull<RayCast2D>("RaycastHolder/RCMRight"), // Middle Right
+                GetNodeOrNull<RayCast2D>("RaycastHolder/RCRight") // Right
             };
         }
 
-        public void Initialize(Vector2 position)
-        {
-            Position = position;
-            GD.Print($"{this} spawned at {Position} with speed {Speed}");
-            GD.Print("auto instantioitu");
-        }
-
+        /// <summary>
+        /// Called every frame. Handles movement, animation, raycast checking, and car removal.
+        /// </summary>
         public override void _Process(double delta)
         {
             if (IsAnyRaycastColliding())
@@ -95,11 +111,27 @@ namespace Crosswalk
             }
         }
 
-        protected virtual void Move(double delta)
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Initializes the car's position and logs debug info.
+        /// </summary>
+        public void Initialize(Vector2 position)
         {
-            Position += new Vector2(0, Speed * (float)delta);
+            Position = position;
+            GD.Print($"{this} spawned at {Position} with speed {Speed}");
+            GD.Print("auto instantioitu");
         }
 
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Checks if any of the raycasts is currently colliding with an object.
+        /// </summary>
         private bool IsAnyRaycastColliding()
         {
             foreach (RayCast2D raycast in raycasts)
@@ -115,5 +147,19 @@ namespace Crosswalk
             }
             return false;
         }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Moves the car forward based on current speed and frame delta.
+        /// </summary>
+        protected virtual void Move(double delta)
+        {
+            Position += new Vector2(0, Speed * (float)delta);
+        }
+
+        #endregion
     }
 }
