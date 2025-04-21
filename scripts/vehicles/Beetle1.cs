@@ -1,25 +1,36 @@
 using Godot;
 using System;
 
-namespace Crosswalk {
+namespace Crosswalk
+{
+    /// <summary>
+    /// Beetle is a specific implementation of Car with unique sound effects and properties.
+    /// Different Beetles have different values for speed, braking force and acceleration force.
+    /// </summary>
     public partial class Beetle1 : Car
     {
+        #region Public Properties
+
         [Export] public override float Speed { get; set; } = 310.0f;
-        [Export] public override float BrakingForce {get; set; } = 950.0f;
+        [Export] public override float BrakingForce { get; set; } = 950.0f;
         [Export] public override float AccelerationForce { get; set; } = 230.0f;
+
+        #endregion
+
+        #region Private Properties
+
         [Export] private AudioStreamPlayer2D _sfxPlayer;
         private AnimatedSprite2D animatedSprite;
         private AnimatedSprite2D windShield;
         private float _initialSpeed;
 
-        public void PlayLoopingSfx(string pathToSfx)
-        {
-            _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
-            _sfxPlayer.PitchScale = 1.0f;
-            _sfxPlayer.Play();
-        }
+        #endregion
 
+        #region Godot Built-In Methods
 
+        /// <summary>
+        /// Called when the node is added to the scene tree. Initializes sprites, sound, and calls base logic.
+        /// </summary>
         public override void _Ready()
         {
             animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
@@ -30,6 +41,9 @@ namespace Crosswalk {
             PlayLoopingSfx("res://assets/audio/sfx/vehicles/beetle-engine.wav");
         }
 
+        /// <summary>
+        /// Called every frame. Updates pitch of engine SFX based on speed and calls base logic.
+        /// </summary>
         public override void _Process(double delta)
         {
             base._Process(delta); // Calls base _Process at Car class
@@ -39,5 +53,22 @@ namespace Crosswalk {
             float pitch = Mathf.Clamp(Speed / _initialSpeed, 0.4f, 10.0f);
             _sfxPlayer.PitchScale = pitch;
         }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Loads and plays a looping SFX from the given path.
+        /// </summary>
+        /// <param name="pathToSfx">Path to the sound effect resource.</param>
+        public void PlayLoopingSfx(string pathToSfx)
+        {
+            _sfxPlayer.Stream = GD.Load<AudioStream>(pathToSfx);
+            _sfxPlayer.PitchScale = 1.0f;
+            _sfxPlayer.Play();
+        }
+
+        #endregion
     }
 }
