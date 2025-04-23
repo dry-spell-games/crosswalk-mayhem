@@ -155,6 +155,8 @@ namespace Crosswalk
         /// <summary>
         /// Handles normal movement logic including walking and running.
         /// </summary>
+        /// <param name="delta">Time elapsed since the last frame (used for frame-independent movement).</param>
+        /// <param name="IsSpeeding">If true, applies faster movement logic (running instead of walking).</param>
         protected virtual void Move(double delta, bool IsSpeeding)
         {
             _animatedSprite.FlipH = Speed < 0;
@@ -164,9 +166,11 @@ namespace Crosswalk
             PlayAnimation(IsSpeeding ? "run" : "walk");
         }
 
+
         /// <summary>
         /// Handles flying behavior after collision.
         /// If a pedestrian flies too long, it's deleted.
+        /// <param name="delta">Time elapsed since the last frame (used for frame-independent movement).</param>
         /// </summary>
         protected void Fly(double delta)
         {
