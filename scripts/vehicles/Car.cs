@@ -12,13 +12,13 @@ namespace Crosswalk
     {
         #region Public Properties
 
-        public virtual float Speed { get; set; }
-        public virtual Vector2 Velocity { get; set; }
-        public virtual float BrakingForce { get; set; }
-        public virtual float AccelerationForce { get; set; }
+        public virtual float _speed { get; set; }
+        public virtual Vector2 _velocity { get; set; }
+        public virtual float _brakingForce { get; set; }
+        public virtual float _accelerationForce { get; set; }
 
         // Two different spawnpositions for cars
-        public List<Vector2> StartPositions { get; set; } = new List<Vector2>
+        public List<Vector2> _startPositions { get; set; } = new List<Vector2>
         {
             new Vector2(140, -400),
             new Vector2(220, -400)
@@ -28,13 +28,13 @@ namespace Crosswalk
 
         #region Private Properties
 
-        private bool isStopped = false;
-        private bool isBraking = false;
-        private bool isAccelerating = false;
-        protected float InitialSpeed;
-        private AnimatedSprite2D animatedSprite; // Sprite for the car itself
-        private AnimatedSprite2D windShield; // Sprite for separated windshield
-        private RayCast2D[] raycasts; // Array for multiple raycasts
+        private bool _isStopped = false;
+        private bool _isBraking = false;
+        private bool _isAccelerating = false;
+        private float _initialSpeed;
+        private AnimatedSprite2D _animatedSprite; // Sprite for the car itself
+        private AnimatedSprite2D _windshield; // Sprite for separated windshield
+        private RayCast2D[] _raycasts; // Array for multiple raycasts
 
         #endregion
 
@@ -45,20 +45,20 @@ namespace Crosswalk
         /// </summary>
         public override void _Ready()
         {
-            animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+            _animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
             // Animation for windshield on a different sprite
-            windShield = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
-            if (windShield != null)
+            _windshield = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
+            if (_windshield != null)
             {
-                windShield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
-                windShield.Play("drive");
+                _windshield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
+                _windshield.Play("drive");
             }
             AddToGroup("cars"); // Adds cars to a group so they can be removed later
-            InitialSpeed = Speed;
+            _initialSpeed = _speed;
 
             // Array for cars' raycasts, only active one used in current version 1.0 cars
             // is RCMiddle, but have left others for possible future uses.
-            raycasts = new RayCast2D[]
+            _raycasts = new RayCast2D[]
             {
                 GetNodeOrNull<RayCast2D>("RaycastHolder/RCLeft"), // Left
                 GetNodeOrNull<RayCast2D>("RaycastHolder/RCMLeft"), // Middle Left
@@ -76,30 +76,30 @@ namespace Crosswalk
             if (IsAnyRaycastColliding())
             {
                 // Slows vehicles using braking force
-                Speed = Mathf.Max(Speed - BrakingForce * (float)delta, 0);
+                _speed = Mathf.Max(_speed - _brakingForce * (float)delta, 0);
             }
-            else if (!IsAnyRaycastColliding() && Speed < InitialSpeed)
+            else if (!IsAnyRaycastColliding() && _speed < _initialSpeed)
             {
                 // Accelerates car using acceleration force
-                Speed = Mathf.Max(Speed + AccelerationForce * (float)delta, 0);
+                _speed = Mathf.Max(_speed + _accelerationForce * (float)delta, 0);
             }
 
-            if (Speed < 1)
+            if (_speed < 1)
             {
-                animatedSprite.Play("idle");
-                if (windShield != null)
+                _animatedSprite.Play("idle");
+                if (_windshield != null)
                 {
-                    windShield.Pause();
+                    _windshield.Pause();
                 }
             }
             else
             {
                 Move(delta);
-                animatedSprite.Play();
-                if (windShield != null)
+                _animatedSprite.Play();
+                if (_windshield != null)
                 {
-                    float custom_scale = Speed / 200; // Scaling speed for windshield animation
-                    windShield.Play("drive", custom_scale);
+                    float custom_scale = _speed / 200; // Scaling speed for windshield animation
+                    _windshield.Play("drive", custom_scale);
                 }
             }
 
@@ -134,7 +134,7 @@ namespace Crosswalk
         /// </summary>
         private bool IsAnyRaycastColliding()
         {
-            foreach (RayCast2D raycast in raycasts)
+            foreach (RayCast2D raycast in _raycasts)
             {
                 if (raycast != null)
                 {
@@ -157,7 +157,7 @@ namespace Crosswalk
         /// </summary>
         protected virtual void Move(double delta)
         {
-            Position += new Vector2(0, Speed * (float)delta);
+            Position += new Vector2(0, _speed * (float)delta);
         }
 
         #endregion

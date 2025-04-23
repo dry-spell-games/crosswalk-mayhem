@@ -232,7 +232,7 @@ namespace Crosswalk
                 _isHit = true;
 
                 HandleCarCollision(car);
-                RotationSpeed = car.Speed * 3f;
+                RotationSpeed = car._speed * 3f;
 
                 if (!isFlying)
                 {
