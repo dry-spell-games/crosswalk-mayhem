@@ -11,13 +11,13 @@ namespace Crosswalk
     {
         #region Public Properties
 
-        public virtual float _speed { get; set; }
-        public virtual Vector2 _velocity { get; set; }
-        public virtual float _brakingForce { get; set; }
-        public virtual float _accelerationForce { get; set; }
+        public virtual float Speed { get; set; }
+        public virtual Vector2 Velocity { get; set; }
+        public virtual float BrakingForce { get; set; }
+        public virtual float AccelerationForce { get; set; }
 
         // Two different spawnpositions for cars
-        public List<Vector2> _startPositions { get; set; } = new List<Vector2>
+        public List<Vector2> StartPositions { get; set; } = new List<Vector2>
         {
             new Vector2(140, -400),
             new Vector2(220, -400)
@@ -53,7 +53,7 @@ namespace Crosswalk
                 _windshield.Play("drive");
             }
             AddToGroup("cars"); // Adds cars to a group so they can be removed later
-            _initialSpeed = _speed;
+            _initialSpeed = Speed;
 
             // Array for cars' raycasts, only active one used in current version 1.0 cars
             // is RCMiddle, but have left others for possible future uses.
@@ -75,15 +75,15 @@ namespace Crosswalk
             if (IsAnyRaycastColliding())
             {
                 // Slows vehicles using braking force
-                _speed = Mathf.Max(_speed - _brakingForce * (float)delta, 0);
+                Speed = Mathf.Max(Speed - BrakingForce * (float)delta, 0);
             }
-            else if (!IsAnyRaycastColliding() && _speed < _initialSpeed)
+            else if (!IsAnyRaycastColliding() && Speed < _initialSpeed)
             {
                 // Accelerates car using acceleration force
-                _speed = Mathf.Max(_speed + _accelerationForce * (float)delta, 0);
+                Speed = Mathf.Max(Speed + AccelerationForce * (float)delta, 0);
             }
 
-            if (_speed < 1)
+            if (Speed < 1)
             {
                 _animatedSprite.Play("idle");
                 if (_windshield != null)
@@ -97,7 +97,7 @@ namespace Crosswalk
                 _animatedSprite.Play();
                 if (_windshield != null)
                 {
-                    float custom_scale = _speed / 200; // Scaling speed for windshield animation
+                    float custom_scale = Speed / 200; // Scaling speed for windshield animation
                     _windshield.Play("drive", custom_scale);
                 }
             }
@@ -156,7 +156,7 @@ namespace Crosswalk
         /// </summary>
         protected virtual void Move(double delta)
         {
-            Position += new Vector2(0, _speed * (float)delta);
+            Position += new Vector2(0, Speed * (float)delta);
         }
 
         #endregion

@@ -14,9 +14,9 @@ namespace Crosswalk
     {
         #region Public Properties
 
-        [Export] public override float _speed { get; set; } = 400.0f;
-        [Export] public override float _brakingForce { get; set; } = 1100.0f;
-        [Export] public override float _accelerationForce { get; set; } = 250.0f;
+        [Export] public override float Speed { get; set; } = 400.0f;
+        [Export] public override float BrakingForce { get; set; } = 1100.0f;
+        [Export] public override float AccelerationForce { get; set; } = 250.0f;
 
         #endregion
 
@@ -41,7 +41,7 @@ namespace Crosswalk
             _windshield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
             base._Ready();
 
-            _initialSpeed = _speed;
+            _initialSpeed = Speed;
             PlayLoopingSfx("res://assets/audio/sfx/vehicles/suv-engine.wav");
         }
 
@@ -53,7 +53,7 @@ namespace Crosswalk
         {
             base._Process(delta);
 
-            float pitch = Mathf.Clamp(_speed / _initialSpeed, 0.4f, 0.8f);
+            float pitch = Mathf.Clamp(Speed / _initialSpeed, 0.4f, 0.8f);
             _sfxPlayer.PitchScale = pitch;
         }
 
