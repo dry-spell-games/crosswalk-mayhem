@@ -44,7 +44,7 @@ namespace Crosswalk
         /// </summary>
         public override void _Process(double delta)
         {
-            if (isFlying)
+            if (_isFlying)
             {
                 base.Fly(delta);
                 animatedSprite.Offset = new Vector2(0, 14);
@@ -66,7 +66,7 @@ namespace Crosswalk
         /// <param name="car">The car that collided with the pedestrian.</param>
         protected override void HandleCarCollision(Car car)
         {
-            isFlying = true;
+            _isFlying = true;
             FlyTime = 0;
         }
 
