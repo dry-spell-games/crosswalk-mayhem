@@ -400,6 +400,7 @@ namespace Crosswalk
             _difficulty = GameManager.Instance._difficulty;
             _pedestriansToSpawn = _pedestrianCount[_difficulty];
 
+            GameManager.Instance._disableLifeCheck = false;
             GameManager.Instance._gameOver = false;
             GameManager.Instance.UpdateLife(_lifeBonus[_difficulty]);
             _inputBlocker.Visible = true;
