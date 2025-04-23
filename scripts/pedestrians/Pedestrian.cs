@@ -145,10 +145,7 @@ namespace Crosswalk
         {
             Position = position;
             ZIndex = Mathf.RoundToInt(GlobalPosition.Y + 100);
-
             Speed = (Position.X > 399) ? -MathF.Abs(Speed) : MathF.Abs(Speed);
-
-            GD.Print($"{this} spawned at {Position} with speed {Speed}");
         }
 
         #endregion
@@ -169,6 +166,7 @@ namespace Crosswalk
 
         /// <summary>
         /// Handles flying behavior after collision.
+        /// If a pedestrian flies too long, it's deleted.
         /// </summary>
         protected void Fly(double delta)
         {
@@ -203,7 +201,6 @@ namespace Crosswalk
 
             if (FlyTime > _maxFlyTime && !IsQueuedForDeletion())
             {
-                GD.Print($"[AUTO-FREE] {Name} flew too long, auto-cleaning...");
                 QueueFree();
             }
         }
@@ -213,7 +210,7 @@ namespace Crosswalk
         /// </summary>
         protected virtual void HandleCarCollision(Car car)
         {
-            GD.Print("Handling collision with a Car...");
+
         }
 
         #endregion
