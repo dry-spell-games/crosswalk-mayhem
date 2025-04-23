@@ -47,7 +47,7 @@ namespace Crosswalk
         /// <param name="delta">Elapsed time since last frame.</param>
         public override void _Process(double delta)
         {
-            if (isFlying)
+            if (_isFlying)
             {
                 base.Fly(delta);
                 animatedSprite.Offset = new Vector2(0, 11);
@@ -74,23 +74,23 @@ namespace Crosswalk
                 await ToSignal(GetTree().CreateTimer(random.Next(3, 8), false, true), "timeout");
 
                 // Skip stopping if paused or not in a proper state
-                if (GetTree().Paused || isStopped || IsSpeeding || _isHit)
+                if (GetTree().Paused || _isStopped || _isSpeeding || _isHit)
                     continue;
 
                 // Don't stop if too close to the edges
                 if (Position.X < 30 || Position.X > 390)
                     continue;
 
-                isStopped = true;
-                randomStop = true;
+                _isStopped = true;
+                _randomStop = true;
                 base.PlayAnimation("idle2");
 
                 // Wait before moving again
                 await ToSignal(GetTree().CreateTimer(random.Next(2, 5), false, true), "timeout");
 
-                isStopped = false;
-                randomStop = false;
-                canBeStopped = true;
+                _isStopped = false;
+                _randomStop = false;
+                _canBeStopped = true;
             }
         }
 
@@ -101,7 +101,7 @@ namespace Crosswalk
         /// <param name="car">The car that collided with grandma.</param>
         protected override void HandleCarCollision(Car car)
         {
-            isFlying = true;
+            _isFlying = true;
             FlyTime = 0;
         }
 

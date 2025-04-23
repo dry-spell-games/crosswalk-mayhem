@@ -67,29 +67,29 @@ namespace Crosswalk
         #region Private Fields
 
         // Flag indicating if pedestrians have red light
-        private bool RedLightsForPedestrians = false;
+        private bool _redLightsForPedestrians = false;
         // Score multiplier based on current difficulty
         private int _scoreMultiplier = GameManager.Instance._difficulty;
         // Max time (seconds) between taps to trigger a double tap
-        private const float DoubleTapThreshold = 0.3f;
+        private const float _doubleTapThreshold = 0.3f;
         // Time of last tap input
-        private float lastTapTime = 0f;
+        private float _lastTapTime = 0f;
         // Waiting state for a second tap
-        private bool isWaitingForDoubleTap = false;
+        private bool _isWaitingForDoubleTap = false;
         // True if currently scaling up during flying animation
-        private bool isScalingUp = true;
+        private bool _isScalingUp = true;
         // Reference to pedestrian's AnimatedSprite2D
-        private AnimatedSprite2D animatedSprite;
+        private AnimatedSprite2D _animatedSprite;
         // True if pedestrian is flying after collision
-        protected bool isFlying = false;
+        protected bool _isFlying = false;
         // True if pedestrian is currently stopped
-        protected bool isStopped = false;
+        protected bool _isStopped = false;
         // True if pedestrian can be stopped again (cooldown ready)
-        protected bool canBeStopped = true;
+        protected bool _canBeStopped = true;
         // True if pedestrian is sprinting
-        protected bool IsSpeeding = false;
+        protected bool _isSpeeding = false;
         // True if playing random idle animation
-        protected bool randomStop = false;
+        protected bool _randomStop = false;
         // True if pedestrian has been hit by a car
         protected bool _isHit = false;
         // Saved initial walking speed
@@ -113,7 +113,7 @@ namespace Crosswalk
             var interactionArea = GetNode<Area2D>("InteractionArea");
             interactionArea?.Connect("input_event", Callable.From((Node viewport, InputEvent @event, int shapeIdx) => OnInputEvent(@event)));
 
-            animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+            _animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         }
 
         /// <summary>
@@ -121,14 +121,14 @@ namespace Crosswalk
         /// </summary>
         public override void _Process(double delta)
         {
-            if (isStopped)
+            if (_isStopped)
             {
-                PlayAnimation(randomStop ? "idle2" : "idle");
+                PlayAnimation(_randomStop ? "idle2" : "idle");
                 return;
             }
-            else if (!isFlying)
+            else if (!_isFlying)
             {
-                Move(delta, IsSpeeding);
+                Move(delta, _isSpeeding);
             }
 
             CleanupOutOfBoundsPedestrians();
@@ -157,7 +157,7 @@ namespace Crosswalk
         /// </summary>
         protected virtual void Move(double delta, bool IsSpeeding)
         {
-            animatedSprite.FlipH = Speed < 0;
+            _animatedSprite.FlipH = Speed < 0;
             float speedMultiplier = IsSpeeding ? SpeedMultiplierFast : SpeedMultiplierNormal;
             Position += new Vector2(Speed * speedMultiplier * (float)delta, 0);
 
@@ -171,15 +171,15 @@ namespace Crosswalk
         protected void Fly(double delta)
         {
             _scaleSpeed = 0.5f * (float)delta;
-            Vector2 currentScale = animatedSprite.Scale;
+            Vector2 currentScale = _animatedSprite.Scale;
 
-            if (isScalingUp)
+            if (_isScalingUp)
             {
                 currentScale += new Vector2(_scaleSpeed, _scaleSpeed);
                 if (currentScale.X >= _maxScale)
                 {
                     currentScale = new Vector2(_maxScale, _maxScale);
-                    isScalingUp = false;
+                    _isScalingUp = false;
                 }
             }
             else
@@ -191,7 +191,7 @@ namespace Crosswalk
                 }
             }
 
-            animatedSprite.Scale = currentScale;
+            _animatedSprite.Scale = currentScale;
 
             FlyTime += (float)delta;
             Position += new Vector2(FlightDirection, -250) * (float)delta;
@@ -231,7 +231,7 @@ namespace Crosswalk
                 HandleCarCollision(car);
                 RotationSpeed = car._speed * 3f;
 
-                if (!isFlying)
+                if (!_isFlying)
                 {
                     GD.PrintErr($"[ERROR] {Name} should be flying but isFlying = false!");
                 }
@@ -245,7 +245,7 @@ namespace Crosswalk
         {
             if (@event is InputEventScreenTouch touch && touch.Pressed)
             {
-                if (!isFlying)
+                if (!_isFlying)
                 {
                     GetNode<GUI>("/root/Level/GUI").PlaySfx(_tapSound);
                 }
@@ -260,24 +260,24 @@ namespace Crosswalk
         {
             float currentTime = Time.GetTicksMsec() / 1000f;
 
-            if ((currentTime - lastTapTime) < DoubleTapThreshold)
+            if ((currentTime - _lastTapTime) < _doubleTapThreshold)
             {
-                isStopped = false;
+                _isStopped = false;
                 StartSpeedBoost();
-                isWaitingForDoubleTap = false;
+                _isWaitingForDoubleTap = false;
             }
             else
             {
-                lastTapTime = currentTime;
-                isWaitingForDoubleTap = true;
+                _lastTapTime = currentTime;
+                _isWaitingForDoubleTap = true;
 
-                if (canBeStopped && !IsSpeeding)
+                if (_canBeStopped && !_isSpeeding)
                 {
                     HandleTapOrStop();
                 }
 
-                await ToSignal(GetTree().CreateTimer(DoubleTapThreshold), "timeout");
-                isWaitingForDoubleTap = false;
+                await ToSignal(GetTree().CreateTimer(_doubleTapThreshold), "timeout");
+                _isWaitingForDoubleTap = false;
             }
         }
 
@@ -286,19 +286,19 @@ namespace Crosswalk
         /// </summary>
         private async void HandleTapOrStop()
         {
-            if (!canBeStopped) return;
+            if (!_canBeStopped) return;
 
-            isStopped = true;
-            canBeStopped = false;
+            _isStopped = true;
+            _canBeStopped = false;
             PlayAnimation("idle");
 
             await ToSignal(GetTree().CreateTimer(StopDuration), "timeout");
 
-            isStopped = false;
+            _isStopped = false;
             PlayAnimation("walk");
 
             await ToSignal(GetTree().CreateTimer(StopCooldown), "timeout");
-            canBeStopped = true;
+            _canBeStopped = true;
         }
 
         /// <summary>
@@ -306,13 +306,13 @@ namespace Crosswalk
         /// </summary>
         private async void StartSpeedBoost()
         {
-            IsSpeeding = true;
-            canBeStopped = false;
+            _isSpeeding = true;
+            _canBeStopped = false;
 
             await ToSignal(GetTree().CreateTimer(SpeedTimer), "timeout");
 
-            IsSpeeding = false;
-            canBeStopped = true;
+            _isSpeeding = false;
+            _canBeStopped = true;
         }
 
         /// <summary>
@@ -320,9 +320,9 @@ namespace Crosswalk
         /// </summary>
         protected void PlayAnimation(string animationName)
         {
-            if (animatedSprite != null && animatedSprite.Animation != animationName)
+            if (_animatedSprite != null && _animatedSprite.Animation != animationName)
             {
-                animatedSprite.Play(animationName);
+                _animatedSprite.Play(animationName);
             }
         }
 
@@ -366,7 +366,7 @@ namespace Crosswalk
                 Vector2 pos = pedestrian.Position;
                 if ((pos.X > 410 || pos.X < -40 || pos.Y > 700 || pos.Y < -100) && !pedestrian.IsQueuedForDeletion())
                 {
-                    if (pedestrian is Pedestrian p && !p.isFlying)
+                    if (pedestrian is Pedestrian p && !p._isFlying)
                     {
                         if (!GameManager.Instance._gameOver)
                         {
