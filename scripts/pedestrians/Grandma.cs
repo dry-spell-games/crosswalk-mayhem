@@ -50,7 +50,7 @@ namespace Crosswalk
             if (isFlying)
             {
                 base.Fly(delta);
-                animatedSprite.Offset = new Vector2(0, 14);
+                animatedSprite.Offset = new Vector2(0, 11);
             }
             else
             {
@@ -83,7 +83,6 @@ namespace Crosswalk
 
                 isStopped = true;
                 randomStop = true;
-                GD.Print("Grandma stopped!");
                 base.PlayAnimation("idle2");
 
                 // Wait before moving again
@@ -92,7 +91,6 @@ namespace Crosswalk
                 isStopped = false;
                 randomStop = false;
                 canBeStopped = true;
-                GD.Print("Grandma started moving again!");
             }
         }
 
@@ -104,7 +102,6 @@ namespace Crosswalk
         protected override void HandleCarCollision(Car car)
         {
             isFlying = true;
-            GD.Print("Grandma was hit by a car!");
             FlyTime = 0;
         }
 

@@ -82,7 +82,6 @@ namespace Crosswalk
 
                 isStopped = true;
                 randomStop = true;
-                GD.Print("Grandpa stopped!");
                 base.PlayAnimation("idle2");
 
                 // Wait before moving again
@@ -91,7 +90,6 @@ namespace Crosswalk
                 isStopped = false;
                 randomStop = false;
                 canBeStopped = true;
-                GD.Print("Grandpa started moving again!");
             }
         }
 
@@ -103,7 +101,6 @@ namespace Crosswalk
         protected override void HandleCarCollision(Car car)
         {
             isFlying = true;
-            GD.Print("Grandpa was hit by a car!");
             FlyTime = 0;
         }
 
