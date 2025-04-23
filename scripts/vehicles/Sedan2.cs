@@ -13,9 +13,9 @@ namespace Crosswalk
     {
         #region Public Properties
 
-        [Export] public override float Speed { get; set; } = 390.0f;
-        [Export] public override float BrakingForce { get; set; } = 1200.0f;
-        [Export] public override float AccelerationForce { get; set; } = 270.0f;
+        [Export] public override float _speed { get; set; } = 390.0f;
+        [Export] public override float _brakingForce { get; set; } = 1200.0f;
+        [Export] public override float _accelerationForce { get; set; } = 270.0f;
 
         #endregion
 
@@ -23,8 +23,8 @@ namespace Crosswalk
 
         [Export] private AudioStreamPlayer2D _sfxPlayer;
 
-        private AnimatedSprite2D animatedSprite;
-        private AnimatedSprite2D windShield;
+        private AnimatedSprite2D _animatedSprite;
+        private AnimatedSprite2D _windshield;
         private float _initialSpeed;
 
         #endregion
@@ -36,11 +36,11 @@ namespace Crosswalk
         /// </summary>
         public override void _Ready()
         {
-            animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-            windShield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
+            _animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+            _windshield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
             base._Ready();
 
-            _initialSpeed = Speed;
+            _initialSpeed = _speed;
             PlayLoopingSfx("res://assets/audio/sfx/vehicles/sedan-engine.wav");
         }
 
@@ -53,7 +53,7 @@ namespace Crosswalk
             base._Process(delta);
 
             // Scales motor's SFX tempo based on current speed
-            float pitch = Mathf.Clamp(Speed / _initialSpeed, 0.4f, 10.0f);
+            float pitch = Mathf.Clamp(_speed / _initialSpeed, 0.4f, 10.0f);
             _sfxPlayer.PitchScale = pitch;
         }
 

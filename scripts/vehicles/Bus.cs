@@ -13,9 +13,9 @@ namespace Crosswalk
     {
         #region Public Properties
 
-        [Export] public override float Speed { get; set; } = 300.0f;
-        [Export] public override float BrakingForce { get; set; } = 700.0f;
-        [Export] public override float AccelerationForce { get; set; } = 150.0f;
+        [Export] public override float _speed { get; set; } = 300.0f;
+        [Export] public override float _brakingForce { get; set; } = 700.0f;
+        [Export] public override float _accelerationForce { get; set; } = 150.0f;
 
         #endregion
 
@@ -23,9 +23,9 @@ namespace Crosswalk
 
         [Export] private AudioStreamPlayer2D _sfxPlayer;
 
-        private AnimatedSprite2D animatedSprite;
-        private AnimatedSprite2D windShield;
-        private static int BusCounter = 0;
+        private AnimatedSprite2D _animatedSprite;
+        private AnimatedSprite2D _windshield;
+        private static int _busCounter = 0;
 
         private float _initialSpeed;
 
@@ -38,16 +38,16 @@ namespace Crosswalk
         /// </summary>
         public override void _Ready()
         {
-            animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-            windShield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
+            _animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+            _windshield = GetNode<AnimatedSprite2D>("AnimatedSprite2D/Windshield");
             base._Ready();
 
-            _initialSpeed = Speed;
+            _initialSpeed = _speed;
             PlayLoopingSfx("res://assets/audio/sfx/vehicles/bus-engine.wav");
 
             ZAsRelative = false;
-            ZIndex = 500 - BusCounter;
-            BusCounter++;
+            ZIndex = 500 - _busCounter;
+            _busCounter++;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Crosswalk
             base._Process(delta);
 
             // Scales motor's SFX tempo. Compares current speed to original speed
-            float pitch = Mathf.Clamp(Speed / _initialSpeed, 0.5f, 2.0f);
+            float pitch = Mathf.Clamp(_speed / _initialSpeed, 0.5f, 2.0f);
             _sfxPlayer.PitchScale = pitch;
         }
 
