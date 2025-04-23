@@ -316,6 +316,8 @@ namespace Crosswalk
                 car = (Car)_beetleScene2.Instantiate();
             else if (rand == 11 && _beetleScene3 != null)
                 car = (Car)_beetleScene3.Instantiate();
+            // if 12 is rolled, buses spawn in fixed order, to prevent same bus numbers to spawn
+            // after each other.
             else if (rand == 12 && _busScenes.Length > 0)
             {
                 PackedScene selectedScene = _busScenes[_currentBusIndex];
@@ -330,6 +332,7 @@ namespace Crosswalk
             else if (rand == 13 && _sportsCarScene != null)
                 car = (Car)_sportsCarScene.Instantiate();
 
+            // Randomly generates spawnpoint for vehicle
             Vector2 spawnPosition = car.StartPositions[GD.RandRange(0, car.StartPositions.Count - 1)];
 
             if (IsSpawnPointCarOccupied(spawnPosition))
