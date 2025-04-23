@@ -47,7 +47,7 @@ namespace Crosswalk
             if (isFlying)
             {
                 base.Fly(delta);
-                animatedSprite.Offset = new Vector2(1, 14);
+                animatedSprite.Offset = new Vector2(0, 14);
             }
             else
             {
@@ -67,7 +67,6 @@ namespace Crosswalk
         protected override void HandleCarCollision(Car car)
         {
             isFlying = true;
-            GD.Print("Boy was hit by a car :[");
             FlyTime = 0;
         }
 
