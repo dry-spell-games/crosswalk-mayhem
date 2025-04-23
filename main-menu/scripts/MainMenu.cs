@@ -48,7 +48,7 @@ namespace Crosswalk
 
         // Audio player node for background music
         [Export] private AudioStreamPlayer2D _musicPlayer;
-        // Audio player node for UI sound effects
+        // Audio player node for sound effects
         [Export] private AudioStreamPlayer2D _sfxPlayer;
 
         // Delay before background music starts playing

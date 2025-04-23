@@ -37,6 +37,8 @@ namespace Crosswalk
         public int _difficulty { get; set; } = 0;
         // Flag for checking if the game is over
         public bool _gameOver { get; set; } = false;
+        // Flag for checking if life count should be checked
+        public bool _disableLifeCheck = false;
 
         #endregion
 
