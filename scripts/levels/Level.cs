@@ -114,8 +114,6 @@ namespace Crosswalk
             // Wait one frame to ensure the node is fully in the scene tree
             await ToSignal(GetTree(), "process_frame");
 
-            GD.Print($"Level {_difficulty} started");
-
             // Load pedestrian scenes
             GrandmaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandma.tscn");
             GrandpaScene = (PackedScene)GD.Load("res://scenes/pedestrians/grandpa.tscn");
@@ -151,11 +149,11 @@ namespace Crosswalk
 
             // Check if scenes loaded properly
             if (GrandmaScene == null) GD.PrintErr("Failed to load Grandma scene!");
-            if (GrandpaScene == null) GD.PrintErr("Failed to load Grandpa scene");
-            else if (GirlScene == null) GD.Print("Failed to load Girl scene!");
-            else if (BoyScene == null) GD.Print("Failed to load Boy scene!");
-            else if (ManScene == null) GD.Print("Failed to load ManScene");
-            else if (WomanScene == null) GD.Print("Failed to load WomanScene");
+            else if (GrandpaScene == null) GD.PrintErr("Failed to load Grandpa scene");
+            else if (GirlScene == null) GD.PrintErr("Failed to load Girl scene!");
+            else if (BoyScene == null) GD.PrintErr("Failed to load Boy scene!");
+            else if (ManScene == null) GD.PrintErr("Failed to load ManScene");
+            else if (WomanScene == null) GD.PrintErr("Failed to load WomanScene");
 
             StartGame();
         }
@@ -166,7 +164,12 @@ namespace Crosswalk
         public override void _Process(Double delta)
         {
             vehicleTrafficLightHitbox.Disabled = _carGreen;
-            CheckLife();
+
+            if (!GameManager.Instance._disableLifeCheck)
+            {
+                CheckLife();
+            }
+
             CheckIfPedestriansLeft();
         }
 
@@ -191,7 +194,6 @@ namespace Crosswalk
                 // Timer which doesn't do anything during pause
                 await ToSignal(GetTree().CreateTimer(_spawnRate[_difficulty], true), "timeout");
                 _pedestriansToSpawn--;
-                GD.Print($"Pedestrians left to spawn: {_pedestriansToSpawn}");
             }
         }
 
@@ -222,26 +224,15 @@ namespace Crosswalk
         {
             while (true)
             {
-                GD.Print("Green light for cars");
                 await ToSignal(GetTree().CreateTimer(_carGreenTimer[_difficulty], false, true), "timeout");
-
                 _carGreen = false;
-
-                GD.Print("Traffic light transition");
                 await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty], false, true), "timeout");
-
                 _pedestrianGreen = true;
-                GD.Print("Green light for pedestrians");
                 EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
-
                 await ToSignal(GetTree().CreateTimer(_pedestrianGreenTimer[_difficulty], false, true), "timeout");
-
                 _pedestrianGreen = false;
                 EmitSignal(SignalName.PedestrianLight, _pedestrianGreen);
-
-                GD.Print("Traffic light transition");
                 await ToSignal(GetTree().CreateTimer(_lightTransitionTimer[_difficulty], false, true), "timeout");
-
                 _carGreen = true;
             }
         }
@@ -343,7 +334,6 @@ namespace Crosswalk
 
             if (IsSpawnPointCarOccupied(spawnPosition))
             {
-                GD.Print("Spawnpoint occupied, can not spawn a vehicle");
                 return;
             }
 
@@ -383,6 +373,7 @@ namespace Crosswalk
             if (GameManager.Instance._score > GameManager.Instance._highscore)
             {
                 GameManager.Instance.UpdateHighscore();
+                GameManager.Instance.SaveData();
                 await _gui.ShowMessage(_messageTimer, "NEW_RECORD");
             }
 
@@ -433,14 +424,13 @@ namespace Crosswalk
         private void CheckIfPedestriansLeft()
         {
             if (_difficultyIncreasing || GetTree() == null || GameManager.Instance._gameOver)
+            {
                 return;
-
-            // GD.Print($"[CHECK] Spawning: {_pedestriansToSpawn}, In scene: {GetTree().GetNodesInGroup("pedestrians").Count}, Increasing: {_difficultyIncreasing}");
+            }
 
             if (_pedestriansToSpawn <= 0 &&
                 GetTree().GetNodesInGroup("pedestrians").Count == 0)
             {
-                // GD.Print("[CHECK] Difficulty increasing triggered.");
                 _difficultyIncreasing = true;
                 if (GameManager.Instance._difficulty < 5)
                 {

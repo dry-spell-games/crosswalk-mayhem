@@ -86,6 +86,7 @@ namespace Crosswalk
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
             await ToSignal(GetTree().CreateTimer(_sfxDelayTimer), "timeout");
 
+            GameManager.Instance._disableLifeCheck = true;
             GameManager.Instance.SaveData();
             GameManager.Instance._difficulty = 0;
             GameManager.Instance.ResetLife();
@@ -103,6 +104,7 @@ namespace Crosswalk
             PlaySfx("res://assets/audio/sfx/menu/button.wav");
             await ToSignal(GetTree().CreateTimer(_sfxDelayTimer), "timeout");
 
+            GameManager.Instance._disableLifeCheck = true;
             GameManager.Instance.SaveData();
             GameManager.Instance._difficulty = 0;
             GameManager.Instance.ResetLife();
