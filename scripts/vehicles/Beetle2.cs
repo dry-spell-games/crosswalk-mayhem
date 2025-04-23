@@ -5,6 +5,7 @@ namespace Crosswalk
 {
     /// <summary>
     /// Beetle is a specific implementation of Car with unique sound effects and properties.
+    /// Uses mainly methods from abstract class Car.
     /// Different Beetles have different values for speed, braking force and acceleration force.
     /// </summary>
     public partial class Beetle2 : Car

@@ -5,7 +5,9 @@ namespace Crosswalk
 {
     /// <summary>
     /// Bus is a specific implementation of the Car class, simulating a larger vehicle
-    /// with unique acceleration, braking, and sound behavior. It also staggers its rendering order with Z-indexing.
+    /// with unique acceleration, braking, and sound behavior.
+    /// It also staggers its rendering order with Z-indexing.
+    /// Uses mainly methods from abstract class Car.
     /// </summary>
     public partial class Bus : Car
     {

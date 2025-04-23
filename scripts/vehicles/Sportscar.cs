@@ -6,6 +6,8 @@ namespace Crosswalk
 {
     /// <summary>
     /// Sportscar is a fast and highly responsive implementation of the Car class.
+    /// Special feature is that it doesn't stop to red lights unlike other cars.
+    /// Uses mainly methods from abstract class Car.
     /// It features high acceleration and braking values and a distinct engine sound.
     /// </summary>
     public partial class Sportscar : Car
