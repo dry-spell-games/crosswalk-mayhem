@@ -6,6 +6,7 @@ namespace Crosswalk
     /// <summary>
     /// Sedan is a specific implementation of the Car class, simulating a faster passenger vehicle
     /// with unique acceleration, braking, and engine sound behavior.
+    /// Uses mainly methods from abstract class Car.
     /// Different Sedans have different attribute values
     /// </summary>
     public partial class Sedan3 : Car

@@ -8,6 +8,7 @@ namespace Crosswalk
     /// It inherits movement and animation behavior from the Car class
     /// and includes its own sound effect scaling. Different SUV's have different
     /// attribute values.
+    /// Uses mainly methods from abstract class Car.
     /// </summary>
     public partial class Suv2 : Car
     {
