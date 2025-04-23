@@ -48,6 +48,7 @@ namespace Crosswalk
         #endregion
 
         #region Private Fields
+
         [Export] private float _maxFlyTime = 5f;
         // Audio player for pedestrian sound effects
         [Export] private AudioStreamPlayer2D _sfxPlayer;
@@ -228,7 +229,7 @@ namespace Crosswalk
                 _isHit = true;
 
                 HandleCarCollision(car);
-                RotationSpeed = car._speed * 3f;
+                RotationSpeed = car.Speed * 3f;
 
                 if (!_isFlying)
                 {

@@ -330,7 +330,7 @@ namespace Crosswalk
             else if (rand == 13 && SportsCarScene != null)
                 car = (Car)SportsCarScene.Instantiate();
 
-            Vector2 spawnPosition = car._startPositions[GD.RandRange(0, car._startPositions.Count - 1)];
+            Vector2 spawnPosition = car.StartPositions[GD.RandRange(0, car.StartPositions.Count - 1)];
 
             if (IsSpawnPointCarOccupied(spawnPosition))
             {
