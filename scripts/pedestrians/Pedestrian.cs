@@ -32,23 +32,6 @@ namespace Crosswalk
         // Horizontal flight direction after a collision
         [Export] public virtual float FlightDirection { get; set; }
         // Maximum allowed flying time before auto-clean
-        [Export] private float _maxFlyTime = 5f;
-        // Audio player for pedestrian sound effects
-        [Export] private AudioStreamPlayer2D _sfxPlayer;
-
-        // Path to hit sound effect
-        [Export] private string _hitSound = "";
-        // Path to scream sound effect
-        [Export] private string _screamSound = "";
-        // Path to tap sound effect
-        [Export] private string _tapSound = "";
-        // Path to score sound effect
-        [Export] private string _scoreSound = "";
-
-        // Speed of scaling effect while flying
-        [Export] private float _scaleSpeed = 0.5f;
-        // Maximum scale during flying animation
-        [Export] private float _maxScale = 2f;
 
         // Predefined starting spawn positions for pedestrians
         public List<Vector2> StartPositions { get; set; } = new()
@@ -65,6 +48,22 @@ namespace Crosswalk
         #endregion
 
         #region Private Fields
+        [Export] private float _maxFlyTime = 5f;
+        // Audio player for pedestrian sound effects
+        [Export] private AudioStreamPlayer2D _sfxPlayer;
+        // Path to hit sound effect
+        [Export] private string _hitSound = "";
+        // Path to scream sound effect
+        [Export] private string _screamSound = "";
+        // Path to tap sound effect
+        [Export] private string _tapSound = "";
+        // Path to score sound effect
+        [Export] private string _scoreSound = "";
+
+        // Speed of scaling effect while flying
+        [Export] private float _scaleSpeed = 0.5f;
+        // Maximum scale during flying animation
+        [Export] private float _maxScale = 2f;
 
         // Flag indicating if pedestrians have red light
         private bool _redLightsForPedestrians = false;
@@ -93,7 +92,7 @@ namespace Crosswalk
         // True if pedestrian has been hit by a car
         protected bool _isHit = false;
         // Saved initial walking speed
-        protected float InitialSpeed;
+        protected float _initialSpeed;
 
         #endregion
 
@@ -105,7 +104,7 @@ namespace Crosswalk
         /// </summary>
         public override void _Ready()
         {
-            InitialSpeed = Speed;
+            _initialSpeed = Speed;
             AddToGroup("pedestrians");
 
             Connect("area_entered", new Callable(this, nameof(OnAreaEntered)));

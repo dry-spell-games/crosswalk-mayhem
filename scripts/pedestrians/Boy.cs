@@ -22,7 +22,7 @@ namespace Crosswalk
 
         #region Private Properties
 
-        private AnimatedSprite2D animatedSprite;
+        private AnimatedSprite2D _animatedSprite;
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace Crosswalk
         {
             base._Ready();
             FlightDirection = GD.RandRange(-300, 300);
-            animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+            _animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Crosswalk
             if (_isFlying)
             {
                 base.Fly(delta);
-                animatedSprite.Offset = new Vector2(0, 14);
+                _animatedSprite.Offset = new Vector2(0, 14);
             }
             else
             {
