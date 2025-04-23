@@ -48,6 +48,7 @@ namespace Crosswalk
             if (isFlying)
             {
                 base.Fly(delta);
+                animatedSprite.Offset = new Vector2(1, 21);
             }
             else
             {
