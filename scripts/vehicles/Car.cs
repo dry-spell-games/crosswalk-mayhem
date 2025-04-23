@@ -56,7 +56,8 @@ namespace Crosswalk
             AddToGroup("cars"); // Adds cars to a group so they can be removed later
             InitialSpeed = Speed;
 
-            // Array for cars' raycasts
+            // Array for cars' raycasts, only active one used in current version 1.0 cars
+            // is RCMiddle, but have left others for possible future uses.
             raycasts = new RayCast2D[]
             {
                 GetNodeOrNull<RayCast2D>("RaycastHolder/RCLeft"), // Left
@@ -74,10 +75,12 @@ namespace Crosswalk
         {
             if (IsAnyRaycastColliding())
             {
+                // Slows vehicles using braking force
                 Speed = Mathf.Max(Speed - BrakingForce * (float)delta, 0);
             }
             else if (!IsAnyRaycastColliding() && Speed < InitialSpeed)
             {
+                // Accelerates car using acceleration force
                 Speed = Mathf.Max(Speed + AccelerationForce * (float)delta, 0);
             }
 
@@ -105,7 +108,6 @@ namespace Crosswalk
             {
                 if (car.Position.Y > 1500) // If true car is out of bounds
                 {
-                    GD.Print("Poistetaan auto: ", car.Name);
                     car.QueueFree(); // Removes car instance
                 }
             }
@@ -121,8 +123,6 @@ namespace Crosswalk
         public void Initialize(Vector2 position)
         {
             Position = position;
-            GD.Print($"{this} spawned at {Position} with speed {Speed}");
-            GD.Print("auto instantioitu");
         }
 
         #endregion
